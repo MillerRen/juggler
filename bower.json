@@ -1,0 +1,16 @@
+{
+  "name": "juggler",
+  "version": "0.0.1",
+  "main": [
+    "src/scripts/juggler.js"
+  ],
+  "dependencies": {
+    "marionette": "~2.1.0",
+    "bootstrap": "~3.2.0"
+  },
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "mocha": "~1.21.4",
+    "sinonjs": "~1.10.2"
+  }
+}
