@@ -1,16 +1,13 @@
 {
   "name": "juggler",
-  "version": "0.0.1",
-  "main": [
-    "src/scripts/juggler.js"
-  ],
+  "private": true,
   "dependencies": {
+    "jquery": "~1.11.0",
     "marionette": "~2.1.0",
-    "bootstrap": "~3.2.0"
+    "bootstrap": "~3.2.0",
+    "bootstrap3-dialog": "~1.33.4",
+    "bootstrap.growl": "~2.0.0",
+    "skylo": "*"
   },
-  "devDependencies": {
-    "chai": "~1.9.1",
-    "mocha": "~1.21.4",
-    "sinonjs": "~1.10.2"
-  }
+  "devDependencies": {}
 }

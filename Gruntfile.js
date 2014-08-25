@@ -1,286 +1,370 @@
-var path = require('path');
-var unwrap = require('unwrap');
+// Generated on 2014-08-25 using generator-webapp 0.4.9
+'use strict';
 
-module.exports = function(grunt) {
+// # Globbing
+// for performance reasons we're only matching one level down:
+// 'test/spec/{,*/}*.js'
+// use this if you want to recursively match all subfolders:
+// 'test/spec/**/*.js'
 
-  require('load-grunt-tasks')(grunt);
+module.exports = function (grunt) {
 
-  // Project configuration.
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    meta: {
-      version: '<%= pkg.version %>',
-      banner:
-        '// Juggler\n' +
-        '// ----------------------------------\n' +
-        '// v<%= pkg.version %>\n' +
-        '//\n' +
-        '// Copyright (c)<%= grunt.template.today("yyyy") %> Miller Ren\n' +
-        '// Distributed under MIT license\n' +
-        '//\n' +
-        '// http://renyufei.com\n' +
-        '\n'
-    },
-    assets: {
-      
-    },
+    // Load grunt tasks automatically
+    require('load-grunt-tasks')(grunt);
 
-    clean: {
-      lib: 'lib'
-    },
+    // Time how long tasks take. Can help when optimizing build times
+    require('time-grunt')(grunt);
 
-    bower: {
-      install: {
-        options: {
-          copy: false
-        }
-      }
-    },
+    // Configurable paths
+    var config = {
+        app: 'app',
+        dist: 'dist'
+    };
 
-    preprocess: {
-      core: {
-        src: 'src/dist/juggler.core.js',
-        dest: 'tmp/juggler.core.js'
-      },
-      bundle: {
-        src: 'src/dist/juggler.bundled.js',
-        dest: 'tmp/backbone.juggler.js'
-      }
-    },
+    // Define the configuration for all the tasks
+    grunt.initConfig({
 
-    template: {
-      options: {
-        data: {
-          version: '<%= pkg.version %>'
-        }
-      },
-      core: {
-        src: '<%= preprocess.core.dest %>',
-        dest: '<%= preprocess.core.dest %>'
-      },
-      bundle: {
-        src: '<%= preprocess.bundle.dest %>',
-        dest: '<%= preprocess.bundle.dest %>'
-      }
-    },
+        // Project settings
+        config: config,
 
-    concat: {
-      options: {
-        banner: '<%= meta.banner %>'
-      },
-      core: {
-        src: '<%= preprocess.core.dest %>',
-        dest: 'lib/core/backbone.juggler.js'
-      },
-      bundle: {
-        options: {
-          banner: '<%= meta.banner %>'
-        },
-        src: '<%= preprocess.bundle.dest %>',
-        dest: 'lib/backbone.juggler.js'
-      }
-    },
-
-    uglify : {
-      core: {
-        src : '<%= concat.core.dest %>',
-        dest : 'lib/core/backbone.juggler.min.js',
-        options : {
-          banner: '<%= meta.core_bundle %>',
-          sourceMap : 'lib/core/backbone.juggler.map',
-          sourceMappingURL : '<%= uglify.bundle.options.sourceMappingURL %>',
-          sourceMapPrefix : 1
-        }
-      },
-
-      bundle: {
-        src : '<%= concat.bundle.dest %>',
-        dest : 'lib/backbone.juggler.min.js',
-        options : {
-          banner: '<%= meta.banner %>',
-          sourceMap : 'lib/backbone.juggler.map',
-          sourceMappingURL : 'backbone.juggler.map',
-          sourceMapPrefix : 2
-        }
-      }
-    },
-
-    env: {
-      coverage: {
-        APP_DIR_FOR_CODE_COVERAGE: '../../../test/tmp/'
-      }
-    },
-
-    instrument: {
-      files: 'tmp/backbone.juggler.js',
-      options: {
-        lazy: true,
-        basePath: 'test'
-      }
-    },
-
-    mochaTest: {
-      tests: {
-        options: {
-          require: 'spec/javascripts/setup/node.js',
-          reporter: grunt.option('mocha-reporter') || 'nyan',
-          clearRequireCache: true,
-          mocha: require('mocha')
-        },
-        src: [
-          'spec/javascripts/setup/helpers.js',
-          'spec/javascripts/*.spec.js'
-        ]
-      }
-    },
-
-    storeCoverage: {
-      options: {
-        dir: 'coverage'
-      }
-    },
-    makeReport: {
-      src: 'coverage/**/*.json',
-      options: {
-        type: 'lcov',
-        dir: 'coverage',
-        print: 'detail'
-      }
-    },
-
-    coveralls: {
-      options: {
-        src: 'coverage/lcov.info',
-        force: false
-      },
-      default: {
-        src: 'coverage/lcov.info'
-      }
-    },
-
-    plato: {
-      marionette : {
-        src : 'src/*.js',
-        dest : 'reports',
-        options : {
-          jshint : grunt.file.readJSON('.jshintrc')
-        }
-      }
-    },
-
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc'
-      },
-
-      marionette: {
-        src: [ 'src/*.js' ]
-      },
-
-      specs: {
-        options: {
-          jshintrc: 'spec/.jshintrc'
+        // Watches files for changes and runs tasks based on the changed files
+        watch: {
+            bower: {
+                files: ['bower.json'],
+                tasks: ['bowerInstall']
+            },
+            js: {
+                files: ['<%= config.app %>/scripts/{,*/}*.js'],
+                tasks: ['jshint'],
+                options: {
+                    livereload: true
+                }
+            },
+            jstest: {
+                files: ['test/spec/{,*/}*.js'],
+                tasks: ['test:watch']
+            },
+            gruntfile: {
+                files: ['Gruntfile.js']
+            },
+            styles: {
+                files: ['<%= config.app %>/styles/{,*/}*.css'],
+                tasks: ['newer:copy:styles', 'autoprefixer']
+            },
+            livereload: {
+                options: {
+                    livereload: '<%= connect.options.livereload %>'
+                },
+                files: [
+                    '<%= config.app %>/{,*/}*.html',
+                    '.tmp/styles/{,*/}*.css',
+                    '<%= config.app %>/images/{,*/}*'
+                ]
+            }
         },
 
-        files: {
-          src: ['spec/javascripts/**.js']
-        }
-      }
-    },
-
-    watch: {
-      marionette : {
-        options: {
-          spawn: false
+        // The actual grunt server settings
+        connect: {
+            options: {
+                port: 9000,
+                open: true,
+                livereload: 35729,
+                // Change this to '0.0.0.0' to access the server from outside
+                hostname: 'localhost'
+            },
+            livereload: {
+                options: {
+                    middleware: function(connect) {
+                        return [
+                            connect.static('.tmp'),
+                            connect().use('/bower_components', connect.static('./bower_components')),
+                            connect.static(config.app)
+                        ];
+                    }
+                }
+            },
+            test: {
+                options: {
+                    open: false,
+                    port: 9001,
+                    middleware: function(connect) {
+                        return [
+                            connect.static('.tmp'),
+                            connect.static('test'),
+                            connect().use('/bower_components', connect.static('./bower_components')),
+                            connect.static(config.app)
+                        ];
+                    }
+                }
+            },
+            dist: {
+                options: {
+                    base: '<%= config.dist %>',
+                    livereload: false
+                }
+            }
         },
-        files : ['src/**/*.js', 'spec/**/*.js'],
-        tasks : ['test']
-      }
-    },
 
-    connect: {
-      server: {
-        options: {
-          port: 8888
+        // Empties folders to start fresh
+        clean: {
+            dist: {
+                files: [{
+                    dot: true,
+                    src: [
+                        '.tmp',
+                        '<%= config.dist %>/*',
+                        '!<%= config.dist %>/.git*'
+                    ]
+                }]
+            },
+            server: '.tmp'
+        },
+
+        // Make sure code styles are up to par and there are no obvious mistakes
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc',
+                reporter: require('jshint-stylish')
+            },
+            all: [
+                'Gruntfile.js',
+                '<%= config.app %>/scripts/{,*/}*.js',
+                '!<%= config.app %>/scripts/vendor/*',
+                'test/spec/{,*/}*.js'
+            ]
+        },
+
+        // Mocha testing framework configuration options
+        mocha: {
+            all: {
+                options: {
+                    run: true,
+                    urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/index.html']
+                }
+            }
+        },
+
+        // Add vendor prefixed styles
+        autoprefixer: {
+            options: {
+                browsers: ['last 1 version']
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '.tmp/styles/',
+                    src: '{,*/}*.css',
+                    dest: '.tmp/styles/'
+                }]
+            }
+        },
+
+        // Automatically inject Bower components into the HTML file
+        bowerInstall: {
+            app: {
+                src: ['<%= config.app %>/index.html'],
+                exclude: ['bower_components/bootstrap/dist/js/bootstrap.js']
+            }
+        },
+
+        // Renames files for browser caching purposes
+        rev: {
+            dist: {
+                files: {
+                    src: [
+                        '<%= config.dist %>/scripts/{,*/}*.js',
+                        '<%= config.dist %>/styles/{,*/}*.css',
+                        '<%= config.dist %>/images/{,*/}*.*',
+                        '<%= config.dist %>/styles/fonts/{,*/}*.*',
+                        '<%= config.dist %>/*.{ico,png}'
+                    ]
+                }
+            }
+        },
+
+        // Reads HTML for usemin blocks to enable smart builds that automatically
+        // concat, minify and revision files. Creates configurations in memory so
+        // additional tasks can operate on them
+        useminPrepare: {
+            options: {
+                dest: '<%= config.dist %>'
+            },
+            html: '<%= config.app %>/index.html'
+        },
+
+        // Performs rewrites based on rev and the useminPrepare configuration
+        usemin: {
+            options: {
+                assetsDirs: ['<%= config.dist %>', '<%= config.dist %>/images']
+            },
+            html: ['<%= config.dist %>/{,*/}*.html'],
+            css: ['<%= config.dist %>/styles/{,*/}*.css']
+        },
+
+        // The following *-min tasks produce minified files in the dist folder
+        imagemin: {
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= config.app %>/images',
+                    src: '{,*/}*.{gif,jpeg,jpg,png}',
+                    dest: '<%= config.dist %>/images'
+                }]
+            }
+        },
+
+        svgmin: {
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= config.app %>/images',
+                    src: '{,*/}*.svg',
+                    dest: '<%= config.dist %>/images'
+                }]
+            }
+        },
+
+        htmlmin: {
+            dist: {
+                options: {
+                    collapseBooleanAttributes: true,
+                    collapseWhitespace: true,
+                    removeAttributeQuotes: true,
+                    removeCommentsFromCDATA: true,
+                    removeEmptyAttributes: true,
+                    removeOptionalTags: true,
+                    removeRedundantAttributes: true,
+                    useShortDoctype: true
+                },
+                files: [{
+                    expand: true,
+                    cwd: '<%= config.dist %>',
+                    src: '{,*/}*.html',
+                    dest: '<%= config.dist %>'
+                }]
+            }
+        },
+
+        // By default, your `index.html`'s <!-- Usemin block --> will take care of
+        // minification. These next options are pre-configured if you do not wish
+        // to use the Usemin blocks.
+        // cssmin: {
+        //     dist: {
+        //         files: {
+        //             '<%= config.dist %>/styles/main.css': [
+        //                 '.tmp/styles/{,*/}*.css',
+        //                 '<%= config.app %>/styles/{,*/}*.css'
+        //             ]
+        //         }
+        //     }
+        // },
+        // uglify: {
+        //     dist: {
+        //         files: {
+        //             '<%= config.dist %>/scripts/scripts.js': [
+        //                 '<%= config.dist %>/scripts/scripts.js'
+        //             ]
+        //         }
+        //     }
+        // },
+        // concat: {
+        //     dist: {}
+        // },
+
+        // Copies remaining files to places other tasks can use
+        copy: {
+            dist: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= config.app %>',
+                    dest: '<%= config.dist %>',
+                    src: [
+                        '*.{ico,png,txt}',
+                        '.htaccess',
+                        'images/{,*/}*.webp',
+                        '{,*/}*.html',
+                        'styles/fonts/{,*/}*.*'
+                    ]
+                }]
+            },
+            styles: {
+                expand: true,
+                dot: true,
+                cwd: '<%= config.app %>/styles',
+                dest: '.tmp/styles/',
+                src: '{,*/}*.css'
+            }
+        },
+
+        // Run some tasks in parallel to speed up build process
+        concurrent: {
+            server: [
+                'copy:styles'
+            ],
+            test: [
+                'copy:styles'
+            ],
+            dist: [
+                'copy:styles',
+                'imagemin',
+                'svgmin'
+            ]
         }
-      }
-    },
-
-    lintspaces: {
-      all: {
-        src: [
-          'src/*.js',
-          'docs/*.md'
-        ],
-        options: {
-          editorconfig: '.editorconfig'
-        }
-      }
-    },
-
-    unwrap: {
-      babysitter: {
-        src: './bower_components/backbone.babysitter/lib/backbone.babysitter.js',
-        dest: './tmp/backbone.babysitter.bare.js'
-      },
-      wreqr: {
-        src: './bower_components/backbone.wreqr/lib/backbone.wreqr.js',
-        dest: './tmp/backbone.wreqr.bare.js'
-      }
-    }
-  });
-
-  grunt.registerMultiTask('unwrap', 'Unwrap UMD', function () {
-    var done = this.async();
-    var timesLeft = 0;
-
-    this.files.forEach(function (file) {
-      file.src.forEach(function (src) {
-        timesLeft++;
-        unwrap(path.resolve(__dirname, src), function (err, content) {
-          if (err) return grunt.log.error(err);
-          grunt.file.write(path.resolve(__dirname, file.dest), content);
-          grunt.log.ok(file.dest + ' created.');
-          timesLeft--;
-          if (timesLeft <= 0) done();
-        });
-      });
     });
-  });
 
-  grunt.registerTask('verify-bower', function () {
-    if (!grunt.file.isDir('./bower_components')) {
-      grunt.fail.warn('Missing bower components. You should run `bower install` before.');
-    }
-  });
 
-  var defaultTestsSrc = grunt.config('mochaTest.tests.src');
-  var defaultJshintSrc = grunt.config('jshint.marionette.src');
-  var defaultJshintSpecSrc = grunt.config('jshint.specs.files.src');
-  grunt.event.on('watch', function(action, filepath) {
-    grunt.config('mochaTest.tests.src', defaultTestsSrc);
-    grunt.config('jshint.marionette.src', defaultJshintSrc);
-    grunt.config('jshint.specs.files.src', defaultJshintSpecSrc);
-    if (filepath.match('spec/javascripts/') && !filepath.match('setup') && !filepath.match('fixtures')) {
-      grunt.config('mochaTest.tests.src', ['spec/javascripts/setup/helpers.js', filepath]);
-      grunt.config('jshint.specs.files.src', filepath);
-      grunt.config('jshint.marionette.src', 'DO_NOT_RUN_ME');
-    }
-    if (filepath.match('src/')) {
-      grunt.config('jshint.marionette.src', filepath);
-      grunt.config('jshint.specs.files.src', 'DO_NOT_RUN_ME');
-    }
-  });
+    grunt.registerTask('serve', function (target) {
+        if (target === 'dist') {
+            return grunt.task.run(['build', 'connect:dist:keepalive']);
+        }
 
-  grunt.registerTask('default', 'An alias task for running tests.', ['test']);
+        grunt.task.run([
+            'clean:server',
+            'concurrent:server',
+            'autoprefixer',
+            'connect:livereload',
+            'watch'
+        ]);
+    });
 
-  grunt.registerTask('lint', 'Lints our sources', ['lintspaces', 'jshint']);
+    grunt.registerTask('server', function (target) {
+        grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
+        grunt.task.run([target ? ('serve:' + target) : 'serve']);
+    });
 
-  grunt.registerTask('test', 'Run the unit tests.', ['verify-bower', 'lint', 'unwrap', 'preprocess:bundle', 'template:bundle', 'mochaTest']);
+    grunt.registerTask('test', function (target) {
+        if (target !== 'watch') {
+            grunt.task.run([
+                'clean:server',
+                'concurrent:test',
+                'autoprefixer'
+            ]);
+        }
 
-  grunt.registerTask('coverage', ['unwrap', 'preprocess:bundle', 'template:bundle', 'env:coverage', 'instrument', 'mochaTest', 'storeCoverage', 'makeReport', 'coveralls']);
+        grunt.task.run([
+            'connect:test',
+            'mocha'
+        ]);
+    });
 
-  grunt.registerTask('dev', 'Auto-lints while writing code.', ['test', 'watch:marionette']);
+    grunt.registerTask('build', [
+        'clean:dist',
+        'useminPrepare',
+        'concurrent:dist',
+        'autoprefixer',
+        'concat',
+        'cssmin',
+        'uglify',
+        'copy:dist',
+        'rev',
+        'usemin',
+        'htmlmin'
+    ]);
 
-  grunt.registerTask('build', 'Build all three versions of the library.', ['clean:lib', 'bower:install', 'lint', 'unwrap', 'preprocess', 'template', 'mochaTest', 'concat', 'uglify']);
+    grunt.registerTask('default', [
+        'newer:jshint',
+        'test',
+        'build'
+    ]);
 };
