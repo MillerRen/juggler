@@ -1,7 +1,7 @@
 {
   "name": "juggler",
   "private": false,
-  "main":[
+  "main": [
     "app/styles/juggler.css",
     "app/scripts/juggler.js"
   ],
@@ -13,5 +13,9 @@
     "bootstrap.growl": "~2.0.0",
     "skylo": "*"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "mocha": "~1.21.4",
+    "chai": "~1.9.1",
+    "sinonjs": "~1.10.2"
+  }
 }

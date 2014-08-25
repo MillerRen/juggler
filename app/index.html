@@ -9,7 +9,11 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
-
+        <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="../bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.css" />
+        <link rel="stylesheet" href="../bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css" />
+        <link rel="stylesheet" href="../bower_components/mocha/mocha.css" />
+        <link rel="stylesheet" href="styles/juggler.css" />
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
@@ -36,10 +40,23 @@
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <script src="../bower_components/jquery/dist/jquery.js"></script>
+        <script src="../bower_components/underscore/underscore.js"></script>
+        <script src="../bower_components/backbone/backbone.js"></script>
+        <script src="../bower_components/backbone.babysitter/lib/backbone.babysitter.js"></script>
+        <script src="../bower_components/backbone.wreqr/lib/backbone.wreqr.js"></script>
+        <script src="../bower_components/marionette/lib/core/backbone.marionette.js"></script>
+        <script src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="../bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.js"></script>
+        <script src="../bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
+        <script src="../bower_components/bootstrap.growl/bootstrap-growl.js"></script>
+        <script src="../bower_components/mocha/mocha.js"></script>
+        <script src="../bower_components/chai/chai.js"></script>
+        <script src="../bower_components/sinonjs/sinon.js"></script>
+        <script src="scripts/juggler.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. 
         <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
             function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
@@ -47,7 +64,7 @@
             e.src='//www.google-analytics.com/analytics.js';
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
-        </script>
+        </script> -->
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
         <script src="scripts/main.js"></script>

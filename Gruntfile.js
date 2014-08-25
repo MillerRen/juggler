@@ -31,7 +31,7 @@ module.exports = function (grunt) {
         watch: {
             bower: {
                 files: ['bower.json'],
-                tasks: ['bowerInstall']
+                tasks: ['wiredep']
             },
             js: {
                 files: ['<%= config.app %>/scripts/{,*/}*.js'],
@@ -160,10 +160,12 @@ module.exports = function (grunt) {
         },
 
         // Automatically inject Bower components into the HTML file
-        bowerInstall: {
+        wiredep: {
             app: {
                 src: ['<%= config.app %>/index.html'],
-                exclude: ['bower_components/bootstrap/dist/js/bootstrap.js']
+                //exclude: ['bower_components/bootstrap/dist/js/bootstrap.js'],
+                devDependencies: true, // default: false
+                includeSelf: true,     // default: false
             }
         },
 
