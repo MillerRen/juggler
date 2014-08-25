@@ -1,6 +1,10 @@
 {
   "name": "juggler",
-  "private": true,
+  "private": false,
+  "main":[
+    "app/styles/juggler.css",
+    "app/scripts/juggler.js"
+  ],
   "dependencies": {
     "jquery": "~1.11.0",
     "marionette": "~2.1.0",
