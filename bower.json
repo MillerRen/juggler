@@ -1,10 +1,23 @@
 {
   "name": "juggler",
-  "private": false,
+  "version": "0.0.0",
+  "description": "A front end solution suite based on Backbone.Marionette and Bootstrap",
   "main": [
     "app/styles/juggler.css",
     "app/scripts/juggler.js"
   ],
+  "homepage": "https://github.com/MillerRen/juggler.git",
+  "keywords": [
+    "backbone",
+    "framework",
+    "client",
+    "browser",
+    "composite"
+  ],
+  "author": {
+    "name": "Miller Ren",
+    "email": "ren12345@126.com"
+  },
   "dependencies": {
     "jquery": "~1.11.0",
     "marionette": "~2.1.0",
