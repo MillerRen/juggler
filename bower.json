@@ -19,12 +19,16 @@
     "email": "ren12345@126.com"
   },
   "dependencies": {
-    "jquery": "~1.11.0",
-    "marionette": "~2.1.0",
-    "bootstrap": "~3.2.0",
-    "bootstrap3-dialog": "~1.33.4",
-    "bootstrap.growl": "~2.0.0",
-    "skylo": "*"
+    "jquery": ">1.10.0",
+    "bootstrap": ">3.0.0",
+    "bootstrap3-dialog": ">=1.33.4",
+    "bootstrap.growl": ">2.0.0",
+    "animate.css": ">=3.2.0",
+    "skylo": "*",
+    "marionette": ">=2.0.0",
+    "backbone-forms": "master",
+    "backgrid": ">0.3.0",
+    "backgrid-paginator": "~0.3.5"
   },
   "devDependencies": {
     "mocha": "~1.21.4",
