@@ -32,9 +32,62 @@
   Backbone.Juggler = Juggler;
   
   
+Juggler.module('Config',function(Config,Juggler,Backbone,Marionette,$,_){
+    Config.Message = {
+
+    };
+});
+
+Juggler.module('Common',function(Common,Juggler,Backbone,Marionette,$,_){
+    Common.Dialog = BootstrapDialog;
+    Common.Notify = $.growl;
+    Common.ProgressBar = $(document).skylo;
+});
+
+Juggler.module('Templates',function(Templates,Juggler,Backbone,Marionette,$,_){
+
+});
+
+Juggler.module('Views',function(Views,Juggler,Backbone,Marionette,$,_){
+
+});
+
+Juggler.module('Enities',function(Enities,Juggler,Backbone,Marionette,$,_){
+
+});
 
 
-  Juggler.on('start',function(){
+
+Juggler.addInitializer(function(){
+    
+    Juggler.Common.Notify(false,{
+      type: 'warning',
+      placement:{align: 'center'},
+      mouse_over:'pause',
+      z_index:9999,
+      animate: {
+    enter: 'animated bounceInDown',
+    exit: 'animated bounceOutUp'
+    }
+    });
+
+
+    Juggler.Common.Dialog.configDefaultOptions({
+      title:'提示：',
+      closeByBackdrop: false,
+    });
+
+    Common.ProgressBar({
+        state: 'success',
+        inchSpeed: 200,
+        initialBurst: 0,
+        flat: false
+    });
+
+  });
+
+
+Juggler.on('start',function(){
 
     if(Backbone.history)
         Backbone.history.start();
