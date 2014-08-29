@@ -1,7 +1,7 @@
 juggler
 =======
 
-A single page application scaffold based on Backbone.Marionette and Bootstrap. 
+An UI lib for Backbone.Marionette based on Bootstrap. 
 
 ##Initialize
 This project need `nodejs` and `npm` and `bower`.
