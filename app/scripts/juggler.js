@@ -96,10 +96,6 @@
     
     });
     
-    Juggler.addInitializer(function(){
-    Juggler.Common.Notify('Hello World!');
-});
-    
     
     Juggler.on('start', function() {
         
