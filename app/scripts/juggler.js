@@ -74,7 +74,21 @@
     });
     
     Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
-    
+        
+        Templates.layout = function(data) {
+            var $el = $('<div>');
+            $.each(data.regions, function(key, value) {
+                var $item = $('<div>');
+                if (value.indexOf('#') == 0)
+                    $item.attr('id', value.replace('#', ''));
+                else if (value.indexOf('.') == 0)
+                    $item.addClass(value.split('.').join(' '));
+                $el.append($item);
+            });
+            
+            return $el.html();
+        };
+        
     });
     
     Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
