@@ -175,6 +175,45 @@
     
     });
     
+    
+    Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
+        
+        Widgets.GroupItem = Juggler.Views.Item.extend({
+            className: 'list-group-item'
+        });
+        
+        Widgets.ListGroup = Juggler.Views.List.extend({
+            className: 'list-group',
+            childView: Widgets.GroupItem
+        });
+        
+        Widgets.Tabs = Juggler.Views.List.extend({
+            className: 'nav nav-tabs'
+        });
+        
+        Widgets.Pills = Juggler.Views.List.extend({
+            className: 'nav nav-pills'
+        });
+        
+        Widgets.Stack = Juggler.Views.List.extend({
+            className: 'nav nav-pills nav-stacked'
+        });
+        
+        Widgets.Nav = Juggler.Views.List.extend({
+            className: 'nav navbar-nav'
+        });
+    
+    });
+    
+    Juggler.module('Components', function(Components, Juggler, Backbone, Marionette, $, _) {
+        
+        Components.Navbar = Juggler.Views.CompositeView.extend({
+            
+        });
+        
+    });
+    
+    
     Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
         
         Enities.Model = Backbone.Model.extend({
