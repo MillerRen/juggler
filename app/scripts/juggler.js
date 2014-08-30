@@ -67,15 +67,7 @@
         };
     });
     
-    Juggler.module('Common', function(Common, Juggler, Backbone, Marionette, $, _) {
-        Common.dialog = BootstrapDialog;
-        Common.notify = $.growl;
-        Common.progressbar = function(options){
-            $(document).skylo(options);
-        };
-    });
-    
-    Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
+        Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
         
         Templates.layout = function(data) {
             var $el = $('<div>');
@@ -95,8 +87,8 @@
     
     Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         Views.ItemView = Marionette.ItemView.extend({
-            constructor: function() {
-                this.options = Marionette.getOption(this, 'defaults');
+            constructor: function(options) {
+                this.options = _.defaults(options,this.defaults);
                 Marionette.ItemView.prototype.constructor.apply(this, arguments);
             },
             template: _.template('')
@@ -177,6 +169,60 @@
     
     });
     
+    Juggler.module('Common', function(Common, Juggler, Backbone, Marionette, $, _) {
+        Common.dialog = BootstrapDialog;
+        
+        Common.Notice = Juggler.Views.ItemView.extend({
+            className:'alert alert-dismissable juggler-alert',
+            template:_.template('<button type="button" class="close" data-dismiss="alert">&times;</button><span class="message"><%= message %></span>'),
+            defaults:{
+                type:'warning'
+            },
+            initialize:function(options){
+                this.$el.addClass('alert-'+options.type);
+                
+            },
+            serializeData:function(){
+                return this.options;
+            },
+            onRender:function(){
+                this.$el.css('margin-left',-this.$el.outerWidth()/2+'px');
+            }
+        });
+        
+        Common.Progressbar = Marionette.ItemView.extend({
+            className:'progress progress-striped active juggler-progress',
+            template:_.template('<div class="progress-bar"></div>'),
+            defaults:{
+                type: 'success'
+            },
+            ui:{
+                bar:'.progress-bar'
+            },
+            modelEvents:{
+                'progress':'onProgress'
+            },
+            initialize:function(options){
+                this.options = _.defaults({},options,this.defaults);
+            },
+            progress:function(progress){
+                progress = progress<0?0:progress;
+                progress = progress>100?100:progress;
+                if(progress>=100)
+                   return this.destroy();
+                this.ui.bar.css('width',progress+'%');
+            },
+            onRender:function(){
+                this.ui.bar.addClass('progress-bar-'+this.options.type);
+            },
+            onProgress:function(progress){
+                this.progress(progress);
+            }
+        });
+        
+    });
+    
+
     
     Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
         
@@ -235,31 +281,13 @@
     
     
     
-    Juggler.addInitializer(function() {
-        
-        Juggler.Common.notify(false, {
-            type: 'warning',
-            placement: {align: 'center'},
-            mouse_over: 'pause',
-            z_index: 9999,
-            animate: {
-                enter: 'animated bounceInDown',
-                exit: 'animated bounceOutUp'
-            }
-        });
-        
+    Juggler.addInitializer(function() {        
         
         Juggler.Common.dialog.configDefaultOptions({
             title: '提示：',
             closeByBackdrop: false,
         });
         
-        $(document).skylo({
-            state: 'success',
-            inchSpeed: 200,
-            initialBurst: 0,
-            flat: false
-        });
     
     });
     
@@ -305,7 +333,9 @@
         Juggler.addRegions({
             headerRegion: '#header',
             mainRegion: '#main',
-            footerRegion: '#footer'
+            footerRegion: '#footer',
+            notifyRegion: '#notify',
+            dialogRegion: '#dialog'
         })
     
     });
