@@ -49,6 +49,86 @@
     });
     
     Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
+        Views.ItemView = Marionette.ItemView.extend({
+            constructor: function() {
+                this.options = Marionette.getOption(this, 'defaults');
+                Marionette.ItemView.prototype.constructor.apply(this, arguments);
+            },
+            template: _.template('')
+        });
+        
+        Views.EmptyView = Views.ItemView.extend({
+            className: 'alert alert-warning',
+            template: Juggler.Templates.empty,
+            defaults: {text: 'not found！'},
+            serializeData: function() {
+                return this.options
+            }
+        });
+        
+        Views.Layout = Marionette.LayoutView.extend({
+            constructor: function(options) {
+                this.options = Marionette.getOption(this, 'defaults');
+                this.regions = Marionette.getOption(this, 'regions') || {};
+                Marionette.LayoutView.prototype.constructor.apply(this, arguments);
+            },
+            defaults: {
+                regions: {}
+            },
+            className: 'row',
+            template: Juggler.Templates.layout,
+            onRender: function() {
+                var that = this, 
+                regions = Marionette.getOption(this, 'regions');
+                
+                this.addRegions(regions);
+                this.$el.find('[id]').each(function(i, item) {
+                    var id = $(item).attr('id');
+                    if (id)
+                        that.addRegion(id, '#' + id);
+                });
+            },
+            serializeData: function() {
+                return this.options;
+            }
+        });
+        
+        Views.CompositeView = Marionette.CompositeView.extend({
+            emptyView: Views.EmptyView,
+            childViewContainer: "",
+            template: _.template(''),
+            getChildView: function(item) {
+                return Views[item.get('viewType')] || Marionette.getOption(this, "childView") || this.constructor;
+            }
+        });
+        
+        Views.Item = Views.ItemView.extend({
+            tagName: 'li',
+            template: _.template('<a data-target="#<%- value %>" data-toggle="tab"><%- name %></a>'),
+            ui: {
+                links: 'a',
+                buttons: 'btn'
+            },
+            events: {
+                'click @ui.links': 'onClick',
+                'click @ui.buttons': 'onPress'
+            },
+            onClick: function() {
+                this.trigger('clicked', this.model);
+            },
+            onPress:function(){
+                thsi.trigger('pressed', this.model);
+            }
+        });
+        
+        
+        
+        Views.List = Views.CompositeView.extend({
+            tagName: 'ul',
+            template: _.template(''),
+            childView: Views.Item
+        });
+        
     
     });
     
@@ -85,6 +165,43 @@
         });
     
     });
+    
+    
+    Juggler.addInitializer(function() {
+        
+        Juggler.vent.on('syncStart', function(model, data) {
+            if (model.silent)
+                return;
+            Juggler.Common.ProgressBar('start');
+        });
+        
+        Juggler.vent.on('syncDone', function(model, data) {
+            if (model.silent)
+                return;
+            $(document).skylo('end');
+            Juggler.Common.Notify(model.message.SYNC_DONE);
+        });
+        
+        Juggler.vent.on('syncFail', function(model, data) {
+            if (model.silent)
+                return;
+            $(document).skylo('end');
+            Juggler.Common.Notify(model.message.SYNC_FAIL, {
+                animate: {
+                    enter: 'animated shake',
+                    exit: 'animated shake'
+                }
+            });
+        });
+        
+        Juggler.vent.on('syncProgress', function(model, data) {
+            if (model.silent)
+                return;
+            $(document).skylo('set', data);
+        });
+    
+    });
+    
     
     Juggler.addInitializer(function() {
         
