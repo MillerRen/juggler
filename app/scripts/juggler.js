@@ -32,6 +32,35 @@
     Backbone.Juggler = Juggler;
     
     
+    Backbone.ajaxSync = Backbone.sync;
+    
+    Backbone.sync = function Sync(method, model, options) {
+        var xhr = Backbone.ajaxSync.apply(this, arguments);
+        
+        Juggler.vent.trigger('syncStart', model);
+        
+        xhr.done(function(data) {
+            model.trigger('done', data);
+            Juggler.vent.trigger('syncDone', data);
+        })
+        .fail(function(data) {
+            model.trigger('fail', data);
+            Juggler.vent.trigger('syncFail', model, data);
+        })
+        .progress(function(data) {
+            model.trigger('progress', model, data);
+            Juggler.vent.trigger('syncProgress', model, data);
+        })
+        .complete(function(data) {
+            model.trigger('complete', model, data);
+            Juggler.vent.trigger('syncComplete');
+        });
+        
+        return xhr;
+    };
+    
+    
+    
     Juggler.module('Config', function(Config, Juggler, Backbone, Marionette, $, _) {
         Config.Message = {
         
@@ -133,7 +162,20 @@
     });
     
     Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
-    
+        
+        Enities.Model = Backbone.Model.extend({
+            url: '/test',
+            silent: false,
+            message: Juggler.Message,
+            parse: function(res, options) {
+                return options.collection ? resp : resp.data;
+            }
+        });
+        
+        Enities.Collection = Backbone.Collection.extend({
+            
+        });
+        
     });
     
     
