@@ -68,9 +68,11 @@
     });
     
     Juggler.module('Common', function(Common, Juggler, Backbone, Marionette, $, _) {
-        Common.Dialog = BootstrapDialog;
-        Common.Notify = $.growl;
-        Common.ProgressBar = $(document).skylo;
+        Common.dialog = BootstrapDialog;
+        Common.notify = $.growl;
+        Common.progressbar = function(options){
+            $(document).skylo(options);
+        };
     });
     
     Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
@@ -235,7 +237,7 @@
     
     Juggler.addInitializer(function() {
         
-        Juggler.Common.Notify(false, {
+        Juggler.Common.notify(false, {
             type: 'warning',
             placement: {align: 'center'},
             mouse_over: 'pause',
@@ -247,7 +249,7 @@
         });
         
         
-        Juggler.Common.Dialog.configDefaultOptions({
+        Juggler.Common.dialog.configDefaultOptions({
             title: '提示：',
             closeByBackdrop: false,
         });
