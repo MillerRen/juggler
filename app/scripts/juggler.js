@@ -267,7 +267,7 @@
         Juggler.vent.on('syncStart', function(model, data) {
             if (model.silent)
                 return;
-            Juggler.Common.ProgressBar('start');
+            $(document).skylo('start');
         });
         
         Juggler.vent.on('syncDone', function(model, data) {
