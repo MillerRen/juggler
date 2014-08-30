@@ -77,7 +77,7 @@ Juggler.addInitializer(function(){
       closeByBackdrop: false,
     });
 
-    Common.ProgressBar({
+    Juggler.Common.ProgressBar({
         state: 'success',
         inchSpeed: 200,
         initialBurst: 0,
