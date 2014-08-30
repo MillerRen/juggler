@@ -1,7 +1,7 @@
 juggler
 =======
 
-Juggler is an UI lib for Backbone.Marionette based on Bootstrap. 
+Juggler is an UI Kits for Backbone.Marionette based on Bootstrap. 
 This project entirely is a front end scaffold based on nodejs and with yeoman.
 
 ##Initialize
