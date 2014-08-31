@@ -21,7 +21,6 @@
   "dependencies": {
     "jquery": ">1.10.0",
     "bootstrap": ">3.0.0",
-    "bootstrap3-dialog": ">=1.33.4",
     "animate.css": ">=3.2.0",
     "marionette": ">=2.0.0",
     "backbone-forms": "master",

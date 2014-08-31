@@ -67,7 +67,7 @@
         };
     });
     
-        Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
+    Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
         
         Templates.layout = function(data) {
             var $el = $('<div>');
@@ -82,6 +82,19 @@
             
             return $el.html();
         };
+        
+        Templates.dialog = _.template('<div class="modal-dialog">\
+                <div class="modal-content">\
+                    <div class="modal-header">\
+                     <button type="button" class="close" data-dismiss="modal">\
+                     <span aria-hidden="true">&times;</span>\
+                     <span class="sr-only">Close</span></button>\
+                     <h4 class="modal-title">标题</h4>\
+                    </div>\
+                    <div class="modal-body"></div>\
+                    <div class="modal-footer"></div>\
+                </div>\
+            </div>');
         
     });
     
@@ -170,23 +183,49 @@
     });
     
     Juggler.module('Common', function(Common, Juggler, Backbone, Marionette, $, _) {
-        Common.dialog = BootstrapDialog;
+        
+        Common.Dialog = Juggler.Views.Layout.extend({
+            className:'modal fade',
+            template:Juggler.Templates.dialog,
+            ui:{
+                header:'.modal-header',
+                body:'.modal-body',
+                footer:'.modal-footer'
+            },
+            regions:{
+                headerRegion:'.modal-header',
+                bodyRegion:'.modal-body',
+                footerRegion:'.modal-footer'
+            },
+            onRender:function(){
+                this.ui.header.addClass('alert alert-success')
+            },
+            onShow:function(){
+                this.$el.modal();
+            }
+        });
         
         Common.Notice = Juggler.Views.ItemView.extend({
-            className:'alert alert-dismissable juggler-alert',
+            className:'alert alert-dismissable fade in animated juggler-alert',
             template:_.template('<button type="button" class="close" data-dismiss="alert">&times;</button><span class="message"><%= message %></span>'),
             defaults:{
                 type:'warning'
             },
+            events:{
+                'close.bs.alert':'onClose'
+            },
             initialize:function(options){
                 this.$el.addClass('alert-'+options.type);
-                
             },
             serializeData:function(){
                 return this.options;
             },
-            onRender:function(){
+            onShow:function(){
                 this.$el.css('margin-left',-this.$el.outerWidth()/2+'px');
+                this.$el.addClass('bounceInDown')
+            },
+            onClose:function(e){
+                this.destroy();
             }
         });
         
@@ -283,10 +322,6 @@
     
     Juggler.addInitializer(function() {        
         
-        Juggler.Common.dialog.configDefaultOptions({
-            title: '提示：',
-            closeByBackdrop: false,
-        });
         
     
     });
