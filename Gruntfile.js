@@ -139,7 +139,7 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     run: true,
-                    urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/index.html']
+                    urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/test.html']
                 }
             }
         },
@@ -163,6 +163,12 @@ module.exports = function (grunt) {
         wiredep: {
             app: {
                 src: ['<%= config.app %>/index.html'],
+                //exclude: ['bower_components/bootstrap/dist/js/bootstrap.js'],
+                //devDependencies: true, // default: false
+                includeSelf: true,     // default: false
+            },
+            test: {
+                src: ['<%= config.app %>/test.html'],
                 //exclude: ['bower_components/bootstrap/dist/js/bootstrap.js'],
                 devDependencies: true, // default: false
                 includeSelf: true,     // default: false

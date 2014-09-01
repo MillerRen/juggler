@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="../bower_components/animate.css/animate.css" />
         <link rel="stylesheet" href="../bower_components/backgrid/lib/backgrid.css" />
         <link rel="stylesheet" href="../bower_components/backgrid-paginator/backgrid-paginator.css" />
+        <link rel="stylesheet" href="../bower_components/mocha/mocha.css" />
         <link rel="stylesheet" href="styles/juggler.css" />
         <!-- endbower -->
         <!-- endbuild -->
@@ -48,6 +49,9 @@
         <script src="../bower_components/backgrid/lib/backgrid.js"></script>
         <script src="../bower_components/backbone-pageable/lib/backbone-pageable.js"></script>
         <script src="../bower_components/backgrid-paginator/backgrid-paginator.js"></script>
+        <script src="../bower_components/mocha/mocha.js"></script>
+        <script src="../bower_components/chai/chai.js"></script>
+        <script src="../bower_components/sinonjs/sinon.js"></script>
         <script src="scripts/juggler.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
@@ -66,6 +70,13 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
+
+        <script>mocha.setup('tdd');</script>
+        <!-- build:js scripts/test.min.js -->
+        <script src="/scripts/test.js"></script>
+        <!-- endbuild -->
+
+        <script>window.mochaPhantomJS?mochaPhantomJS.run():mocha.run();</script>
         
 </body>
 </html>
