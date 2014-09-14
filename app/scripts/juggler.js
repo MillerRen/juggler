@@ -340,20 +340,20 @@
         Juggler.vent.on('syncStart', function(model, data) {
             if (model.silent)
                 return;
-            $(document).skylo('start');
+            
         });
         
         Juggler.vent.on('syncDone', function(model, data) {
             if (model.silent)
                 return;
-            $(document).skylo('end');
+            
             Juggler.Common.Notify(model.message.SYNC_DONE);
         });
         
         Juggler.vent.on('syncFail', function(model, data) {
             if (model.silent)
                 return;
-            $(document).skylo('end');
+            
             Juggler.Common.Notify(model.message.SYNC_FAIL, {
                 animate: {
                     enter: 'animated shake',
@@ -365,7 +365,7 @@
         Juggler.vent.on('syncProgress', function(model, data) {
             if (model.silent)
                 return;
-            $(document).skylo('set', data);
+            
         });
     
     });
