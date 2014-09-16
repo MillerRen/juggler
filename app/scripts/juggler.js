@@ -62,9 +62,12 @@
     
     
     Juggler.module('Config', function(Config, Juggler, Backbone, Marionette, $, _) {
+        
         Config.Message = {
         
         };
+        
+        Config.BaseUrl = 'http://localhost:9000';
     });
     
     Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
@@ -130,9 +133,6 @@
                 this.regions = Marionette.getOption(this, 'regions') || {};
                 Marionette.LayoutView.prototype.constructor.apply(this, arguments);
             },
-            defaults: {
-                regions: {}
-            },
             className: 'row',
             template: Juggler.Templates.layout,
             onRender: function() {
@@ -195,6 +195,9 @@
         Common.Dialog = Juggler.Views.Layout.extend({
             className:'modal fade',
             template:Juggler.Templates.dialog,
+            defaults:{
+                type:'success'
+            },
             ui:{
                 header:'.modal-header',
                 body:'.modal-body',
@@ -206,10 +209,13 @@
                 footerRegion:'.modal-footer'
             },
             onRender:function(){
-                this.ui.header.addClass('alert alert-success')
+                this.ui.header.addClass('alert alert-'+this.options.type);
             },
             onShow:function(){
                 this.$el.modal();
+            },
+            onClose:function(){
+                this.$el.modal('destroy');
             }
         });
         
