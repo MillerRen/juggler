@@ -92,9 +92,9 @@
                      <button type="button" class="close" data-dismiss="modal">\
                      <span aria-hidden="true">&times;</span>\
                      <span class="sr-only">Close</span></button>\
-                     <h4 class="modal-title">标题</h4>\
+                     <h4 class="modal-title"><%= title %></h4>\
                     </div>\
-                    <div class="modal-body"></div>\
+                    <div class="modal-body"><%= content %></div>\
                     <div class="modal-footer"></div>\
                 </div>\
             </div>');
@@ -196,7 +196,13 @@
             className:'modal fade',
             template:Juggler.Templates.dialog,
             defaults:{
-                type:'success'
+                type:'success',
+                title:'',
+                content:'',
+                buttons:{
+                    'positive':{},
+                    'negative':{}
+                }
             },
             ui:{
                 header:'.modal-header',
@@ -210,6 +216,10 @@
             },
             onRender:function(){
                 this.ui.header.addClass('alert alert-'+this.options.type);
+                if(!this.options.buttons){
+                    this.ui.footer.remove()
+                    return;
+                }
             },
             onShow:function(){
                 this.$el.modal();
