@@ -130,10 +130,10 @@
         Views.Layout = Marionette.LayoutView.extend({
             constructor: function(options) {
                 this.options = Marionette.getOption(this, 'defaults');
+                _.extend(this.options,options);
                 this.regions = Marionette.getOption(this, 'regions') || {};
                 Marionette.LayoutView.prototype.constructor.apply(this, arguments);
             },
-            className: 'row',
             template: Juggler.Templates.layout,
             onRender: function() {
                 var that = this, 
@@ -202,7 +202,8 @@
                 buttons:{
                     'positive':{},
                     'negative':{}
-                }
+                },
+                backdrop:'static'
             },
             ui:{
                 header:'.modal-header',
@@ -222,7 +223,7 @@
                 }
             },
             onShow:function(){
-                this.$el.modal();
+                this.$el.modal(this.options);
             },
             onClose:function(){
                 this.$el.modal('destroy');
