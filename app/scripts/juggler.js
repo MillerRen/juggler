@@ -72,20 +72,6 @@
     
     Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
         
-        Templates.layout = function(data) {
-            var $el = $('<div>');
-            $.each(data.regions, function(key, value) {
-                var $item = $('<div>');
-                if (value.indexOf('#') == 0)
-                    $item.attr('id', value.replace('#', ''));
-                else if (value.indexOf('.') == 0)
-                    $item.addClass(value.split('.').join(' '));
-                $el.append($item);
-            });
-            
-            return $el.html();
-        };
-        
         Templates.dialog = _.template('<div class="modal-dialog">\
                 <div class="modal-content">\
                     <div class="modal-header">\
@@ -134,16 +120,17 @@
                 this.regions = Marionette.getOption(this, 'regions') || {};
                 Marionette.LayoutView.prototype.constructor.apply(this, arguments);
             },
-            template: Juggler.Templates.layout,
+            template: _.template(''),
             onRender: function() {
                 var that = this, 
                 regions = Marionette.getOption(this, 'regions');
                 
                 this.addRegions(regions);
-                this.$el.find('[id]').each(function(i, item) {
-                    var id = $(item).attr('id');
-                    if (id)
-                        that.addRegion(id, '#' + id);
+
+                this.$el.find('[data-region]').each(function(i, item) {
+                    var region = $(item).attr('data-region');
+                    if (region)
+                        that.addRegion($.camelCase(region), '[data-region=' + region+']');
                 });
             },
             serializeData: function() {
