@@ -22,10 +22,7 @@
     "jquery": ">1.10.0",
     "bootstrap": ">3.0.0",
     "animate.css": ">=3.2.0",
-    "marionette": ">=2.0.0",
-    "backbone-forms": "master",
-    "backgrid": ">0.3.0",
-    "backgrid-paginator": "~0.3.5"
+    "marionette": ">=2.0.0"
   },
   "devDependencies": {
     "mocha": "~1.21.4",
