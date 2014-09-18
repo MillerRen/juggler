@@ -329,24 +329,18 @@
     Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
         
         Enities.Model = Backbone.Model.extend({
-            api: '/test',
+            url: '/test',
             silent: true,
             message: Juggler.Message,
             parse: function(res, options) {
                 return options.collection ? resp : resp.data;
-            },
-            url:function(){
-                return Juggler.Config.BaseUrl + this.url;
             }
         });
         
         Enities.Collection = Backbone.Collection.extend({
-            api:'/test',
+            url:'/test',
             silent:true,
-            message: Juggler.Message,
-            url:function(){
-                return Juggler.Config.BaseUrl + this.url;
-            }
+            message: Juggler.Message
         });
         
     });
