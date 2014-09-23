@@ -1,1 +1,1 @@
-console.log("'Allo 'Allo!");
+Juggler.addInitializer(function(){var a=new Juggler.Common.Dialog({title:"hi",content:"hello"});Juggler.dialogRegion.show(a)}),$(function(){Juggler.start()});
