@@ -4,7 +4,7 @@ Juggler.addInitializer(function(){
     //Juggler.notifyRegion.show(pr);
     var dialog = new Juggler.Common.Dialog({
         title:'hi',
-        content:'hello'
+        content:'hello world'
     });
     Juggler.dialogRegion.show(dialog);
 });

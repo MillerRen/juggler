@@ -81,7 +81,9 @@
                      <h4 class="modal-title"><%= title %></h4>\
                     </div>\
                     <div class="modal-body"><%= content %></div>\
-                    <div class="modal-footer"></div>\
+                    <div class="modal-footer">\
+                    <button class="btn btn-primary">确定</button>\
+                    </div>\
                 </div>\
             </div>');
        
@@ -307,6 +309,15 @@
     Juggler.module('Components', function(Components, Juggler, Backbone, Marionette, $, _) {
         
         Components.Navbar = Juggler.Views.CompositeView.extend({
+            
+        });
+        
+        
+        Components.Form = Juggler.Views.CompositeView.extend({
+            
+        });
+        
+        Components.Form.Field = Juggler.Views.ItemView.extend({
             
         });
         
