@@ -178,10 +178,11 @@
         
     
     });
+
     
-    Juggler.module('Common', function(Common, Juggler, Backbone, Marionette, $, _) {
+    Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
         
-        Common.Dialog = Juggler.Views.Layout.extend({
+        Widgets.Dialog = Juggler.Views.Layout.extend({
             className:'modal fade',
             template:Juggler.Templates.dialog,
             defaults:{
@@ -219,7 +220,7 @@
             }
         });
         
-        Common.Notice = Juggler.Views.ItemView.extend({
+        Widgets.Notice = Juggler.Views.ItemView.extend({
             className:'alert alert-dismissable fade in animated juggler-alert',
             template:Juggler.Templates.alert,
             defaults:{
@@ -243,7 +244,7 @@
             }
         });
         
-        Common.Progressbar = Marionette.ItemView.extend({
+        Widgets.Progressbar = Marionette.ItemView.extend({
             className:'progress progress-striped active juggler-progress',
             template:_.template('<div class="progress-bar"></div>'),
             defaults:{
@@ -272,12 +273,6 @@
                 this.progress(progress);
             }
         });
-        
-    });
-    
-
-    
-    Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
         
         Widgets.GroupItem = Juggler.Views.Item.extend({
             className: 'list-group-item'
