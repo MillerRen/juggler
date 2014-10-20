@@ -298,15 +298,14 @@
         Widgets.Nav = Juggler.Views.List.extend({
             className: 'nav navbar-nav'
         });
+
+        Widgets.Navbar = Juggler.Views.CompositeView.extend({
+            
+        });
     
     });
     
     Juggler.module('Components', function(Components, Juggler, Backbone, Marionette, $, _) {
-        
-        Components.Navbar = Juggler.Views.CompositeView.extend({
-            
-        });
-        
         
         Components.Form = Juggler.Views.CompositeView.extend({
             
