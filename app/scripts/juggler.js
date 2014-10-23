@@ -304,6 +304,10 @@
         });
     
     });
+
+    Juggler.module('Editors',function(Editors, Juggler, Backbone,Marionette, $, _){
+        
+    });
     
     Juggler.module('Components', function(Components, Juggler, Backbone, Marionette, $, _) {
         

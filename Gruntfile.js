@@ -44,6 +44,10 @@ module.exports = function (grunt) {
                 files: ['test/spec/{,*/}*.js'],
                 tasks: ['test:watch']
             },
+            preprocess: {
+              files: ['<%= config.app %>/scripts/juggler/{,*/}*.js'],
+              tasks: ['preprocess:core']  
+            },
             gruntfile: {
                 files: ['Gruntfile.js']
             },
@@ -60,6 +64,13 @@ module.exports = function (grunt) {
                     '.tmp/styles/{,*/}*.css',
                     '<%= config.app %>/images/{,*/}*'
                 ]
+            }
+        },
+
+        preprocess:{
+            core:{
+                src:'<%= config.app %>/scripts/juggler/juggler.js',
+                dest:'<%= config.app %>/scripts/juggler.core.js'
             }
         },
 
@@ -328,6 +339,7 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
+            'preprocess',
             'clean:server',
             'concurrent:server',
             'autoprefixer',
