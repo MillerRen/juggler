@@ -320,12 +320,21 @@
     
     Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
         
-        Enities.Model = Backbone.Model.extend({
+        Enities.Model = Backbone.RelationalModel.extend({
             url: '/test',
             silent: true,
             message: Juggler.Message,
             parse: function(res, options) {
                 return options.collection ? resp : resp.data;
+            },
+            index:function(){
+                return this.collection.indexOf(this);
+            },
+            prev:function(){
+                return this.collection.at(this.index()-1);
+            },
+            next:function(){
+                return this.collection.at(this.index()+1);
             }
         });
         
@@ -342,42 +351,6 @@
     Juggler.addInitializer(function() {        
         
         
-    
-    });
-    
-    
-    Juggler.addInitializer(function() {
-        
-        Juggler.vent.on('syncStart', function(model, data) {
-            if (model.silent)
-                return;
-            
-        });
-        
-        Juggler.vent.on('syncDone', function(model, data) {
-            if (model.silent)
-                return;
-            
-            Juggler.Common.Notify(model.message.SYNC_DONE);
-        });
-        
-        Juggler.vent.on('syncFail', function(model, data) {
-            if (model.silent)
-                return;
-            
-            Juggler.Common.Notify(model.message.SYNC_FAIL, {
-                animate: {
-                    enter: 'animated shake',
-                    exit: 'animated shake'
-                }
-            });
-        });
-        
-        Juggler.vent.on('syncProgress', function(model, data) {
-            if (model.silent)
-                return;
-            
-        });
     
     });
     
