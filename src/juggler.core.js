@@ -35,6 +35,8 @@
 
     // @include ./juggler.templates.js
 
+    // @include ./juggler.enities.js
+
     // @include ./juggler.views.js
 
     // @include ./juggler.widgets.js

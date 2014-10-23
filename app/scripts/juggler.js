@@ -40,31 +40,64 @@
     });
 
     Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
-            
-            Templates.dialog = _.template('<div class="modal-dialog">\
-                    <div class="modal-content">\
-                        <div class="modal-header">\
-                         <button type="button" class="close" data-dismiss="modal">\
-                         <span aria-hidden="true">&times;</span>\
-                         <span class="sr-only">Close</span></button>\
-                         <h4 class="modal-title"><%= title %></h4>\
-                        </div>\
-                        <div class="modal-body"><%= content %></div>\
-                        <div class="modal-footer">\
-                        <button class="btn btn-primary">确定</button>\
-                        </div>\
-                    </div>\
-                </div>');
-           
-            Templates.alert = _.template('<button type="button" class="close" data-dismiss="alert">\
-                    <span aria-hidden="true">&times;</span>\
-                    <span class="sr-only">Close</span>\
-                </button>\
-                <span class="alert-message">\
-                    <%= message %>\
-                </span>');
     
+        Templates.dialog = _.template('<div class="modal-dialog">\
+                <div class="modal-content">\
+                    <div class="modal-header">\
+                     <button type="button" class="close" data-dismiss="modal">\
+                     <span aria-hidden="true">&times;</span>\
+                     <span class="sr-only">Close</span></button>\
+                     <h4 class="modal-title"><%= title %></h4>\
+                    </div>\
+                    <div class="modal-body"><%= content %></div>\
+                    <div class="modal-footer">\
+                    <button class="btn btn-primary">确定</button>\
+                    </div>\
+                </div>\
+            </div>');
+    
+        Templates.alert = _.template('<button type="button" class="close" data-dismiss="alert">\
+                <span aria-hidden="true">&times;</span>\
+                <span class="sr-only">Close</span>\
+            </button>\
+            <span class="alert-message">\
+                <%= message %>\
+            </span>');
+    
+        Templates.form = _.template('');
+    
+        Templates.form_row = _.template(
+            '<label class="col-md-2 contorl-label"><%- label %></label>\
+            <div class="col-md-10"></div>\
+            ');
+    
+    });
+
+    Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
+    
+        Enities.Model = Backbone.RelationalModel.extend({
+            urlRoot: '/test',
+            message: Juggler.Message,
+            parse: function(res, options) {
+                return options.collection ? resp : resp.data;
+            },
+            index:function(){
+                return this.collection.indexOf(this);
+            },
+            prev:function(){
+                return this.collection.at(this.index()-1);
+            },
+            next:function(){
+                return this.collection.at(this.index()+1);
+            }
         });
+    
+        Enities.Collection = Backbone.Collection.extend({
+            url:'/test',
+            message: Juggler.Message
+        });
+    
+    });
 
     Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         
@@ -276,13 +309,17 @@
 
     Juggler.module('Components', function(Components, Juggler, Backbone, Marionette, $, _) {
     
+        Components.FormRow = Juggler.Views.ItemView.extend({
+            className:'form-group',
+            template:Juggler.Templates.form_row
+        });
+        
         Components.Form = Juggler.Views.CompositeView.extend({
-    
+            tagName:'form',
+            childView:Components.FormRow
         });
     
-        Components.Form.Field = Juggler.Views.ItemView.extend({
-    
-        });
+        
     
     });
 

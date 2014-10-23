@@ -17,6 +17,7 @@ module.exports = function (grunt) {
 
     // Configurable paths
     var config = {
+        src: 'src',
         app: 'app',
         dist: 'dist'
     };
@@ -33,19 +34,19 @@ module.exports = function (grunt) {
                 files: ['bower.json'],
                 tasks: ['wiredep']
             },
-//             js: {
-//                 files: ['<%= config.app %>/scripts/{,*/}*.js'],
-//                 tasks: ['jshint'],
-//                 options: {
-//                     livereload: true
-//                 }
-//             },
+             js: {
+                 files: ['<%= config.app %>/scripts/*.js'],
+                 tasks: [],
+                 options: {
+                     livereload: true
+                 }
+             },
             jstest: {
                 files: ['test/spec/{,*/}*.js'],
                 tasks: ['test:watch']
             },
             preprocess: {
-              files: ['<%= config.app %>/scripts/juggler/{,*/}*.js'],
+              files: ['<%= config.src %>/{,*/}*.js'],
               tasks: ['preprocess:core']  
             },
             gruntfile: {
@@ -69,7 +70,7 @@ module.exports = function (grunt) {
 
         preprocess:{
             core:{
-                src:'<%= config.app %>/scripts/juggler/juggler.core.js',
+                src:'<%= config.src %>/juggler.core.js',
                 dest:'<%= config.app %>/scripts/juggler.js'
             }
         },
