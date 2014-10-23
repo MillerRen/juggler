@@ -33,13 +33,13 @@ module.exports = function (grunt) {
                 files: ['bower.json'],
                 tasks: ['wiredep']
             },
-            js: {
-                files: ['<%= config.app %>/scripts/{,*/}*.js'],
-                tasks: ['jshint'],
-                options: {
-                    livereload: true
-                }
-            },
+//             js: {
+//                 files: ['<%= config.app %>/scripts/{,*/}*.js'],
+//                 tasks: ['jshint'],
+//                 options: {
+//                     livereload: true
+//                 }
+//             },
             jstest: {
                 files: ['test/spec/{,*/}*.js'],
                 tasks: ['test:watch']
@@ -69,8 +69,8 @@ module.exports = function (grunt) {
 
         preprocess:{
             core:{
-                src:'<%= config.app %>/scripts/juggler/juggler.js',
-                dest:'<%= config.app %>/scripts/juggler.core.js'
+                src:'<%= config.app %>/scripts/juggler/juggler.core.js',
+                dest:'<%= config.app %>/scripts/juggler.js'
             }
         },
 

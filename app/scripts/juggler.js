@@ -31,73 +31,43 @@
     
     Backbone.Juggler = Juggler;
     
-    
-    Backbone.ajaxSync = Backbone.sync;
-    
-    Backbone.sync = function Sync(method, model, options) {
-        var xhr = Backbone.ajaxSync.apply(this, arguments);
-        
-        Juggler.vent.trigger('syncStart', model);
-        
-        xhr.done(function(data) {
-            model.trigger('done', data);
-            Juggler.vent.trigger('syncDone', data);
-        })
-        .fail(function(data) {
-            model.trigger('fail', data);
-            Juggler.vent.trigger('syncFail', model, data);
-        })
-        .progress(function(data) {
-            model.trigger('progress', model, data);
-            Juggler.vent.trigger('syncProgress', model, data);
-        })
-        .complete(function(data) {
-            model.trigger('complete', model, data);
-            Juggler.vent.trigger('syncComplete');
-        });
-        
-        return xhr;
-    };
-    
-    
-    
     Juggler.module('Config', function(Config, Juggler, Backbone, Marionette, $, _) {
-        
+    
         Config.Message = {
-        
+    
         };
-        
-        Config.BaseUrl = 'http://localhost:9000';
-    });
     
-    Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
-        
-        Templates.dialog = _.template('<div class="modal-dialog">\
-                <div class="modal-content">\
-                    <div class="modal-header">\
-                     <button type="button" class="close" data-dismiss="modal">\
-                     <span aria-hidden="true">&times;</span>\
-                     <span class="sr-only">Close</span></button>\
-                     <h4 class="modal-title"><%= title %></h4>\
-                    </div>\
-                    <div class="modal-body"><%= content %></div>\
-                    <div class="modal-footer">\
-                    <button class="btn btn-primary">确定</button>\
-                    </div>\
-                </div>\
-            </div>');
-       
-        Templates.alert = _.template('<button type="button" class="close" data-dismiss="alert">\
-                <span aria-hidden="true">&times;</span>\
-                <span class="sr-only">Close</span>\
-            </button>\
-            <span class="alert-message">\
-                <%= message %>\
-            </span>');
+    });
 
-    });
+    Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
+            
+            Templates.dialog = _.template('<div class="modal-dialog">\
+                    <div class="modal-content">\
+                        <div class="modal-header">\
+                         <button type="button" class="close" data-dismiss="modal">\
+                         <span aria-hidden="true">&times;</span>\
+                         <span class="sr-only">Close</span></button>\
+                         <h4 class="modal-title"><%= title %></h4>\
+                        </div>\
+                        <div class="modal-body"><%= content %></div>\
+                        <div class="modal-footer">\
+                        <button class="btn btn-primary">确定</button>\
+                        </div>\
+                    </div>\
+                </div>');
+           
+            Templates.alert = _.template('<button type="button" class="close" data-dismiss="alert">\
+                    <span aria-hidden="true">&times;</span>\
+                    <span class="sr-only">Close</span>\
+                </button>\
+                <span class="alert-message">\
+                    <%= message %>\
+                </span>');
     
+        });
+
     Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
+        
         Views.ItemView = Marionette.ItemView.extend({
             constructor: function(options) {
                 this.options = _.defaults(options,this.defaults);
@@ -105,7 +75,7 @@
             },
             template: _.template('')
         });
-        
+    
         Views.EmptyView = Views.ItemView.extend({
             className: 'alert alert-warning',
             template: Juggler.Templates.empty,
@@ -114,7 +84,7 @@
                 return this.options
             }
         });
-        
+    
         Views.Layout = Marionette.LayoutView.extend({
             constructor: function(options) {
                 this.options = Marionette.getOption(this, 'defaults');
@@ -126,9 +96,9 @@
             onRender: function() {
                 var that = this, 
                 regions = Marionette.getOption(this, 'regions');
-                
+    
                 this.addRegions(regions);
-
+    
                 this.$el.find('[data-region]').each(function(i, item) {
                     var region = $(item).attr('data-region');
                     if (region)
@@ -139,7 +109,7 @@
                 return this.options;
             }
         });
-        
+    
         Views.CompositeView = Marionette.CompositeView.extend({
             emptyView: Views.EmptyView,
             childViewContainer: "",
@@ -148,7 +118,7 @@
                 return Views[item.get('viewType')] || Marionette.getOption(this, "childView") || this.constructor;
             }
         });
-        
+    
         Views.Item = Views.ItemView.extend({
             tagName: 'li',
             template: _.template('<a data-target="#<%- value %>" data-toggle="tab"><%- name %></a>'),
@@ -167,21 +137,20 @@
                 thsi.trigger('pressed', this.model);
             }
         });
-        
-        
-        
+    
+    
+    
         Views.List = Views.CompositeView.extend({
             tagName: 'ul',
             template: _.template(''),
             childView: Views.Item
         });
-        
+    
     
     });
 
-    
     Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
-        
+    
         Widgets.Dialog = Juggler.Views.Layout.extend({
             className:'modal fade',
             template:Juggler.Templates.dialog,
@@ -219,7 +188,7 @@
                 this.$el.modal('destroy');
             }
         });
-        
+    
         Widgets.Notice = Juggler.Views.ItemView.extend({
             className:'alert alert-dismissable fade in animated juggler-alert',
             template:Juggler.Templates.alert,
@@ -243,7 +212,7 @@
                 this.destroy();
             }
         });
-        
+    
         Widgets.Progressbar = Marionette.ItemView.extend({
             className:'progress progress-striped active juggler-progress',
             template:_.template('<div class="progress-bar"></div>'),
@@ -273,94 +242,52 @@
                 this.progress(progress);
             }
         });
-        
+    
         Widgets.GroupItem = Juggler.Views.Item.extend({
             className: 'list-group-item'
         });
-        
+    
         Widgets.ListGroup = Juggler.Views.List.extend({
             className: 'list-group',
             childView: Widgets.GroupItem
         });
-        
+    
         Widgets.Tabs = Juggler.Views.List.extend({
             className: 'nav nav-tabs'
         });
-        
+    
         Widgets.Pills = Juggler.Views.List.extend({
             className: 'nav nav-pills'
         });
-        
+    
         Widgets.Stack = Juggler.Views.List.extend({
             className: 'nav nav-pills nav-stacked'
         });
-        
+    
         Widgets.Nav = Juggler.Views.List.extend({
             className: 'nav navbar-nav'
         });
-
+    
         Widgets.Navbar = Juggler.Views.CompositeView.extend({
-            
+    
         });
     
     });
 
-    Juggler.module('Editors',function(Editors, Juggler, Backbone,Marionette, $, _){
-        
-    });
-    
     Juggler.module('Components', function(Components, Juggler, Backbone, Marionette, $, _) {
-        
+    
         Components.Form = Juggler.Views.CompositeView.extend({
-            
+    
         });
-        
+    
         Components.Form.Field = Juggler.Views.ItemView.extend({
-            
+    
         });
-        
-    });
-    
-    
-    Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
-        
-        Enities.Model = Backbone.RelationalModel.extend({
-            url: '/test',
-            silent: true,
-            message: Juggler.Message,
-            parse: function(res, options) {
-                return options.collection ? resp : resp.data;
-            },
-            index:function(){
-                return this.collection.indexOf(this);
-            },
-            prev:function(){
-                return this.collection.at(this.index()-1);
-            },
-            next:function(){
-                return this.collection.at(this.index()+1);
-            }
-        });
-        
-        Enities.Collection = Backbone.Collection.extend({
-            url:'/test',
-            silent:true,
-            message: Juggler.Message
-        });
-        
-    });
-    
-    
-    
-    Juggler.addInitializer(function() {        
-        
-        
     
     });
-    
     
     Juggler.addInitializer(function() {
-        
+    
         Juggler.addRegions({
             headerRegion: '#header',
             mainRegion: '#main',
@@ -371,9 +298,8 @@
     
     });
     
-    
     Juggler.on('start', function() {
-        
+    
         if (Backbone.history)
             Backbone.history.start();
     
