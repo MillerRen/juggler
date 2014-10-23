@@ -285,7 +285,13 @@
         });
     
     });
+
+    Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
     
+        
+    
+    });
+
     Juggler.addInitializer(function() {
     
         Juggler.addRegions({
