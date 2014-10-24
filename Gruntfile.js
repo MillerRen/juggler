@@ -19,8 +19,11 @@ module.exports = function (grunt) {
     var config = {
         src: 'src',
         app: 'app',
-        dist: 'dist'
+        dist: 'dist',
+        tmp: 'tmp'
     };
+
+    var path = require('path');
 
     // Define the configuration for all the tasks
     grunt.initConfig({
@@ -75,6 +78,20 @@ module.exports = function (grunt) {
             }
         },
 
+        express: {
+          server: {
+              options: {
+                hostname: '*',
+                port: 9000,
+                bases: ['<%= config.tmp %>', '<%= config.app %>', '<%= config.dist %>'],
+                server: './server/index.js',
+                livereload: true,
+                serverreload: true,
+                logger: true
+              }
+            }
+        },
+/*
         // The actual grunt server settings
         connect: {
             options: {
@@ -116,7 +133,7 @@ module.exports = function (grunt) {
                 }
             }
         },
-
+*/
         // Empties folders to start fresh
         clean: {
             dist: {
@@ -350,8 +367,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('server', function (target) {
-        grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-        grunt.task.run([target ? ('serve:' + target) : 'serve']);
+        grunt.task.run(['express', 'express-keepalive']);
     });
 
     grunt.registerTask('test', function (target) {
