@@ -87,7 +87,12 @@ module.exports = function (grunt) {
                 server: './server/index.js',
                 livereload: true,
                 serverreload: true,
-                logger: true
+                logger: true,
+                middleware: [function(req, res, next){
+                    //req.url = req.url.replace('bower_components/','');
+                    console.log(req.url)
+                    return next();
+                }]
               }
             }
         },
