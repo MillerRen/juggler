@@ -10,7 +10,6 @@
         <!-- build:css styles/juggler.bundle.min.css -->
         <!-- bower:css -->
         <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="styles/juggler.css" />
         <!-- endbower -->
         <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap-theme.css" />
         <!-- endbuild -->
@@ -45,22 +44,18 @@
         <script src="../bower_components/backbone-relational/backbone-relational.js"></script>
         <script src="../bower_components/backbone.modelbinder/backbone.modelbinder.js"></script>
         <script src="../bower_components/backbone.validate/dist/backbone-validation.js"></script>
-        <script src="scripts/juggler.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. 
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='//www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X');ga('send','pageview');
-        </script> -->
+        <!-- build:js({app,.tmp}) scripts/juggler.min.js -->
+        <script src="scripts/juggler.js"></script>
+        <!-- endbuild -->
+
+        <!-- build:js({app,.tmp}) scripts/app.min.js -->
+        <script src="scripts/app.js"></script>
+        <!-- endbuild -->
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
-        <script src="scripts/app.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
         
