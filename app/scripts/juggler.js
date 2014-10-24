@@ -103,48 +103,51 @@
         
         Views.ItemView = Marionette.ItemView.extend({
             constructor: function(options) {
-                this.options = _.defaults(options,this.defaults);
+                _.defaults(this.options,this.defaults);
                 Marionette.ItemView.prototype.constructor.apply(this, arguments);
             },
-            template: _.template('')
+            template: _.template(''),
+            serializeData: function() {
+                return this.model?this.model.toJSON():this.options;
+            }
         });
     
         Views.EmptyView = Views.ItemView.extend({
             className: 'alert alert-warning',
             template: Juggler.Templates.empty,
-            defaults: {text: 'not found！'},
-            serializeData: function() {
-                return this.options
-            }
+            defaults: {text: 'not found！'}
         });
     
         Views.Layout = Marionette.LayoutView.extend({
-            constructor: function(options) {
-                this.options = Marionette.getOption(this, 'defaults');
-                _.extend(this.options,options);
-                this.regions = Marionette.getOption(this, 'regions') || {};
-                Marionette.LayoutView.prototype.constructor.apply(this, arguments);
-            },
+            className:'row',
+            regionAttr:'data-region',
             template: _.template(''),
-            onRender: function() {
-                var that = this, 
-                regions = Marionette.getOption(this, 'regions');
-    
-                this.addRegions(regions);
-    
-                this.$el.find('[data-region]').each(function(i, item) {
-                    var region = $(item).attr('data-region');
-                    if (region)
-                        that.addRegion($.camelCase(region), '[data-region=' + region+']');
+            constructor: function(options) {
+                _.defaults(this.options,this.defaults);
+                Marionette.LayoutView.apply(this, arguments);
+            },
+            render: function() {
+                Views.Layout.__super__.prototype.render.apply(this,arguments);
+                this.resoveTemplateRegions();
+                this.triggerMethod('resoveregion');
+            },
+            resoveTemplateRegions:function(){
+                var that = this,
+                    regionAttr = this.getOption(regionAttr),
+                    region_selector = '['+regionAttr+']';
+                this.$el.find(region_selector)
+                .each(function(i, item) {
+                    var region = $(item).attr(regionAttr);
+                    region&&that.addRegion($.camelCase(region), '[data-region='+region+']');
                 });
             },
             serializeData: function() {
-                return this.options;
+                return this.model?this.model.toJSON():this.options;
             }
         });
     
         Views.CompositeView = Marionette.CompositeView.extend({
-            emptyView: Views.EmptyView,
+            emptyView: Views.ItemView,
             childViewContainer: "",
             template: _.template(''),
             getChildView: function(item) {
