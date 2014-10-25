@@ -79,66 +79,32 @@ module.exports = function (grunt) {
         },
 
         express: {
-          server: {
-              options: {
-                hostname: '*',
-                port: 9000,
-                bases: ['<%= config.tmp %>', '<%= config.app %>', '<%= config.dist %>'],
-                server: './server/index.js',
-                livereload: true,
-                serverreload: true,
-                logger: true,
-                middleware: [function(req, res, next){
-                    //req.url = req.url.replace('bower_components/','');
-                    console.log(req.url)
-                    return next();
-                }]
-              }
-            }
-        },
-/*
-        // The actual grunt server settings
-        connect: {
+          options: {
+            port: 9000,
+            hostname: '*'
+          },
+          livereload: {
             options: {
-                port: 9000,
-                open: true,
-                livereload: 35729,
-                // Change this to '0.0.0.0' to access the server from outside
-                hostname: 'localhost'
-            },
-            livereload: {
-                options: {
-                    middleware: function(connect) {
-                        return [
-                            connect.static('.tmp'),
-                            connect().use('/bower_components', connect.static('./bower_components')),
-                            connect.static(config.app)
-                        ];
-                    }
-                }
-            },
-            test: {
-                options: {
-                    open: false,
-                    port: 9001,
-                    middleware: function(connect) {
-                        return [
-                            connect.static('.tmp'),
-                            connect.static('test'),
-                            connect().use('/bower_components', connect.static('./bower_components')),
-                            connect.static(config.app)
-                        ];
-                    }
-                }
-            },
-            dist: {
-                options: {
-                    base: '<%= config.dist %>',
-                    livereload: false
-                }
+              server: path.resolve('./server'),
+              livereload: true,
+              serverreload: true,
+              bases: [path.resolve('./.tmp'), path.resolve(__dirname, config.app)]
             }
+          },
+          test: {
+            options: {
+              server: path.resolve('./server'),
+              bases: [path.resolve('./.tmp'), path.resolve(__dirname, 'test')]
+            }
+          },
+          dist: {
+            options: {
+              server: path.resolve('./server'),
+              bases: path.resolve(__dirname, config.dist)
+            }
+          }
         },
-*/
+
         // Empties folders to start fresh
         clean: {
             dist: {
@@ -352,13 +318,19 @@ module.exports = function (grunt) {
                 'imagemin',
                 'svgmin'
             ]
+        },
+        
+      open: {
+          server: {
+            url: 'http://localhost:<%= express.options.port %>'
+          }
         }
     });
 
 
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
-            return grunt.task.run(['build', 'connect:dist:keepalive']);
+            return grunt.task.run(['build', 'open','express:dist:keepalive']);
         }
 
         grunt.task.run([
@@ -366,7 +338,8 @@ module.exports = function (grunt) {
             'clean:server',
             'concurrent:server',
             'autoprefixer',
-            'connect:livereload',
+            'express:livereload',
+            'open',
             'watch'
         ]);
     });
