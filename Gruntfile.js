@@ -19,11 +19,8 @@ module.exports = function (grunt) {
     var config = {
         src: 'src',
         app: 'app',
-        dist: 'dist',
-        tmp: 'tmp'
+        dist: 'dist'
     };
-
-    var path = require('path');
 
     // Define the configuration for all the tasks
     grunt.initConfig({
@@ -48,9 +45,13 @@ module.exports = function (grunt) {
                 files: ['test/spec/{,*/}*.js'],
                 tasks: ['test:watch']
             },
-            preprocess: {
+            juggler: {
               files: ['<%= config.src %>/{,*/}*.js'],
-              tasks: ['preprocess:core']  
+              tasks: ['preprocess:juggler']
+            },
+            app: {
+              files: ['<%= config.app %>/scripts/modules/{,*/}*.js'],
+              tasks: ['preprocess:app']
             },
             gruntfile: {
                 files: ['Gruntfile.js']
@@ -72,37 +73,56 @@ module.exports = function (grunt) {
         },
 
         preprocess:{
-            core:{
+            juggler:{
                 src:'<%= config.src %>/juggler.core.js',
                 dest:'<%= config.app %>/scripts/juggler.js'
+            },
+            app:{
+                src:'<%= config.app %>/scripts/modules/build.js',
+                dest:'<%= config.app %>/scripts/app.js'
             }
         },
 
-        express: {
-          options: {
-            port: 9000,
-            hostname: '*'
-          },
-          livereload: {
+        // The actual grunt server settings
+        connect: {
             options: {
-              server: path.resolve('./server'),
-              livereload: true,
-              serverreload: true,
-              bases: [path.resolve('./.tmp'), path.resolve(__dirname, config.app)]
+                port: 9000,
+                open: true,
+                livereload: 35729,
+                // Change this to '0.0.0.0' to access the server from outside
+                hostname: 'localhost'
+            },
+            livereload: {
+                options: {
+                    middleware: function(connect) {
+                        return [
+                            connect.static('.tmp'),
+                            connect().use('/bower_components', connect.static('./bower_components')),
+                            connect.static(config.app)
+                        ];
+                    }
+                }
+            },
+            test: {
+                options: {
+                    open: false,
+                    port: 9001,
+                    middleware: function(connect) {
+                        return [
+                            connect.static('.tmp'),
+                            connect.static('test'),
+                            connect().use('/bower_components', connect.static('./bower_components')),
+                            connect.static(config.app)
+                        ];
+                    }
+                }
+            },
+            dist: {
+                options: {
+                    base: '<%= config.dist %>',
+                    livereload: false
+                }
             }
-          },
-          test: {
-            options: {
-              server: path.resolve('./server'),
-              bases: [path.resolve('./.tmp'), path.resolve(__dirname, 'test')]
-            }
-          },
-          dist: {
-            options: {
-              server: path.resolve('./server'),
-              bases: path.resolve(__dirname, config.dist)
-            }
-          }
         },
 
         // Empties folders to start fresh
@@ -165,7 +185,7 @@ module.exports = function (grunt) {
                 src: ['<%= config.app %>/index.html'],
                 //exclude: ['bower_components/bootstrap/dist/js/bootstrap.js'],
                 //devDependencies: true, // default: false
-                //includeSelf: true,     // default: false
+                includeSelf: true,     // default: false
             },
             test: {
                 src: ['<%= config.app %>/test.html'],
@@ -318,19 +338,13 @@ module.exports = function (grunt) {
                 'imagemin',
                 'svgmin'
             ]
-        },
-        
-      open: {
-          server: {
-            url: 'http://localhost:<%= express.options.port %>'
-          }
         }
     });
 
 
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
-            return grunt.task.run(['build', 'open','express:dist:keepalive']);
+            return grunt.task.run(['build', 'connect:dist:keepalive']);
         }
 
         grunt.task.run([
@@ -338,14 +352,14 @@ module.exports = function (grunt) {
             'clean:server',
             'concurrent:server',
             'autoprefixer',
-            'express:livereload',
-            'open',
+            'connect:livereload',
             'watch'
         ]);
     });
 
     grunt.registerTask('server', function (target) {
-        grunt.task.run(['express', 'express-keepalive']);
+        grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
+        grunt.task.run([target ? ('serve:' + target) : 'serve']);
     });
 
     grunt.registerTask('test', function (target) {

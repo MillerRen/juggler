@@ -43,9 +43,7 @@
         currentApp.start(args);
     };
 
-    App.module('Demo',function(Demo, Juggler, Backbone, Marionette, $, _){
-    	
-    });
+    // @include ./demo.js
     
 	
 	App.addInitializer(function(){
