@@ -34,13 +34,6 @@ module.exports = function (grunt) {
                 files: ['bower.json'],
                 tasks: ['wiredep']
             },
-             js: {
-                 files: ['<%= config.app %>/scripts/*.js'],
-                 tasks: [],
-                 options: {
-                     livereload: true
-                 }
-             },
             jstest: {
                 files: ['test/spec/{,*/}*.js'],
                 tasks: ['test:watch']
@@ -53,6 +46,10 @@ module.exports = function (grunt) {
               files: ['<%= config.app %>/scripts/modules/{,*/}*.js'],
               tasks: ['preprocess:app']
             },
+             js: {
+                 files: ['<%= config.app %>/scripts/{,*/}*.js'],
+                 //tasks: ['jshint']
+             },
             gruntfile: {
                 files: ['Gruntfile.js']
             },

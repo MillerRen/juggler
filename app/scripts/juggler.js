@@ -34,7 +34,7 @@
     Juggler.module('Config', function(Config, Juggler, Backbone, Marionette, $, _) {
     
         Config.Message = {
-            
+            //test:''
         };
     
     });
@@ -130,7 +130,7 @@
                 Marionette.LayoutView.apply(this, arguments);
             },
             render: function() {
-                Views.Layout.__super__.prototype.render.apply(this,arguments);
+                Views.Layout.__super__.render.apply(this,arguments);
                 this.resoveTemplateRegions();
                 this.triggerMethod('resoveregion');
             },
