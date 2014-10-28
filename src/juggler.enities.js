@@ -2,8 +2,8 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
 
     Enities.Model = Backbone.RelationalModel.extend({
         urlRoot: '/test',
-        message: Juggler.Message,
-        parse: function(res, options) {
+        message: Juggler.Config.Message,
+        parse: function(resp, options) {
             return options.collection ? resp : resp.data;
         },
         index:function(){
@@ -19,7 +19,10 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
 
     Enities.Collection = Backbone.Collection.extend({
         url:'/test',
-        message: Juggler.Message
+        message: Juggler.Config.Message,
+        parse: function(resp, options) {
+            return options.collection ? resp : resp.data;
+        }
     });
 
 });
