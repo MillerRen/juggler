@@ -70,6 +70,21 @@
             '<label class="col-md-2 contorl-label"><%- label %></label>\
             <div class="col-md-10"></div>\
             ');
+        
+        Templates.navbar = _.template('<div class="container">\
+                  <div class="navbar-header">\
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">\
+                      <span class="sr-only">Toggle navigation</span>\
+                      <span class="icon-bar"></span>\
+                      <span class="icon-bar"></span>\
+                      <span class="icon-bar"></span>\
+                    </button>\
+                    <a class="navbar-brand" href="#"><%= brand %></a>\
+                  </div>\
+                  <div class="collapse navbar-collapse" id="navbar-collapse" data-region="navbar">\
+                    <ul class="nav navbar-nav"></ul>\
+                  </div>\
+                </div>');
     
     });
 
@@ -150,6 +165,10 @@
         });
     
         Views.CompositeView = Marionette.CompositeView.extend({
+            constructor: function(options) {
+                Views.CompositeView.__super__.constructor.apply(this, arguments);
+                _.defaults(this.options,this.defaults);
+            },
             emptyView: Views.ItemView,
             childViewContainer: "",
             template: _.template(''),
@@ -307,8 +326,17 @@
             className: 'nav navbar-nav'
         });
     
-        Widgets.Navbar = Juggler.Views.CompositeView.extend({
-    
+        Widgets.Navbar = Juggler.Views.List.extend({
+            className:'navbar navbar-static-top navbar-default',
+            tagName:'div',
+            childViewContainer:'.navbar-nav',
+            template:Juggler.Templates.navbar,
+            defaults:{
+                brand:'Home'
+            },
+            serializeData:function(){
+                return this.options;
+            }
         });
     
     });

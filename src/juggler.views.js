@@ -46,6 +46,10 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     });
 
     Views.CompositeView = Marionette.CompositeView.extend({
+        constructor: function(options) {
+            Views.CompositeView.__super__.constructor.apply(this, arguments);
+            _.defaults(this.options,this.defaults);
+        },
         emptyView: Views.ItemView,
         childViewContainer: "",
         template: _.template(''),

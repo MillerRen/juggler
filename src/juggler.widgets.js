@@ -117,8 +117,17 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         className: 'nav navbar-nav'
     });
 
-    Widgets.Navbar = Juggler.Views.CompositeView.extend({
-
+    Widgets.Navbar = Juggler.Views.List.extend({
+        className:'navbar navbar-static-top navbar-default',
+        tagName:'div',
+        childViewContainer:'.navbar-nav',
+        template:Juggler.Templates.navbar,
+        defaults:{
+            brand:'Home'
+        },
+        serializeData:function(){
+            return this.options;
+        }
     });
 
 });
