@@ -43,11 +43,17 @@
         currentApp.start(args);
     };
 
-    App.module('Demo.Layout',function(Layout, App, Backbone, Marionette, $, _){
-    	
-    	Layout.Layout39 = Juggler.Views.Layout.extend({
-    		template:_.template('<div class="col-md-3" data-region="sidebar"></div>\
-    		<div class="col-md-9" data-region="content"></div>')
+
+
+    App.module('Layout',function(Layout, App, Backbone, Marionette, $, _){
+    
+    	Layout.Page = Juggler.Views.Layout.extend({
+    		template:_.template('<div class="col-md-12" data-region="breadcrumb"></div>\
+    			<div class="col-md-12" data-region="main">\
+    				<div class="col-md-3" data-region="sidebar"></div>\
+    				<div class="col-md-9" data-region="content"></div>\
+    			</div>\
+    		')
     	});
     
     });
@@ -56,12 +62,19 @@
     App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
     
     	Demo.on('start',function(){
-    		var layout = new Demo.Layout.Layout39();
+    		var layout = new App.Layout.Page();
     		Juggler.mainRegion.show(layout);
+    
     		var navbar = new Juggler.Widgets.Navbar({
     			collection:new Demo.Enities.Navs
     		});
     		Juggler.headerRegion.show(navbar);
+    
+    		var breadcrumb = new Juggler.Widgets.Breadcrumb({
+    			collection:new Demo.Enities.Breadcrumb()
+    		});console.log(layout)
+    		layout.breadcrumbRegion.show(breadcrumb);
+    		
     	});
     
     });
@@ -72,6 +85,15 @@
     		initialize:function(){
     			this.reset([
     				{name:'Docs',value:'docs'},
+    				{name:'Examples',value:'examples'}
+    			]);
+    		}
+    	});
+    
+    	Enities.Breadcrumb = Juggler.Enities.Collection.extend({
+    		initialize:function(){
+    			this.reset([
+    				{name:'Demo',value:'demo'},
     				{name:'Examples',value:'examples'}
     			]);
     		}

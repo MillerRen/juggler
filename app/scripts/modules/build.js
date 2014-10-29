@@ -43,6 +43,8 @@
         currentApp.start(args);
     };
 
+    // @include ./enities.js
+
     // @include ./layout.js
 
     // @include ./demo.js

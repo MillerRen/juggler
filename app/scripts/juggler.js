@@ -148,17 +148,17 @@
             render: function() {
                 Views.Layout.__super__.render.apply(this,arguments);
                 this.resoveTemplateRegions();
-                this.triggerMethod('resoveregion');
             },
             resoveTemplateRegions:function(){
                 var that = this,
-                    regionAttr = this.getOption(regionAttr),
+                    regionAttr = this.regionAttr,
                     region_selector = '['+regionAttr+']';
                 this.$el.find(region_selector)
                 .each(function(i, item) {
                     var region = $(item).attr(regionAttr);
-                    region&&that.addRegion($.camelCase(region), '[data-region='+region+']');
+                    region&&that.addRegion($.camelCase(region)+'Region', '['+regionAttr+'='+region+']');
                 });
+                this.triggerMethod('resoveregion');
             },
             serializeData: function() {
                 return this.model?this.model.toJSON():this.options;
@@ -314,6 +314,10 @@
     
         Widgets.Nav = Juggler.Views.List.extend({
             className: 'nav navbar-nav'
+        });
+    
+        Widgets.Breadcrumb = Juggler.Views.List.extend({
+           className: 'breadcrumb' 
         });
     
         Widgets.Navbar = Juggler.Views.List.extend({

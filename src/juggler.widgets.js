@@ -117,6 +117,10 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         className: 'nav navbar-nav'
     });
 
+    Widgets.Breadcrumb = Juggler.Views.List.extend({
+       className: 'breadcrumb' 
+    });
+
     Widgets.Navbar = Juggler.Views.List.extend({
         className:'navbar navbar-static-top navbar-default',
         tagName:'div',
