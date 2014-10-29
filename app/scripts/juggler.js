@@ -180,19 +180,8 @@
         Views.Item = Views.ItemView.extend({
             tagName: 'li',
             template: _.template('<a data-target="#<%- value %>" data-toggle="tab"><%- name %></a>'),
-            ui: {
-                links: 'a',
-                buttons: 'btn'
-            },
-            events: {
-                'click @ui.links': 'onClick',
-                'click @ui.buttons': 'onPress'
-            },
-            onClick: function() {
-                this.trigger('clicked', this.model);
-            },
-            onPress:function(){
-                thsi.trigger('pressed', this.model);
+            triggers:{
+               'click a':'click' 
             }
         });
     
@@ -333,6 +322,12 @@
             template:Juggler.Templates.navbar,
             defaults:{
                 brand:'Home'
+            },
+            childEvents:{
+              'click':'onClick'  
+            },
+            onClick:function(view){
+              Backbone.history.navigate(view.model.get('value')); 
             },
             serializeData:function(){
                 return this.options;

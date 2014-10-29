@@ -47,7 +47,7 @@
     	
     	Demo.Layout = Juggler.Views.Layout.extend({
     		template:_.template('<div class="col-md-3" data-region="sidebar"></div>\
-    		<div class="col-md-9" data-region="content">I am all done!</div>')
+    		<div class="col-md-9" data-region="content"></div>')
     	});
     
     	Demo.on('start',function(){
@@ -65,7 +65,10 @@
     
     	Enities.Navs = Juggler.Enities.Collection.extend({
     		initialize:function(){
-    			this.reset([{name:'test1',value:'test1'}]);
+    			this.reset([
+    				{name:'Docs',value:'docs'},
+    				{name:'Examples',value:'examples'}
+    			]);
     		}
     	});
     

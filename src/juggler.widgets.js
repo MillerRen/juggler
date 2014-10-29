@@ -125,6 +125,12 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         defaults:{
             brand:'Home'
         },
+        childEvents:{
+          'click':'onClick'  
+        },
+        onClick:function(view){
+          Backbone.history.navigate(view.model.get('value')); 
+        },
         serializeData:function(){
             return this.options;
         }
