@@ -46,10 +46,13 @@ module.exports = function (grunt) {
               files: ['<%= config.app %>/scripts/modules/{,*/}*.js'],
               tasks: ['preprocess:app']
             },
-             js: {
-                 files: ['<%= config.app %>/scripts/{,*/}*.js'],
-                 //tasks: ['jshint']
-             },
+            js: {
+                files: ['<%= config.app %>/scripts/{,*/}*.js'],
+                tasks: ['jshint'],
+                options: {
+                  livereload: true
+                }
+              },
             gruntfile: {
                 files: ['Gruntfile.js']
             },

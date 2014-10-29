@@ -47,7 +47,7 @@
     	
     	Demo.Layout = Juggler.Views.Layout.extend({
     		template:_.template('<div class="col-md-3" data-region="sidebar"></div>\
-    		<div class="col-md-9" data-region="content"></div>')
+    		<div class="col-md-9" data-region="content">I am all done!</div>')
     	});
     
     	Demo.on('start',function(){
