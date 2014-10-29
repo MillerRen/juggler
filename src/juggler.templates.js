@@ -41,7 +41,8 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
                 <a class="navbar-brand" href="#"><%= brand %></a>\
               </div>\
               <div class="collapse navbar-collapse" id="navbar-collapse" data-region="navbar">\
-                <ul class="nav navbar-nav"></ul>\
+                <ul class="nav navbar-nav navbar-nav-primary"></ul>\
+                <ul class="nav navbar-nav navbar-nav-secondary"></ul>\
               </div>\
             </div>');
 

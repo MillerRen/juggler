@@ -120,7 +120,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     Widgets.Navbar = Juggler.Views.List.extend({
         className:'navbar navbar-static-top navbar-default',
         tagName:'div',
-        childViewContainer:'.navbar-nav',
+        childViewContainer:'.navbar-nav-primary',
         template:Juggler.Templates.navbar,
         defaults:{
             brand:'Home'

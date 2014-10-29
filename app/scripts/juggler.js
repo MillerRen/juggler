@@ -82,7 +82,8 @@
                     <a class="navbar-brand" href="#"><%= brand %></a>\
                   </div>\
                   <div class="collapse navbar-collapse" id="navbar-collapse" data-region="navbar">\
-                    <ul class="nav navbar-nav"></ul>\
+                    <ul class="nav navbar-nav navbar-nav-primary"></ul>\
+                    <ul class="nav navbar-nav navbar-nav-secondary"></ul>\
                   </div>\
                 </div>');
     
@@ -318,7 +319,7 @@
         Widgets.Navbar = Juggler.Views.List.extend({
             className:'navbar navbar-static-top navbar-default',
             tagName:'div',
-            childViewContainer:'.navbar-nav',
+            childViewContainer:'.navbar-nav-primary',
             template:Juggler.Templates.navbar,
             defaults:{
                 brand:'Home'
