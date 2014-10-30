@@ -186,12 +186,16 @@
             }
         });
     
-    
-    
         Views.List = Views.CompositeView.extend({
             tagName: 'ul',
             template: _.template(''),
-            childView: Views.Item
+            childView: Views.Item,
+            childEvents:{
+              'click':'onClick'  
+            },
+            onClick:function(view){
+              Backbone.history.navigate(view.model.get('value')); 
+            }
         });
     
     
@@ -327,12 +331,6 @@
             template:Juggler.Templates.navbar,
             defaults:{
                 brand:'Home'
-            },
-            childEvents:{
-              'click':'onClick'  
-            },
-            onClick:function(view){
-              Backbone.history.navigate(view.model.get('value')); 
             },
             serializeData:function(){
                 return this.options;

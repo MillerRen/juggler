@@ -66,12 +66,16 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         }
     });
 
-
-
     Views.List = Views.CompositeView.extend({
         tagName: 'ul',
         template: _.template(''),
-        childView: Views.Item
+        childView: Views.Item,
+        childEvents:{
+          'click':'onClick'  
+        },
+        onClick:function(view){
+          Backbone.history.navigate(view.model.get('value')); 
+        }
     });
 
 
