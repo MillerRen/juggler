@@ -185,7 +185,7 @@ module.exports = function (grunt) {
                 src: ['<%= config.app %>/index.html'],
                 //exclude: ['bower_components/bootstrap/dist/js/bootstrap.js'],
                 //devDependencies: true, // default: false
-                includeSelf: true,     // default: false
+                includeSelf: false,     // default: false
             },
             test: {
                 src: ['<%= config.app %>/test.html'],
@@ -312,7 +312,9 @@ module.exports = function (grunt) {
                         '.htaccess',
                         'images/{,*/}*.webp',
                         '{,*/}*.html',
-                        'styles/fonts/{,*/}*.*'
+                        'styles/fonts/{,*/}*.*',
+                        'scripts/juggler.js',
+                        'styles/juggler.css'
                     ]
                 }]
             },

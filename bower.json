@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "description": "A front end solution suite based on Backbone.Marionette and Bootstrap",
   "main": [
-    "dist/css/juggler.css",
-    "dist/js/juggler.js"
+    "dist/styles/juggler.css",
+    "dist/scripts/juggler.js"
   ],
   "homepage": "https://github.com/MillerRen/juggler.git",
   "keywords": [
