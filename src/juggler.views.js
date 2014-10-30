@@ -27,9 +27,9 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         },
         render: function() {
             Views.Layout.__super__.render.apply(this,arguments);
-            this.resoveTemplateRegions();
+            this.resolveTemplateRegions();
         },
-        resoveTemplateRegions:function(){
+        resolveTemplateRegions:function(){
             var that = this,
                 regionAttr = this.regionAttr,
                 region_selector = '['+regionAttr+']';

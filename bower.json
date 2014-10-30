@@ -32,6 +32,6 @@
     "sinonjs": "~1.10.2"
   },
   "ignore": [
-    "app"
+    "app/"
   ]
 }
