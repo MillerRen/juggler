@@ -1,0 +1,15 @@
+.juggler-progress{
+    height:5px;
+    overflow:hidden;
+    border-radius:0;
+}
+.juggler-progress .progress-bar{
+    min-width:20px;
+}
+
+.juggler-alert{
+    display:inline-block;
+    top:20px;
+    left:50%;
+    position:fixed;
+}
