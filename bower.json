@@ -1,7 +1,7 @@
 {
   "name": "juggler",
   "version": "0.0.0",
-  "description": "A front end solution suite based on Backbone.Marionette and Bootstrap",
+  "description": "UI Kits for Backbone.Marionette based on Bootstrap",
   "main": [
     "dist/styles/juggler.css",
     "dist/scripts/juggler.js"
@@ -30,5 +30,8 @@
     "mocha": "~1.21.4",
     "chai": "~1.9.1",
     "sinonjs": "~1.10.2"
-  }
+  },
+  "ignore": [
+    "app"
+  ]
 }
