@@ -134,4 +134,16 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         }
     });
 
+    Widgets.DropdownMenu = Juggler.Views.List.extend({
+       className:'dropdown-menu' 
+    });
+
+    Widgets.Pagination = Juggler.Views.List.extend({
+        className:'pagination'
+    });
+
+    Widgets.MediaList = Juggler.Views.List.extend({
+        className:'media-list'
+    });
+
 });

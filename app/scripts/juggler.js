@@ -14,6 +14,7 @@
     }
 
 }(this, function(root, Marionette, Backbone, _) {
+    
     'use strict';
     
     
@@ -335,6 +336,18 @@
             serializeData:function(){
                 return this.options;
             }
+        });
+    
+        Widgets.DropdownMenu = Juggler.Views.List.extend({
+           className:'dropdown-menu' 
+        });
+    
+        Widgets.Pagination = Juggler.Views.List.extend({
+            className:'pagination'
+        });
+    
+        Widgets.MediaList = Juggler.Views.List.extend({
+            className:'media-list'
         });
     
     });
