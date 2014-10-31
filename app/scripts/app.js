@@ -43,43 +43,7 @@
         currentApp.start(args);
     };
 
-
-
-    App.module('Layout',function(Layout, App, Backbone, Marionette, $, _){
-    
-    	Layout.Page = Juggler.Views.Layout.extend({
-    		template:_.template('<div class="col-md-12" data-region="breadcrumb"></div>\
-    			<div class="col-md-12" data-region="main">\
-    				<div class="col-md-3" data-region="sidebar"></div>\
-    				<div class="col-md-9" data-region="content"></div>\
-    			</div>\
-    		')
-    	});
-    
-    });
-    
-
-    App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
-    
-    	Demo.on('start',function(){
-    		var layout = new App.Layout.Page();
-    		Juggler.mainRegion.show(layout);
-    
-    		var navbar = new Juggler.Widgets.Navbar({
-    			collection:new Demo.Enities.Navs
-    		});
-    		Juggler.headerRegion.show(navbar);
-    
-    		var breadcrumb = new Juggler.Widgets.Breadcrumb({
-    			collection:new Demo.Enities.Breadcrumb()
-    		});console.log(layout)
-    		layout.breadcrumbRegion.show(breadcrumb);
-    		
-    	});
-    
-    });
-    
-    App.module('Demo.Enities',function(Enities, App, Backbone, Marionette, $, _){
+    App.module('Enities',function(Enities, App, Backbone, Marionette, $, _){
     
     	Enities.Navs = Juggler.Enities.Collection.extend({
     		initialize:function(){
@@ -100,6 +64,46 @@
     	});
     
     });
+
+    App.module('Layout',function(Layout, App, Backbone, Marionette, $, _){
+    
+    	Layout.Page = Juggler.Views.Layout.extend({
+    		template:_.template('<div class="col-md-3" data-region="sidebar"></div>\
+    				<div class="col-md-9" data-region="content"></div>\
+    		')
+    	});
+    
+    });
+    
+
+    App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
+    
+    	Demo.on('start',function(){
+    		var layout = new App.Layout.Page();
+    		Juggler.mainRegion.show(layout);
+    
+    		var navbar = new Juggler.Widgets.Navbar({
+    			collection:new App.Enities.Navs
+    		});
+    		Juggler.headerRegion.show(navbar);
+    
+    		var breadcrumb = new Juggler.Widgets.Breadcrumb({
+    			collection:new App.Enities.Breadcrumb()
+    		});
+    
+    		Juggler.navRegion.show(breadcrumb);
+    
+    		var menu = new Juggler.Widgets.GroupList({
+    			collection:new App.Enities.Navs
+    		});
+    
+    		layout.sidebarRegion.show(menu);
+    		
+    	});
+    
+    });
+    
+    
     
 	
 	App.addInitializer(function(){

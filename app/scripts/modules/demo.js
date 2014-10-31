@@ -5,37 +5,23 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		Juggler.mainRegion.show(layout);
 
 		var navbar = new Juggler.Widgets.Navbar({
-			collection:new Demo.Enities.Navs
+			collection:new App.Enities.Navs
 		});
 		Juggler.headerRegion.show(navbar);
 
 		var breadcrumb = new Juggler.Widgets.Breadcrumb({
-			collection:new Demo.Enities.Breadcrumb()
-		});console.log(layout)
-		layout.breadcrumbRegion.show(breadcrumb);
+			collection:new App.Enities.Breadcrumb()
+		});
+
+		Juggler.navRegion.show(breadcrumb);
+
+		var menu = new Juggler.Widgets.GroupList({
+			collection:new App.Enities.Navs
+		});
+
+		layout.sidebarRegion.show(menu);
 		
 	});
 
 });
 
-App.module('Demo.Enities',function(Enities, App, Backbone, Marionette, $, _){
-
-	Enities.Navs = Juggler.Enities.Collection.extend({
-		initialize:function(){
-			this.reset([
-				{name:'Docs',value:'docs'},
-				{name:'Examples',value:'examples'}
-			]);
-		}
-	});
-
-	Enities.Breadcrumb = Juggler.Enities.Collection.extend({
-		initialize:function(){
-			this.reset([
-				{name:'Demo',value:'demo'},
-				{name:'Examples',value:'examples'}
-			]);
-		}
-	});
-
-});

@@ -300,7 +300,7 @@
             className: 'list-group-item'
         });
     
-        Widgets.ListGroup = Juggler.Views.List.extend({
+        Widgets.GroupList = Juggler.Views.List.extend({
             className: 'list-group',
             childView: Widgets.GroupItem
         });
@@ -378,6 +378,7 @@
     
         Juggler.addRegions({
             headerRegion: '#header',
+            navRegion: '#nav',
             mainRegion: '#main',
             footerRegion: '#footer',
             notifyRegion: '#notify',

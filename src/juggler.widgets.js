@@ -96,7 +96,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         className: 'list-group-item'
     });
 
-    Widgets.ListGroup = Juggler.Views.List.extend({
+    Widgets.GroupList = Juggler.Views.List.extend({
         className: 'list-group',
         childView: Widgets.GroupItem
     });
