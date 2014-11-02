@@ -20,6 +20,12 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		});
 
 		layout.sidebarRegion.show(menu);
+
+		var table = new Juggler.Widgets.Table({
+			collection:new App.Enities.Table
+		});
+
+		layout.contentRegion.show(table);
 		
 	});
 

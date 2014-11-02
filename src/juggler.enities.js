@@ -25,4 +25,15 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
         }
     });
 
+    Enities.model_to_collection = function(model, name, value, Collection){
+        Collection = Collection||Enities.Collection;
+        name = name||'name';
+        value = value||'value';
+        return new Collection(
+            _.map(model.toJSON(), function(item,i){
+                return {name:item,value:i};
+            })
+        );
+    };
+
 });

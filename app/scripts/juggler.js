@@ -117,14 +117,25 @@
             }
         });
     
+        Enities.model_to_collection = function(model, name, value, Collection){
+            Collection = Collection||Enities.Collection;
+            name = name||'name';
+            value = value||'value';
+            return new Collection(
+                _.map(model.toJSON(), function(item,i){
+                    return {name:item,value:i};
+                })
+            );
+        };
+    
     });
 
     Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         
         Views.ItemView = Marionette.ItemView.extend({
             constructor: function(options) {
-                _.defaults(this.options,this.defaults);
                 Marionette.ItemView.prototype.constructor.apply(this, arguments);
+                _.defaults(this.options,this.defaults);
             },
             template: _.template(''),
             serializeData: function() {
@@ -134,8 +145,11 @@
     
         Views.EmptyView = Views.ItemView.extend({
             className: 'alert alert-warning',
-            template: Juggler.Templates.empty,
-            defaults: {text: 'not found！'}
+            template: _.template('<%= text %>'),
+            defaults: {text: 'not found！'},
+            serializeData:function(){
+                return this.options;
+            }
         });
     
         Views.Layout = Marionette.LayoutView.extend({
@@ -143,8 +157,8 @@
             regionAttr:'data-region',
             template: _.template(''),
             constructor: function(options) {
-                _.defaults(this.options,this.defaults);
                 Marionette.LayoutView.apply(this, arguments);
+                _.defaults(this.options,this.defaults);
             },
             render: function() {
                 Views.Layout.__super__.render.apply(this,arguments);
@@ -171,12 +185,9 @@
                 Views.CompositeView.__super__.constructor.apply(this, arguments);
                 _.defaults(this.options,this.defaults);
             },
-            emptyView: Views.ItemView,
+            emptyView: Views.EmptyView,
             childViewContainer: "",
-            template: _.template(''),
-            getChildView: function(item) {
-                return Views[item.get('viewType')] || Marionette.getOption(this, "childView") || this.constructor;
-            }
+            template: _.template('')
         });
     
         Views.Item = Views.ItemView.extend({
@@ -348,6 +359,28 @@
     
         Widgets.MediaList = Juggler.Views.List.extend({
             className:'media-list'
+        });
+    
+        Widgets.Td = Juggler.Views.ItemView.extend({
+            tagName:'td',
+            template:_.template('<%= name %>')
+        });
+    
+        Widgets.Tr = Juggler.Views.CompositeView.extend({
+            tagName:'tr',
+            childView:Widgets.Td,
+            initialize:function(options){
+                this.collection = this.collection || Juggler.Enities.model_to_collection(this.model);
+            }
+        });
+    
+        Widgets.Table = Juggler.Views.CompositeView.extend({
+            tagName:'table',
+            className:'table',
+            childView:Widgets.Tr,
+            childViewContainer:'tbody',
+            template:_.template('<thead></thead><tbody></tbody><tfoot></tfoot>'),
+    
         });
     
     });

@@ -146,4 +146,26 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         className:'media-list'
     });
 
+    Widgets.Td = Juggler.Views.ItemView.extend({
+        tagName:'td',
+        template:_.template('<%= name %>')
+    });
+
+    Widgets.Tr = Juggler.Views.CompositeView.extend({
+        tagName:'tr',
+        childView:Widgets.Td,
+        initialize:function(options){
+            this.collection = this.collection || Juggler.Enities.model_to_collection(this.model);
+        }
+    });
+
+    Widgets.Table = Juggler.Views.CompositeView.extend({
+        tagName:'table',
+        className:'table',
+        childView:Widgets.Tr,
+        childViewContainer:'tbody',
+        template:_.template('<thead></thead><tbody></tbody><tfoot></tfoot>'),
+
+    });
+
 });

@@ -2,8 +2,8 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     
     Views.ItemView = Marionette.ItemView.extend({
         constructor: function(options) {
-            _.defaults(this.options,this.defaults);
             Marionette.ItemView.prototype.constructor.apply(this, arguments);
+            _.defaults(this.options,this.defaults);
         },
         template: _.template(''),
         serializeData: function() {
@@ -13,8 +13,11 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
 
     Views.EmptyView = Views.ItemView.extend({
         className: 'alert alert-warning',
-        template: Juggler.Templates.empty,
-        defaults: {text: 'not found！'}
+        template: _.template('<%= text %>'),
+        defaults: {text: 'not found！'},
+        serializeData:function(){
+            return this.options;
+        }
     });
 
     Views.Layout = Marionette.LayoutView.extend({
@@ -22,8 +25,8 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         regionAttr:'data-region',
         template: _.template(''),
         constructor: function(options) {
-            _.defaults(this.options,this.defaults);
             Marionette.LayoutView.apply(this, arguments);
+            _.defaults(this.options,this.defaults);
         },
         render: function() {
             Views.Layout.__super__.render.apply(this,arguments);
@@ -50,12 +53,9 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
             Views.CompositeView.__super__.constructor.apply(this, arguments);
             _.defaults(this.options,this.defaults);
         },
-        emptyView: Views.ItemView,
+        emptyView: Views.EmptyView,
         childViewContainer: "",
-        template: _.template(''),
-        getChildView: function(item) {
-            return Views[item.get('viewType')] || Marionette.getOption(this, "childView") || this.constructor;
-        }
+        template: _.template('')
     });
 
     Views.Item = Views.ItemView.extend({

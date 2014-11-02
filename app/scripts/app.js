@@ -63,6 +63,15 @@
     		}
     	});
     
+    	Enities.Table = Juggler.Enities.Collection.extend({
+    		initialize:function(){
+    			this.reset([
+    				{name:'Demo',value:'demo'},
+    				{name:'Examples',value:'examples'}
+    			]);
+    		}
+    	});
+    
     });
 
     App.module('Layout',function(Layout, App, Backbone, Marionette, $, _){
@@ -98,6 +107,12 @@
     		});
     
     		layout.sidebarRegion.show(menu);
+    
+    		var table = new Juggler.Widgets.Table({
+    			collection:new App.Enities.Table
+    		});
+    
+    		layout.contentRegion.show(table);
     		
     	});
     
