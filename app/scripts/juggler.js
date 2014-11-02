@@ -123,7 +123,11 @@
             value = value||'value';
             return new Collection(
                 _.map(model.toJSON(), function(item,i){
-                    return {name:item,value:i};
+                    var data = {};
+                    data[name]=item;
+                    data[value]=i;
+                    
+                    return data;
                 })
             );
         };
@@ -385,6 +389,12 @@
     
     });
 
+    Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
+    
+        
+    
+    });
+
     Juggler.module('Components', function(Components, Juggler, Backbone, Marionette, $, _) {
     
         Components.FormRow = Juggler.Views.ItemView.extend({
@@ -396,12 +406,6 @@
             tagName:'form',
             childView:Components.FormRow
         });
-    
-        
-    
-    });
-
-    Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
     
         
     

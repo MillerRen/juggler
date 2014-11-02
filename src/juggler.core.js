@@ -42,9 +42,9 @@
 
     // @include ./juggler.widgets.js
 
-    // @include ./juggler.components.js
-
     // @include ./juggler.editors.js
+
+    // @include ./juggler.components.js
 
     // @include ./juggler.initializer.js
     
