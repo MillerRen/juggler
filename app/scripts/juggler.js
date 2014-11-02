@@ -376,8 +376,12 @@
             tagName:'tr',
             childView:Widgets.Td,
             initialize:function(options){
-                this.collection = this.collection || Juggler.Enities.model_to_collection(this.model);
+                //this.collection = this.collection || Juggler.Enities.model_to_collection(this.model);
             }
+        });
+    
+        Widgets.Thead = Widgets.Tr.extend({
+            childView:Widgets.Td.extend({tagName:'th'})
         });
     
         Widgets.Table = Juggler.Views.CompositeView.extend({
@@ -385,8 +389,15 @@
             className:'table',
             childView:Widgets.Tr,
             childViewContainer:'tbody',
+            ui:{
+                thead:'thead',
+                tbody:'tbody',
+                tfoot:'tfoot'
+            },
             template:_.template('<thead></thead><tbody></tbody><tfoot></tfoot>'),
-    
+            onRender:function(){
+                this.thead = new Widgets.Thead({el:this.ui.thead});
+            }
         });
     
         Widgets.GridLayout = Juggler.Views.LayoutView.extend({
