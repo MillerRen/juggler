@@ -156,7 +156,7 @@
             }
         });
     
-        Views.Layout = Marionette.LayoutView.extend({
+        Views.LayoutView = Marionette.LayoutView.extend({
             className:'row',
             regionAttr:'data-region',
             template: _.template(''),
@@ -165,7 +165,7 @@
                 _.defaults(this.options,this.defaults);
             },
             render: function() {
-                Views.Layout.__super__.render.apply(this,arguments);
+                Views.LayoutView.__super__.render.apply(this,arguments);
                 this.resolveTemplateRegions();
             },
             resolveTemplateRegions:function(){
@@ -184,6 +184,8 @@
             }
         });
     
+        
+    
         Views.CompositeView = Marionette.CompositeView.extend({
             constructor: function(options) {
                 Views.CompositeView.__super__.constructor.apply(this, arguments);
@@ -194,7 +196,7 @@
             template: _.template('')
         });
     
-        Views.Item = Views.ItemView.extend({
+        Views.ListItemView = Views.ItemView.extend({
             tagName: 'li',
             template: _.template('<a data-target="#<%- value %>" data-toggle="tab"><%- name %></a>'),
             triggers:{
@@ -202,10 +204,10 @@
             }
         });
     
-        Views.List = Views.CompositeView.extend({
+        Views.ListView = Views.CompositeView.extend({
             tagName: 'ul',
             template: _.template(''),
-            childView: Views.Item,
+            childView: Views.ListItemView,
             childEvents:{
               'click':'onClick'  
             },
@@ -219,7 +221,7 @@
 
     Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
     
-        Widgets.Dialog = Juggler.Views.Layout.extend({
+        Widgets.Dialog = Juggler.Views.LayoutView.extend({
             className:'modal fade',
             template:Juggler.Templates.dialog,
             defaults:{
@@ -311,36 +313,36 @@
             }
         });
     
-        Widgets.GroupItem = Juggler.Views.Item.extend({
+        Widgets.GroupItem = Juggler.Views.ListItemView.extend({
             className: 'list-group-item'
         });
     
-        Widgets.GroupList = Juggler.Views.List.extend({
+        Widgets.GroupList = Juggler.Views.ListView.extend({
             className: 'list-group',
             childView: Widgets.GroupItem
         });
     
-        Widgets.Tabs = Juggler.Views.List.extend({
+        Widgets.Tabs = Juggler.Views.ListView.extend({
             className: 'nav nav-tabs'
         });
     
-        Widgets.Pills = Juggler.Views.List.extend({
+        Widgets.Pills = Juggler.Views.ListView.extend({
             className: 'nav nav-pills'
         });
     
-        Widgets.Stack = Juggler.Views.List.extend({
+        Widgets.Stack = Juggler.Views.ListView.extend({
             className: 'nav nav-pills nav-stacked'
         });
     
-        Widgets.Nav = Juggler.Views.List.extend({
+        Widgets.Nav = Juggler.Views.ListView.extend({
             className: 'nav navbar-nav'
         });
     
-        Widgets.Breadcrumb = Juggler.Views.List.extend({
+        Widgets.Breadcrumb = Juggler.Views.ListView.extend({
            className: 'breadcrumb' 
         });
     
-        Widgets.Navbar = Juggler.Views.List.extend({
+        Widgets.Navbar = Juggler.Views.ListView.extend({
             className:'navbar navbar-static-top navbar-default',
             tagName:'div',
             childViewContainer:'.navbar-nav-primary',
@@ -353,15 +355,15 @@
             }
         });
     
-        Widgets.DropdownMenu = Juggler.Views.List.extend({
+        Widgets.DropdownMenu = Juggler.Views.ListItemView.extend({
            className:'dropdown-menu' 
         });
     
-        Widgets.Pagination = Juggler.Views.List.extend({
+        Widgets.Pagination = Juggler.Views.ListItemView.extend({
             className:'pagination'
         });
     
-        Widgets.MediaList = Juggler.Views.List.extend({
+        Widgets.MediaList = Juggler.Views.ListItemView.extend({
             className:'media-list'
         });
     
@@ -385,6 +387,10 @@
             childViewContainer:'tbody',
             template:_.template('<thead></thead><tbody></tbody><tfoot></tfoot>'),
     
+        });
+    
+        Widgets.GridLayout = Juggler.Views.LayoutView.extend({
+            
         });
     
     });

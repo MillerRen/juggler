@@ -20,7 +20,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         }
     });
 
-    Views.Layout = Marionette.LayoutView.extend({
+    Views.LayoutView = Marionette.LayoutView.extend({
         className:'row',
         regionAttr:'data-region',
         template: _.template(''),
@@ -29,7 +29,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
             _.defaults(this.options,this.defaults);
         },
         render: function() {
-            Views.Layout.__super__.render.apply(this,arguments);
+            Views.LayoutView.__super__.render.apply(this,arguments);
             this.resolveTemplateRegions();
         },
         resolveTemplateRegions:function(){
@@ -48,6 +48,8 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         }
     });
 
+    
+
     Views.CompositeView = Marionette.CompositeView.extend({
         constructor: function(options) {
             Views.CompositeView.__super__.constructor.apply(this, arguments);
@@ -58,7 +60,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         template: _.template('')
     });
 
-    Views.Item = Views.ItemView.extend({
+    Views.ListItemView = Views.ItemView.extend({
         tagName: 'li',
         template: _.template('<a data-target="#<%- value %>" data-toggle="tab"><%- name %></a>'),
         triggers:{
@@ -66,10 +68,10 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         }
     });
 
-    Views.List = Views.CompositeView.extend({
+    Views.ListView = Views.CompositeView.extend({
         tagName: 'ul',
         template: _.template(''),
-        childView: Views.Item,
+        childView: Views.ListItemView,
         childEvents:{
           'click':'onClick'  
         },
