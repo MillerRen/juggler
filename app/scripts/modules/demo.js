@@ -5,6 +5,7 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 			collection:new Juggler.Enities.Collection([
 				{sidebar:{md:{3:'',push:9}},content:{md:{9:'',pull:3}}},
 				{test:{md:3},test2:{md:9}},
+				[{md:3},{md:9}],
 			])
 		});
 		Juggler.mainRegion.show(layout);
