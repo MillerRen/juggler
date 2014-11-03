@@ -1,5 +1,20 @@
 Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
-
+    
+    Enities.model_to_collection = function(model, name, value, Collection){
+        Collection = Collection||Enities.Collection;
+        name = name||'name';
+        value = value||'value';
+        return new Collection(
+            _.map(model.toJSON(), function(item,i){
+                var data = {};
+                data[name]=item;
+                data[value]=i;
+                
+                return data;
+            })
+        );
+    };
+    
     Enities.Model = Backbone.RelationalModel.extend({
         urlRoot: '/test',
         message: Juggler.Config.Message,
@@ -25,19 +40,24 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
         }
     });
 
-    Enities.model_to_collection = function(model, name, value, Collection){
-        Collection = Collection||Enities.Collection;
-        name = name||'name';
-        value = value||'value';
-        return new Collection(
-            _.map(model.toJSON(), function(item,i){
-                var data = {};
-                data[name]=item;
-                data[value]=i;
-                
-                return data;
-            })
-        );
-    };
+    Enities.Column = Enities.Model.extend({
+        defaults: {
+            name: undefined,
+            label: undefined,
+            sortable: false,
+            editable: false,
+            renderable: true,
+            formatter: undefined,
+            sortType: "cycle",
+            sortValue: undefined,
+            direction: null,
+            cell: undefined,
+            headerCell: undefined
+        }
+    });
+
+    Enities.Columns = Enities.Collection.extend({
+        model:Enities.Column
+    });
 
 });

@@ -155,7 +155,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         tagName:'tr',
         childView:Widgets.Td,
         initialize:function(options){
-            //this.collection = this.collection || Juggler.Enities.model_to_collection(this.model);
+            this.collection = this.collection || Juggler.Enities.model_to_collection(this.model);
         }
     });
 
@@ -175,7 +175,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         },
         template:_.template('<thead></thead><tbody></tbody><tfoot></tfoot>'),
         onRender:function(){
-            this.thead = new Widgets.Thead({el:this.ui.thead});
+            //this.thead = new Widgets.Thead({el:this.ui.thead});
         }
     });
 
