@@ -28,7 +28,8 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		layout.sidebarRegion.show(menu);
 
 		var table = new Juggler.Widgets.Table({
-			collection:new App.Enities.Table
+			collection:new App.Enities.Table,
+			columns:new Juggler.Enities.Collection([{name:'name',label:'名称'},{name:'label',label:'标签'}])
 		});
 
 		layout.contentRegion.show(table);

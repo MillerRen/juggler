@@ -132,6 +132,14 @@
             }
         });
     
+        Enities.Cell = Enities.Model.extend({
+    
+        });
+    
+        Enities.Row = Enities.Collection.extend({
+            model:Enities.Cell
+        });
+    
         Enities.Column = Enities.Model.extend({
             defaults: {
                 name: undefined,
@@ -158,6 +166,7 @@
         
         Views.ItemView = Marionette.ItemView.extend({
             constructor: function(options) {
+                _.extend(this,_.pick(options,'parent'));
                 Marionette.ItemView.prototype.constructor.apply(this, arguments);
                 _.defaults(this.options,this.defaults);
             },
@@ -204,16 +213,31 @@
             }
         });
     
-        
+        Views.CollectionView = Marionette.CollectionView.extend({
+            constructor: function(options) {
+                _.extend(this,_.pick(options,'parent'));
+                Views.CompositeView.__super__.constructor.apply(this, arguments);
+                _.defaults(this.options,this.defaults);
+            },
+            emptyView: Views.EmptyView,
+            template: _.template(''),
+            childViewOptions:function(){
+                return {parent:this};
+            }
+        });
     
         Views.CompositeView = Marionette.CompositeView.extend({
             constructor: function(options) {
+                _.extend(this,_.pick(options,'parent'));
                 Views.CompositeView.__super__.constructor.apply(this, arguments);
                 _.defaults(this.options,this.defaults);
             },
             emptyView: Views.EmptyView,
             childViewContainer: "",
-            template: _.template('')
+            template: _.template(''),
+            childViewOptions:function(){
+                return {parent:this};
+            }
         });
     
         Views.ListItemView = Views.ItemView.extend({
@@ -387,36 +411,65 @@
             className:'media-list'
         });
     
+        Widgets.Th = Juggler.Views.ItemView.extend({
+            tagName:'th',
+            template:_.template('<%= label %>')
+        });
+    
         Widgets.Td = Juggler.Views.ItemView.extend({
             tagName:'td',
-            template:_.template('<%= label %>')
+            template:_.template('<%= label %>'),
+            serializeData:function(){console.log(this.model)
+                return {label:this.parent.model.get(this.model.get('name'))};
+            }
         });
     
         Widgets.Tr = Juggler.Views.CompositeView.extend({
             tagName:'tr',
             childView:Widgets.Td,
             initialize:function(options){
-                this.collection = this.collection || Juggler.Enities.model_to_collection(this.model);
+                console.log(this.collection)
             }
         });
     
         Widgets.Thead = Widgets.Tr.extend({
-            childView:Widgets.Td.extend({tagName:'th'})
+            childView:Widgets.Th
         });
     
-        Widgets.Table = Juggler.Views.CompositeView.extend({
+        Widgets.Tbody = Juggler.Views.CompositeView.extend({
+            childView:Widgets.Tr,
+            childViewOptions:function(){
+                return {collection:this.options.columns}
+            }
+        });
+    
+        Widgets.Table = Juggler.Views.LayoutView.extend({
             tagName:'table',
-            className:'table',
+            className:'table table-hover table-striped',
             childView:Widgets.Tr,
             childViewContainer:'tbody',
-            ui:{
-                thead:'thead',
-                tbody:'tbody',
-                tfoot:'tfoot'
-            },
             template:_.template('<thead></thead><tbody></tbody><tfoot></tfoot>'),
+            regions:{
+                theadRegion:'thead',
+                tbodyRegion:'tbody',
+                tfootRegion:'tfoot'
+            },
+            initialize:function(){
+                this.head = new Widgets.Thead({
+                    collection:this.options.columns,
+                    parent:this
+                });
+                this.body = new Widgets.Tbody({
+                    collection:this.collection,
+                    columns:this.options.columns
+                });
+                this.tbodyRegion.attachHtml = function(view){
+                    this.$el.html(view.$el.html())
+                };
+            },
             onRender:function(){
-                //this.thead = new Widgets.Thead({el:this.ui.thead});
+                this.theadRegion.show(this.head);
+                this.tbodyRegion.show(this.body);
             }
         });
     

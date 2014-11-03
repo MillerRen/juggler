@@ -2,6 +2,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     
     Views.ItemView = Marionette.ItemView.extend({
         constructor: function(options) {
+            _.extend(this,_.pick(options,'parent'));
             Marionette.ItemView.prototype.constructor.apply(this, arguments);
             _.defaults(this.options,this.defaults);
         },
@@ -48,16 +49,31 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         }
     });
 
-    
+    Views.CollectionView = Marionette.CollectionView.extend({
+        constructor: function(options) {
+            _.extend(this,_.pick(options,'parent'));
+            Views.CompositeView.__super__.constructor.apply(this, arguments);
+            _.defaults(this.options,this.defaults);
+        },
+        emptyView: Views.EmptyView,
+        template: _.template(''),
+        childViewOptions:function(){
+            return {parent:this};
+        }
+    });
 
     Views.CompositeView = Marionette.CompositeView.extend({
         constructor: function(options) {
+            _.extend(this,_.pick(options,'parent'));
             Views.CompositeView.__super__.constructor.apply(this, arguments);
             _.defaults(this.options,this.defaults);
         },
         emptyView: Views.EmptyView,
         childViewContainer: "",
-        template: _.template('')
+        template: _.template(''),
+        childViewOptions:function(){
+            return {parent:this};
+        }
     });
 
     Views.ListItemView = Views.ItemView.extend({

@@ -40,6 +40,14 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
         }
     });
 
+    Enities.Cell = Enities.Model.extend({
+
+    });
+
+    Enities.Row = Enities.Collection.extend({
+        model:Enities.Cell
+    });
+
     Enities.Column = Enities.Model.extend({
         defaults: {
             name: undefined,
