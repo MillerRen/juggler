@@ -62,7 +62,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
 
     Views.ListItemView = Views.ItemView.extend({
         tagName: 'li',
-        template: _.template('<a data-target="#<%- value %>" data-toggle="tab"><%- name %></a>'),
+        template: _.template('<a data-target="#<%- name %>" data-toggle="tab"><%- label %></a>'),
         triggers:{
            'click a':'click' 
         }
@@ -76,7 +76,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
           'click':'onClick'  
         },
         onClick:function(view){
-          Backbone.history.navigate(view.model.get('value')); 
+          Backbone.history.navigate(view.model.get('name')); 
         }
     });
 

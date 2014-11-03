@@ -48,8 +48,8 @@
     	Enities.Navs = Juggler.Enities.Collection.extend({
     		initialize:function(){
     			this.reset([
-    				{name:'Docs',value:'docs'},
-    				{name:'Examples',value:'examples'}
+    				{name:'Docs',label:'docs'},
+    				{name:'Examples',label:'examples'}
     			]);
     		}
     	});
@@ -57,8 +57,8 @@
     	Enities.Breadcrumb = Juggler.Enities.Collection.extend({
     		initialize:function(){
     			this.reset([
-    				{name:'Demo',value:'demo'},
-    				{name:'Examples',value:'examples'}
+    				{name:'Demo',label:'demo'},
+    				{name:'Examples',label:'examples'}
     			]);
     		}
     	});
@@ -66,8 +66,8 @@
     	Enities.Table = Juggler.Enities.Collection.extend({
     		initialize:function(){
     			this.reset([
-    				{name:'Demo',value:'demo'},
-    				{name:'Examples',value:'examples'}
+    				{name:'Demo',label:'demo'},
+    				{name:'Examples',label:'examples'}
     			]);
     		}
     	});

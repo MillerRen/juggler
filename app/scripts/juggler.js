@@ -95,7 +95,7 @@
         Enities.model_to_collection = function(model, name, value, Collection){
             Collection = Collection||Enities.Collection;
             name = name||'name';
-            value = value||'value';
+            value = value||'label';
             return new Collection(
                 _.map(model.toJSON(), function(item,i){
                     var data = {};
@@ -218,7 +218,7 @@
     
         Views.ListItemView = Views.ItemView.extend({
             tagName: 'li',
-            template: _.template('<a data-target="#<%- value %>" data-toggle="tab"><%- name %></a>'),
+            template: _.template('<a data-target="#<%- name %>" data-toggle="tab"><%- label %></a>'),
             triggers:{
                'click a':'click' 
             }
@@ -232,7 +232,7 @@
               'click':'onClick'  
             },
             onClick:function(view){
-              Backbone.history.navigate(view.model.get('value')); 
+              Backbone.history.navigate(view.model.get('name')); 
             }
         });
     
@@ -389,7 +389,7 @@
     
         Widgets.Td = Juggler.Views.ItemView.extend({
             tagName:'td',
-            template:_.template('<%= name %>')
+            template:_.template('<%= label %>')
         });
     
         Widgets.Tr = Juggler.Views.CompositeView.extend({

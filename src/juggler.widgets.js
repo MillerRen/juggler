@@ -148,7 +148,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
 
     Widgets.Td = Juggler.Views.ItemView.extend({
         tagName:'td',
-        template:_.template('<%= name %>')
+        template:_.template('<%= label %>')
     });
 
     Widgets.Tr = Juggler.Views.CompositeView.extend({
