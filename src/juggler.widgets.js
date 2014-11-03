@@ -3,7 +3,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     Widgets.Dialog = Juggler.Views.LayoutView.extend({
         className:'modal fade',
         template:Juggler.Templates.dialog,
-        defaults:{
+        options:{
             type:'success',
             title:'',
             content:'',
@@ -41,14 +41,15 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     Widgets.Notice = Juggler.Views.ItemView.extend({
         className:'alert alert-dismissable fade in animated juggler-alert',
         template:Juggler.Templates.alert,
-        defaults:{
-            type:'warning'
+        options:{
+            type:'warning',
+            message:'message'
         },
         events:{
             'close.bs.alert':'onClose'
         },
         initialize:function(options){
-            this.$el.addClass('alert-'+options.type);
+            this.$el.addClass('alert-'+this.options.type);
         },
         serializeData:function(){
             return this.options;
@@ -65,7 +66,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     Widgets.Progressbar = Marionette.ItemView.extend({
         className:'progress progress-striped active juggler-progress',
         template:_.template('<div class="progress-bar"></div>'),
-        defaults:{
+        options:{
             type: 'success'
         },
         ui:{
@@ -126,7 +127,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         tagName:'div',
         childViewContainer:'.navbar-nav-primary',
         template:Juggler.Templates.navbar,
-        defaults:{
+        options:{
             brand:'Home'
         },
         serializeData:function(){
@@ -154,16 +155,16 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     Widgets.Td = Juggler.Views.ItemView.extend({
         tagName:'td',
         template:_.template('<%= label %>'),
-        serializeData:function(){console.log(this.model)
-            return {label:this.parent.model.get(this.model.get('name'))};
+        serializeData:function(){
+            return {label:this.options.tr.model.get(this.model.get('name'))};
         }
     });
 
     Widgets.Tr = Juggler.Views.CompositeView.extend({
         tagName:'tr',
         childView:Widgets.Td,
-        initialize:function(options){
-            console.log(this.collection)
+        childViewOptions:function(){
+            return {tr:this}
         }
     });
 

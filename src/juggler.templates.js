@@ -20,7 +20,7 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
             <span class="sr-only">Close</span>\
         </button>\
         <span class="alert-message">\
-            <%= message %>\
+            //<%= message %>\
         </span>');
 
     Templates.form = _.template('');

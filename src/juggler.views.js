@@ -1,11 +1,6 @@
 Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     
     Views.ItemView = Marionette.ItemView.extend({
-        constructor: function(options) {
-            _.extend(this,_.pick(options,'parent'));
-            Marionette.ItemView.prototype.constructor.apply(this, arguments);
-            _.defaults(this.options,this.defaults);
-        },
         template: _.template(''),
         serializeData: function() {
             return this.model?this.model.toJSON():this.options;
@@ -25,10 +20,6 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         className:'row',
         regionAttr:'data-region',
         template: _.template(''),
-        constructor: function(options) {
-            Marionette.LayoutView.apply(this, arguments);
-            _.defaults(this.options,this.defaults);
-        },
         render: function() {
             Views.LayoutView.__super__.render.apply(this,arguments);
             this.resolveTemplateRegions();
@@ -50,11 +41,6 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     });
 
     Views.CollectionView = Marionette.CollectionView.extend({
-        constructor: function(options) {
-            _.extend(this,_.pick(options,'parent'));
-            Views.CompositeView.__super__.constructor.apply(this, arguments);
-            _.defaults(this.options,this.defaults);
-        },
         emptyView: Views.EmptyView,
         template: _.template(''),
         childViewOptions:function(){
@@ -63,11 +49,6 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     });
 
     Views.CompositeView = Marionette.CompositeView.extend({
-        constructor: function(options) {
-            _.extend(this,_.pick(options,'parent'));
-            Views.CompositeView.__super__.constructor.apply(this, arguments);
-            _.defaults(this.options,this.defaults);
-        },
         emptyView: Views.EmptyView,
         childViewContainer: "",
         template: _.template(''),
