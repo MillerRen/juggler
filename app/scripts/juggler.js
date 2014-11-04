@@ -44,7 +44,7 @@
     
         Templates.dialog = _.template('<div class="modal-dialog">\
                 <div class="modal-content">\
-                    <div class="modal-header">\
+                    <div class="modal-header alert alert-<%- type %>">\
                      <button type="button" class="close" data-dismiss="modal">\
                      <span aria-hidden="true">&times;</span>\
                      <span class="sr-only">Close</span></button>\
@@ -70,7 +70,7 @@
     
         Templates.form_row = _.template(
         '<label class="col-md-2 contorl-label"><%- label %></label>\
-        <div class="col-md-10"></div>\
+        <div class="col-md-10 control-field"></div>\
         ');
         
         Templates.navbar = _.template('<div class="container">\
@@ -168,6 +168,21 @@
             model:Enities.Column
         });
     
+        Enities.Field = Enities.Model.extend({
+           defaults:{
+               label:'label',
+               editor:'Input'
+           } 
+        });
+    
+        Enities.Fields = Enities.Collection.extend({
+            model:Enities.Field
+        });
+    
+        Enities.Form = Enities.Model.extend({
+    
+        });
+    
     });
 
     Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
@@ -182,7 +197,7 @@
         Views.EmptyView = Views.ItemView.extend({
             className: 'alert alert-warning',
             template: _.template('<%= text %>'),
-            defaults: {text: 'not found！'}
+            options: {text: 'not found！'}
         });
     
         Views.LayoutView = Marionette.LayoutView.extend({
@@ -224,6 +239,9 @@
                 return {
                     parentModel:this.model
                 };
+            },
+            templateHelpers: function() {
+                return this.options;
             }
         });
     
@@ -257,6 +275,7 @@
             template:Juggler.Templates.dialog,
             options:{
                 type:'success',
+                size:'md',
                 title:'',
                 body:'',
                 buttons:{
@@ -266,7 +285,7 @@
                 backdrop:'static'
             },
             ui:{
-                header:'.modal-header',
+                header:'.modal-title',
                 body:'.modal-body',
                 footer:'.modal-footer'
             },
@@ -278,8 +297,7 @@
                 this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
                 value?this.ui[key].show():this.ui[key].hide();
             },
-            onRender:function(){console.log(this)
-                this.ui.header.addClass('alert alert-'+this.options.type);
+            onRender:function(){
                 this.get('header')?this.ui.header.show():this.ui.header.hide();
                 this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
                 if(!this.options.buttons){
@@ -505,14 +523,34 @@
     
         });
     
-        Widgets.FormRow = Juggler.Views.ItemView.extend({
+        Widgets.Field = Juggler.Views.LayoutView.extend({
             className:'form-group',
-            template:Juggler.Templates.form_row
+            template:Juggler.Templates.form_row,
+            ui:{
+                label:'.control-label',
+                field:'.control-field'
+            },
+            initialize:function(){console.log(this.serializeData())
+                this.editor = Juggler.module('Editors.'+this.serializeData().editor);
+            },
+            onRender:function(){
+                this.fieldRegion.show(new this.editor)
+            }
         });
         
         Widgets.Form = Juggler.Views.CompositeView.extend({
             tagName:'form',
-            childView:Widgets.FormRow
+            childView:Widgets.Field,
+            options:{
+                type:'horizontal'
+            },
+            initialize:function(){
+                this.setType(this.options.type);
+            },
+            setType:function(type){
+                this.$el.removeClass('form-'+this.options.type).addClass('form-'+type);
+                this.options.type = type;
+            }
         });
     
     
@@ -520,7 +558,15 @@
 
     Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
     
-        
+        Editors.Input = Juggler.Views.ItemView.extend({
+            tagName:'input',
+            className:'form-control'
+        });
+    
+        Editors.Textarea = Juggler.Views.ItemView.extend({
+            tagName:'textarea',
+            className:'form-control'
+        });
     
     });
 

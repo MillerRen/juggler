@@ -5,6 +5,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         template:Juggler.Templates.dialog,
         options:{
             type:'success',
+            size:'md',
             title:'',
             body:'',
             buttons:{
@@ -14,7 +15,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             backdrop:'static'
         },
         ui:{
-            header:'.modal-header',
+            header:'.modal-title',
             body:'.modal-body',
             footer:'.modal-footer'
         },
@@ -26,8 +27,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
             value?this.ui[key].show():this.ui[key].hide();
         },
-        onRender:function(){console.log(this)
-            this.ui.header.addClass('alert alert-'+this.options.type);
+        onRender:function(){
             this.get('header')?this.ui.header.show():this.ui.header.hide();
             this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
             if(!this.options.buttons){
@@ -253,14 +253,34 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
 
     });
 
-    Widgets.FormRow = Juggler.Views.ItemView.extend({
+    Widgets.Field = Juggler.Views.LayoutView.extend({
         className:'form-group',
-        template:Juggler.Templates.form_row
+        template:Juggler.Templates.form_row,
+        ui:{
+            label:'.control-label',
+            field:'.control-field'
+        },
+        initialize:function(){console.log(this.serializeData())
+            this.editor = Juggler.module('Editors.'+this.serializeData().editor);
+        },
+        onRender:function(){
+            this.fieldRegion.show(new this.editor)
+        }
     });
     
     Widgets.Form = Juggler.Views.CompositeView.extend({
         tagName:'form',
-        childView:Widgets.FormRow
+        childView:Widgets.Field,
+        options:{
+            type:'horizontal'
+        },
+        initialize:function(){
+            this.setType(this.options.type);
+        },
+        setType:function(type){
+            this.$el.removeClass('form-'+this.options.type).addClass('form-'+type);
+            this.options.type = type;
+        }
     });
 
 

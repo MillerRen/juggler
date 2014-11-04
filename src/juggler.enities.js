@@ -68,4 +68,19 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
         model:Enities.Column
     });
 
+    Enities.Field = Enities.Model.extend({
+       defaults:{
+           label:'label',
+           editor:'Input'
+       } 
+    });
+
+    Enities.Fields = Enities.Collection.extend({
+        model:Enities.Field
+    });
+
+    Enities.Form = Enities.Model.extend({
+
+    });
+
 });

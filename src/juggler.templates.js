@@ -2,7 +2,7 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
 
     Templates.dialog = _.template('<div class="modal-dialog">\
             <div class="modal-content">\
-                <div class="modal-header">\
+                <div class="modal-header alert alert-<%- type %>">\
                  <button type="button" class="close" data-dismiss="modal">\
                  <span aria-hidden="true">&times;</span>\
                  <span class="sr-only">Close</span></button>\
@@ -28,7 +28,7 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
 
     Templates.form_row = _.template(
     '<label class="col-md-2 contorl-label"><%- label %></label>\
-    <div class="col-md-10"></div>\
+    <div class="col-md-10 control-field"></div>\
     ');
     
     Templates.navbar = _.template('<div class="container">\

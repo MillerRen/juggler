@@ -10,7 +10,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     Views.EmptyView = Views.ItemView.extend({
         className: 'alert alert-warning',
         template: _.template('<%= text %>'),
-        defaults: {text: 'not found！'}
+        options: {text: 'not found！'}
     });
 
     Views.LayoutView = Marionette.LayoutView.extend({
@@ -52,6 +52,9 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
             return {
                 parentModel:this.model
             };
+        },
+        templateHelpers: function() {
+            return this.options;
         }
     });
 
