@@ -2,8 +2,8 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     
     Views.ItemView = Marionette.ItemView.extend({
         template: _.template(''),
-        serializeData: function() {
-            return Views.ItemView.__super__.serializeData.apply(this,arguments)||this.options;
+        templateHelpers: function() {
+            return this.options;
         }
     });
 
@@ -18,8 +18,15 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         regionAttr:'data-region',
         template: _.template(''),
         render: function() {
+            this.resolveUIRegions();
             Views.LayoutView.__super__.render.apply(this,arguments);
             this.resolveTemplateRegions();
+        },
+        resolveUIRegions:function(){
+            if(!this.ui)return;
+            for(var i in this.ui){
+                this.addRegion(i+'Region',this.ui[i])
+            }
         },
         resolveTemplateRegions:function(){
             var that = this,
@@ -32,8 +39,8 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
             });
             this.triggerMethod('resoveregion');
         },
-        serializeData: function() {
-            return Views.LayoutView.__super__.serializeData.apply(this,arguments)||this.options;
+        templateHelpers: function() {
+            return this.options;
         }
     });
 

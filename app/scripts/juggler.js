@@ -166,8 +166,8 @@
         
         Views.ItemView = Marionette.ItemView.extend({
             template: _.template(''),
-            serializeData: function() {
-                return Views.ItemView.__super__.serializeData.apply(this,arguments)||this.options;
+            templateHelpers: function() {
+                return this.options;
             }
         });
     
@@ -182,8 +182,15 @@
             regionAttr:'data-region',
             template: _.template(''),
             render: function() {
+                this.resolveUIRegions();
                 Views.LayoutView.__super__.render.apply(this,arguments);
                 this.resolveTemplateRegions();
+            },
+            resolveUIRegions:function(){
+                if(!this.ui)return;
+                for(var i in this.ui){
+                    this.addRegion(i+'Region',this.ui[i])
+                }
             },
             resolveTemplateRegions:function(){
                 var that = this,
@@ -196,8 +203,8 @@
                 });
                 this.triggerMethod('resoveregion');
             },
-            serializeData: function() {
-                return Views.LayoutView.__super__.serializeData.apply(this,arguments)||this.options;
+            templateHelpers: function() {
+                return this.options;
             }
         });
     
@@ -322,6 +329,31 @@
             },
             onProgress:function(progress){
                 this.progress(progress);
+            }
+        });
+    
+        Widgets.Panel = Juggler.Views.LayoutView.extend({
+            className:'panel panel-default',
+            template:_.template('<div class="panel-heading"><%- title %></div><div class="panel-body"></div><div class="panel-footer"></div>'),
+            ui:{
+                header:'.panel-heading',
+                body:'.panel-body',
+                footer:'.panel-footer'
+            },
+            options:{
+                title:'',
+                body:'',
+                footer:''
+            },
+            getTitle:function(){
+                return this.serializeData().title;
+            },
+            getFooter:function(){
+                return this.serializeData().footer;
+            },
+            onRender:function(){
+                this.getTitle()?this.ui.header.show():this.ui.header.hide();
+                this.getFooter()?this.ui.footer.show():this.ui.footer.hide();
             }
         });
     

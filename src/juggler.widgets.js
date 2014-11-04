@@ -87,6 +87,31 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         }
     });
 
+    Widgets.Panel = Juggler.Views.LayoutView.extend({
+        className:'panel panel-default',
+        template:_.template('<div class="panel-heading"><%- title %></div><div class="panel-body"></div><div class="panel-footer"></div>'),
+        ui:{
+            header:'.panel-heading',
+            body:'.panel-body',
+            footer:'.panel-footer'
+        },
+        options:{
+            title:'',
+            body:'',
+            footer:''
+        },
+        getTitle:function(){
+            return this.serializeData().title;
+        },
+        getFooter:function(){
+            return this.serializeData().footer;
+        },
+        onRender:function(){
+            this.getTitle()?this.ui.header.show():this.ui.header.hide();
+            this.getFooter()?this.ui.footer.show():this.ui.footer.hide();
+        }
+    });
+
     Widgets.GroupList = Juggler.Views.ListView.extend({
         className: 'list-group',
         childView: Juggler.Views.ListItemView.extend({

@@ -4,7 +4,7 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		 window.layout = new Juggler.Widgets.GridLayout({
 			collection:new Juggler.Enities.Collection([
 				{sidebar:{md:{3:'',push:9}},content:{md:{9:'',pull:3}}},
-				{test:{md:3},form:{md:9}},
+				{panel:{md:3},form:{md:9}},
 				[{md:3},{md:9}],
 			])
 		});
@@ -40,6 +40,12 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		});
 
 		layout.formRegion.show(form);
+
+		var panel = new Juggler.Widgets.Panel();
+
+		layout.panelRegion.show(panel);
+
+		//panel.bodyRegion.show(form);
 		
 	});
 
