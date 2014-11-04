@@ -59,13 +59,36 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
     Editors.Checkbox = Editors.Input.extend({
         tagName:'label',
         className:'checkbox-inline',
-        attributes:{type:'checkbox'},
-        template:_.template('<input type="checkbox" name="<%- name %>" checked="" /> <%- label %>'),
+        template:_.template('<input type="checkbox" name="<%- name %>" checked="" /><%- label %>'),
+        setName:function(name){
+            this.$el.attr('for',name);
+        }
     })
 
     Editors.Checkboxes = Juggler.Views.CompositeView.extend({
         className:'',
         childView:Editors.Checkbox,
+        initialize:function(){
+            this.collection = this.collection || new Juggler.Enities.Collection(this.model.get('options'));
+        },
+        childViewOptions:function(model,index){
+            model.set('name',this.model.get('name'));
+            return Editors.Checkboxes.__super__.childViewOptions.apply(this,arguments);
+        }
+    });
+
+    Editors.Radio = Editors.Input.extend({
+        tagName:'label',
+        className:'radio-inline',
+        template:_.template('<input type="radio" name="<%- name %>" checked="" /><%- label %>'),
+        setName:function(name){
+            this.$el.attr('for',name);
+        }
+    })
+
+    Editors.Radios = Juggler.Views.CompositeView.extend({
+        className:'',
+        childView:Editors.Radio,
         initialize:function(){
             this.collection = this.collection || new Juggler.Enities.Collection(this.model.get('options'));
         },

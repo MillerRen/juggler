@@ -136,7 +136,8 @@
     				{name:'input',label:'Input',editor:'Input'},
     				{name:'textarea',label:'Textarea',editor:'Textarea'},
     				{name:'select',label:'Select',editor:'Select',options:[{value:'1',name:'option1'},{value:'2',name:'option2'}]},
-    				{name:'checkbox',label:'Checkboxes',editor:'Checkboxes',options:[{value:'1',label:'option1'},{value:'2',label:'option2'}]}
+    				{name:'checkbox',label:'Checkboxes',editor:'Checkboxes',options:[{value:'1',label:'option1'},{value:'2',label:'option2'}]},
+    				{name:'radio',label:'Radios',editor:'Radios',options:[{value:'1',label:'option1'},{value:'2',label:'option2'}]}
     			])
     		});
     
