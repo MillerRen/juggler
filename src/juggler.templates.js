@@ -8,7 +8,7 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
                  <span class="sr-only">Close</span></button>\
                  <h4 class="modal-title"><%= title %></h4>\
                 </div>\
-                <div class="modal-body"><%= content %></div>\
+                <div class="modal-body"><%= body %></div>\
                 <div class="modal-footer">\
                 <button class="btn btn-primary">确定</button>\
                 </div>\

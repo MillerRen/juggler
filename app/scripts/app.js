@@ -139,7 +139,11 @@
     
     		layout.panelRegion.show(panel);
     
-    		//panel.bodyRegion.show(form);
+    		var dialog = new Juggler.Widgets.Dialog();
+    
+    		//Juggler.dialogRegion.show(dialog);
+    
+    		//dialog.bodyRegion.show(form)
     		
     	});
     

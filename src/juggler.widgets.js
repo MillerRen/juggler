@@ -6,7 +6,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         options:{
             type:'success',
             title:'',
-            content:'',
+            body:'',
             buttons:{
                 'positive':{},
                 'negative':{}
@@ -18,13 +18,18 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             body:'.modal-body',
             footer:'.modal-footer'
         },
-        regions:{
-            headerRegion:'.modal-header',
-            bodyRegion:'.modal-body',
-            footerRegion:'.modal-footer'
+        get:function(key){
+            return _.extend(this.serializeData(),this.templateHelpers())[key];
         },
-        onRender:function(){
+        set:function(key, value){
+            this[key+'Region'].close();
+            this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
+            value?this.ui[key].show():this.ui[key].hide();
+        },
+        onRender:function(){console.log(this)
             this.ui.header.addClass('alert alert-'+this.options.type);
+            this.get('header')?this.ui.header.show():this.ui.header.hide();
+            this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
             if(!this.options.buttons){
                 this.ui.footer.remove()
                 return;
@@ -108,7 +113,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
             value?this.ui[key].show():this.ui[key].hide();
         },
-        onRender:function(){console.log(this.serializeData())
+        onRender:function(){
             this.get('header')?this.ui.header.show():this.ui.header.hide();
             this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
         }
