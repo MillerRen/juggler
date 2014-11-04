@@ -15,13 +15,14 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
             </div>\
         </div>');
 
-    Templates.alert = _.template('<button type="button" class="close" data-dismiss="alert">\
-            <span aria-hidden="true">&times;</span>\
-            <span class="sr-only">Close</span>\
-        </button>\
-        <span class="alert-message">\
-            //<%= message %>\
-        </span>');
+    Templates.alert = _.template(
+    '<button type="button" class="close" data-dismiss="alert">\
+        <span aria-hidden="true">&times;</span>\
+        <span class="sr-only">Close</span>\
+    </button>\
+    <span class="alert-message">\
+        <%= message %>\
+    </span>');
 
     Templates.form = _.template('');
 

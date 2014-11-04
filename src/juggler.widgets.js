@@ -43,12 +43,12 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         }
     });
 
-    Widgets.Notice = Juggler.Views.ItemView.extend({
+    Widgets.Alert = Juggler.Views.ItemView.extend({
         className:'alert alert-dismissable fade in animated juggler-alert',
         template:Juggler.Templates.alert,
         options:{
             type:'warning',
-            message:'message'
+            message:''
         },
         events:{
             'close.bs.alert':'onClose'

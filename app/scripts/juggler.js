@@ -57,13 +57,14 @@
                 </div>\
             </div>');
     
-        Templates.alert = _.template('<button type="button" class="close" data-dismiss="alert">\
-                <span aria-hidden="true">&times;</span>\
-                <span class="sr-only">Close</span>\
-            </button>\
-            <span class="alert-message">\
-                //<%= message %>\
-            </span>');
+        Templates.alert = _.template(
+        '<button type="button" class="close" data-dismiss="alert">\
+            <span aria-hidden="true">&times;</span>\
+            <span class="sr-only">Close</span>\
+        </button>\
+        <span class="alert-message">\
+            <%= message %>\
+        </span>');
     
         Templates.form = _.template('');
     
@@ -294,12 +295,12 @@
             }
         });
     
-        Widgets.Notice = Juggler.Views.ItemView.extend({
+        Widgets.Alert = Juggler.Views.ItemView.extend({
             className:'alert alert-dismissable fade in animated juggler-alert',
             template:Juggler.Templates.alert,
             options:{
                 type:'warning',
-                message:'message'
+                message:''
             },
             events:{
                 'close.bs.alert':'onClose'
