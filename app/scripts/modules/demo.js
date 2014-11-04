@@ -4,7 +4,7 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		 window.layout = new Juggler.Widgets.GridLayout({
 			collection:new Juggler.Enities.Collection([
 				{sidebar:{md:{3:'',push:9}},content:{md:{9:'',pull:3}}},
-				{test:{md:3},test2:{md:9}},
+				{test:{md:3},form:{md:9}},
 				[{md:3},{md:9}],
 			])
 		});
@@ -33,6 +33,13 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		});
 
 		layout.contentRegion.show(table);
+
+		var form = new Juggler.Widgets.Form({
+			model:new App.Enities.Form,
+			collection:new Juggler.Enities.Collection([{name:'name',label:'名称'},{name:'label',label:'标签'}])
+		});
+
+		layout.formRegion.show(form);
 		
 	});
 

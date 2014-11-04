@@ -3,17 +3,14 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     Views.ItemView = Marionette.ItemView.extend({
         template: _.template(''),
         serializeData: function() {
-            return this.model?this.model.toJSON():this.options;
+            return Views.ItemView.__super__.serializeData.apply(this,arguments)||this.options;
         }
     });
 
     Views.EmptyView = Views.ItemView.extend({
         className: 'alert alert-warning',
         template: _.template('<%= text %>'),
-        defaults: {text: 'not found！'},
-        serializeData:function(){
-            return this.options;
-        }
+        defaults: {text: 'not found！'}
     });
 
     Views.LayoutView = Marionette.LayoutView.extend({
@@ -40,20 +37,15 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         }
     });
 
-    Views.CollectionView = Marionette.CollectionView.extend({
-        emptyView: Views.EmptyView,
-        template: _.template(''),
-        childViewOptions:function(){
-            return {parent:this};
-        }
-    });
-
     Views.CompositeView = Marionette.CompositeView.extend({
         emptyView: Views.EmptyView,
         childViewContainer: "",
         template: _.template(''),
         childViewOptions:function(){
-            return {parent:this};
+            return {
+                parentModel:this.model,
+                collection:this.collection
+            };
         }
     });
 

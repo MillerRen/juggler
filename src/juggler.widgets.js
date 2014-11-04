@@ -51,9 +51,6 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         initialize:function(options){
             this.$el.addClass('alert-'+this.options.type);
         },
-        serializeData:function(){
-            return this.options;
-        },
         onShow:function(){
             this.$el.css('margin-left',-this.$el.outerWidth()/2+'px');
             this.$el.addClass('bounceInDown')
@@ -75,9 +72,6 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         modelEvents:{
             'progress':'onProgress'
         },
-        initialize:function(options){
-            this.options = _.defaults(options,Marionette.getOption(this, 'defaults'));
-        },
         progress:function(progress){
             progress = progress<0?0:progress;
             progress = progress>100?100:progress;
@@ -93,13 +87,11 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         }
     });
 
-    Widgets.GroupItem = Juggler.Views.ListItemView.extend({
-        className: 'list-group-item'
-    });
-
     Widgets.GroupList = Juggler.Views.ListView.extend({
         className: 'list-group',
-        childView: Widgets.GroupItem
+        childView: Juggler.Views.ListItemView.extend({
+            className: 'list-group-item'
+        })
     });
 
     Widgets.Tabs = Juggler.Views.ListView.extend({
@@ -123,10 +115,10 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     });
 
     Widgets.Navbar = Juggler.Views.ListView.extend({
-        className:'navbar navbar-static-top navbar-default',
         tagName:'div',
-        childViewContainer:'.navbar-nav-primary',
         template:Juggler.Templates.navbar,
+        childViewContainer:'.navbar-nav-primary',
+        className:'navbar navbar-static-top navbar-default',
         options:{
             brand:'Home'
         },
@@ -154,9 +146,9 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
 
     Widgets.Td = Juggler.Views.ItemView.extend({
         tagName:'td',
-        template:_.template('<%= label %>'),
+        template:_.template('<%= text %>'),
         serializeData:function(){
-            return {label:this.options.tr.model.get(this.model.get('name'))};
+            return {text:this.options.tr.model.get(this.model.get('name'))};
         }
     });
 
@@ -231,5 +223,16 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         }
 
     });
+
+    Widgets.FormRow = Juggler.Views.ItemView.extend({
+        className:'form-group',
+        template:Juggler.Templates.form_row
+    });
+    
+    Widgets.Form = Juggler.Views.CompositeView.extend({
+        tagName:'form',
+        childView:Widgets.FormRow
+    });
+
 
 });

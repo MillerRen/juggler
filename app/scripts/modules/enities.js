@@ -27,4 +27,11 @@ App.module('Enities',function(Enities, App, Backbone, Marionette, $, _){
 		}
 	});
 
+	Enities.Form = Juggler.Enities.Model.extend({
+		defaults:{
+			field1:'field1',
+			field2:'field2'
+		}
+	});
+
 });

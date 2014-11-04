@@ -167,17 +167,14 @@
         Views.ItemView = Marionette.ItemView.extend({
             template: _.template(''),
             serializeData: function() {
-                return this.model?this.model.toJSON():this.options;
+                return Views.ItemView.__super__.serializeData.apply(this,arguments)||this.options;
             }
         });
     
         Views.EmptyView = Views.ItemView.extend({
             className: 'alert alert-warning',
             template: _.template('<%= text %>'),
-            defaults: {text: 'not found！'},
-            serializeData:function(){
-                return this.options;
-            }
+            defaults: {text: 'not found！'}
         });
     
         Views.LayoutView = Marionette.LayoutView.extend({
@@ -204,20 +201,15 @@
             }
         });
     
-        Views.CollectionView = Marionette.CollectionView.extend({
-            emptyView: Views.EmptyView,
-            template: _.template(''),
-            childViewOptions:function(){
-                return {parent:this};
-            }
-        });
-    
         Views.CompositeView = Marionette.CompositeView.extend({
             emptyView: Views.EmptyView,
             childViewContainer: "",
             template: _.template(''),
             childViewOptions:function(){
-                return {parent:this};
+                return {
+                    parentModel:this.model,
+                    collection:this.collection
+                };
             }
         });
     
@@ -297,9 +289,6 @@
             initialize:function(options){
                 this.$el.addClass('alert-'+this.options.type);
             },
-            serializeData:function(){
-                return this.options;
-            },
             onShow:function(){
                 this.$el.css('margin-left',-this.$el.outerWidth()/2+'px');
                 this.$el.addClass('bounceInDown')
@@ -321,9 +310,6 @@
             modelEvents:{
                 'progress':'onProgress'
             },
-            initialize:function(options){
-                this.options = _.defaults(options,Marionette.getOption(this, 'defaults'));
-            },
             progress:function(progress){
                 progress = progress<0?0:progress;
                 progress = progress>100?100:progress;
@@ -339,13 +325,11 @@
             }
         });
     
-        Widgets.GroupItem = Juggler.Views.ListItemView.extend({
-            className: 'list-group-item'
-        });
-    
         Widgets.GroupList = Juggler.Views.ListView.extend({
             className: 'list-group',
-            childView: Widgets.GroupItem
+            childView: Juggler.Views.ListItemView.extend({
+                className: 'list-group-item'
+            })
         });
     
         Widgets.Tabs = Juggler.Views.ListView.extend({
@@ -369,10 +353,10 @@
         });
     
         Widgets.Navbar = Juggler.Views.ListView.extend({
-            className:'navbar navbar-static-top navbar-default',
             tagName:'div',
-            childViewContainer:'.navbar-nav-primary',
             template:Juggler.Templates.navbar,
+            childViewContainer:'.navbar-nav-primary',
+            className:'navbar navbar-static-top navbar-default',
             options:{
                 brand:'Home'
             },
@@ -400,9 +384,9 @@
     
         Widgets.Td = Juggler.Views.ItemView.extend({
             tagName:'td',
-            template:_.template('<%= label %>'),
+            template:_.template('<%= text %>'),
             serializeData:function(){
-                return {label:this.options.tr.model.get(this.model.get('name'))};
+                return {text:this.options.tr.model.get(this.model.get('name'))};
             }
         });
     
@@ -477,6 +461,17 @@
             }
     
         });
+    
+        Widgets.FormRow = Juggler.Views.ItemView.extend({
+            className:'form-group',
+            template:Juggler.Templates.form_row
+        });
+        
+        Widgets.Form = Juggler.Views.CompositeView.extend({
+            tagName:'form',
+            childView:Widgets.FormRow
+        });
+    
     
     });
 
