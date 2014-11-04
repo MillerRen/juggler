@@ -50,8 +50,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         template: _.template(''),
         childViewOptions:function(){
             return {
-                parentModel:this.model,
-                collection:this.collection
+                parentModel:this.model
             };
         }
     });

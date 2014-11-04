@@ -89,26 +89,27 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
 
     Widgets.Panel = Juggler.Views.LayoutView.extend({
         className:'panel panel-default',
-        template:_.template('<div class="panel-heading"><%- title %></div><div class="panel-body"></div><div class="panel-footer"></div>'),
+        template:Juggler.Templates.panel,
         ui:{
             header:'.panel-heading',
             body:'.panel-body',
             footer:'.panel-footer'
         },
         options:{
-            title:'',
+            header:'',
             body:'',
             footer:''
         },
-        getTitle:function(){
-            return this.serializeData().title;
+        get:function(key){
+            return _.extend(this.serializeData(),this.templateHelpers())[key];
         },
-        getFooter:function(){
-            return this.serializeData().footer;
+        set:function(key, value){
+            this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
+            value?this.ui[key].show():this.ui[key].hide();
         },
-        onRender:function(){
-            this.getTitle()?this.ui.header.show():this.ui.header.hide();
-            this.getFooter()?this.ui.footer.show():this.ui.footer.hide();
+        onRender:function(){console.log(this.serializeData())
+            this.get('header')?this.ui.header.show():this.ui.header.hide();
+            this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
         }
     });
 

@@ -68,25 +68,32 @@
         Templates.form = _.template('');
     
         Templates.form_row = _.template(
-            '<label class="col-md-2 contorl-label"><%- label %></label>\
-            <div class="col-md-10"></div>\
-            ');
+        '<label class="col-md-2 contorl-label"><%- label %></label>\
+        <div class="col-md-10"></div>\
+        ');
         
         Templates.navbar = _.template('<div class="container">\
-                  <div class="navbar-header">\
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">\
-                      <span class="sr-only">Toggle navigation</span>\
-                      <span class="icon-bar"></span>\
-                      <span class="icon-bar"></span>\
-                      <span class="icon-bar"></span>\
-                    </button>\
-                    <a class="navbar-brand" href="#"><%= brand %></a>\
-                  </div>\
-                  <div class="collapse navbar-collapse" id="navbar-collapse" data-region="navbar">\
-                    <ul class="nav navbar-nav navbar-nav-primary"></ul>\
-                    <ul class="nav navbar-nav navbar-nav-secondary"></ul>\
-                  </div>\
-                </div>');
+          <div class="navbar-header">\
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">\
+              <span class="sr-only">Toggle navigation</span>\
+              <span class="icon-bar"></span>\
+              <span class="icon-bar"></span>\
+              <span class="icon-bar"></span>\
+            </button>\
+            <a class="navbar-brand" href="#"><%= brand %></a>\
+          </div>\
+          <div class="collapse navbar-collapse" id="navbar-collapse" data-region="navbar">\
+            <ul class="nav navbar-nav navbar-nav-primary"></ul>\
+            <ul class="nav navbar-nav navbar-nav-secondary"></ul>\
+          </div>\
+        </div>'
+        );
+    
+        Templates.panel = _.template(
+            '<div class="panel-heading"><%= header %></div>\
+            <div class="panel-body"><%= body %></div>\
+            <div class="panel-footer"><%= footer %></div>'
+        );
     
     });
 
@@ -214,8 +221,7 @@
             template: _.template(''),
             childViewOptions:function(){
                 return {
-                    parentModel:this.model,
-                    collection:this.collection
+                    parentModel:this.model
                 };
             }
         });
@@ -334,26 +340,27 @@
     
         Widgets.Panel = Juggler.Views.LayoutView.extend({
             className:'panel panel-default',
-            template:_.template('<div class="panel-heading"><%- title %></div><div class="panel-body"></div><div class="panel-footer"></div>'),
+            template:Juggler.Templates.panel,
             ui:{
                 header:'.panel-heading',
                 body:'.panel-body',
                 footer:'.panel-footer'
             },
             options:{
-                title:'',
+                header:'',
                 body:'',
                 footer:''
             },
-            getTitle:function(){
-                return this.serializeData().title;
+            get:function(key){
+                return _.extend(this.serializeData(),this.templateHelpers())[key];
             },
-            getFooter:function(){
-                return this.serializeData().footer;
+            set:function(key, value){
+                this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
+                value?this.ui[key].show():this.ui[key].hide();
             },
-            onRender:function(){
-                this.getTitle()?this.ui.header.show():this.ui.header.hide();
-                this.getFooter()?this.ui.footer.show():this.ui.footer.hide();
+            onRender:function(){console.log(this.serializeData())
+                this.get('header')?this.ui.header.show():this.ui.header.hide();
+                this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
             }
         });
     

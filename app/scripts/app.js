@@ -135,7 +135,7 @@
     
     		layout.formRegion.show(form);
     
-    		var panel = new Juggler.Widgets.Panel();
+    		var panel = new Juggler.Widgets.Panel({header:'panel title',body:'panel body',footer:'panel footer'});
     
     		layout.panelRegion.show(panel);
     
