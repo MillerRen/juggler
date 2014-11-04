@@ -37,8 +37,9 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		var form = new Juggler.Widgets.Form({
 			model:new App.Enities.Form(),
 			collection:new Juggler.Enities.Fields([
-				{name:'field1',label:'名称',editor:'Textarea'},
-				{name:'field2',label:'标签'}
+				{name:'input',label:'Input',editor:'Input'},
+				{name:'textarea',label:'Textarea',editor:'Textarea'},
+				{name:'select',label:'Select',editor:'Select',options:[{value:'1',name:'option1'},{value:'2',name:'option2'}]}
 			])
 		});
 
