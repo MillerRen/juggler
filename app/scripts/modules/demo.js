@@ -35,10 +35,10 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		layout.contentRegion.show(table);
 
 		var form = new Juggler.Widgets.Form({
-			model:new App.Enities.Form,
+			model:new App.Enities.Form(),
 			collection:new Juggler.Enities.Fields([
-				{name:'name',label:'名称',editor:'Textarea'},
-				{name:'label',label:'标签'}
+				{name:'field1',label:'名称',editor:'Textarea'},
+				{name:'field2',label:'标签'}
 			])
 		});
 

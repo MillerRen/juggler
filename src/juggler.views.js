@@ -48,7 +48,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         emptyView: Views.EmptyView,
         childViewContainer: "",
         template: _.template(''),
-        childViewOptions:function(){
+        childViewOptions:function(model,index){
             return {
                 parentModel:this.model
             };

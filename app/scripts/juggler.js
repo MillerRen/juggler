@@ -235,7 +235,7 @@
             emptyView: Views.EmptyView,
             childViewContainer: "",
             template: _.template(''),
-            childViewOptions:function(){
+            childViewOptions:function(model,index){
                 return {
                     parentModel:this.model
                 };
@@ -530,11 +530,13 @@
                 label:'.control-label',
                 field:'.control-field'
             },
-            initialize:function(){console.log(this.serializeData())
-                this.editor = Juggler.module('Editors.'+this.serializeData().editor);
+            initialize:function(){
+                this.Editor = Juggler.module('Editors.'+this.serializeData().editor);
+                this.model.set('value',this.options.parentModel.get(this.model.get('name')));
             },
             onRender:function(){
-                this.fieldRegion.show(new this.editor)
+                var editor = new this.Editor({model:this.model});
+                this.fieldRegion.show(editor);
             }
         });
         
@@ -560,12 +562,31 @@
     
         Editors.Input = Juggler.Views.ItemView.extend({
             tagName:'input',
-            className:'form-control'
+            className:'form-control',
+            onRender:function(){
+                this.setValue(this.model.get('value'));
+                this.setName(this.model.get('name'));
+            },
+            setName:function(name){
+                this.$el.attr('name',name);
+            },
+            setValue:function(value){
+                this.$el.val(value);
+            },
+            getValue:function(){
+                return this.$el.val();
+            }
         });
     
-        Editors.Textarea = Juggler.Views.ItemView.extend({
+        Editors.Textarea = Editors.Input.extend({
             tagName:'textarea',
-            className:'form-control'
+            className:'form-control',
+            setValue:function(value){
+                this.$el.text(value);
+            },
+            getValue:function(){
+                return this.$el.text();
+            }
         });
     
     });

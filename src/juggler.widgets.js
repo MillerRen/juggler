@@ -260,11 +260,13 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             label:'.control-label',
             field:'.control-field'
         },
-        initialize:function(){console.log(this.serializeData())
-            this.editor = Juggler.module('Editors.'+this.serializeData().editor);
+        initialize:function(){
+            this.Editor = Juggler.module('Editors.'+this.serializeData().editor);
+            this.model.set('value',this.options.parentModel.get(this.model.get('name')));
         },
         onRender:function(){
-            this.fieldRegion.show(new this.editor)
+            var editor = new this.Editor({model:this.model});
+            this.fieldRegion.show(editor);
         }
     });
     
