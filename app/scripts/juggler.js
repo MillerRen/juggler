@@ -616,6 +616,25 @@
             }
         });
     
+        Editors.Checkbox = Editors.Input.extend({
+            tagName:'label',
+            className:'checkbox-inline',
+            attributes:{type:'checkbox'},
+            template:_.template('<input type="checkbox" name="<%- name %>" checked="" /> <%- label %>'),
+        })
+    
+        Editors.Checkboxes = Juggler.Views.CompositeView.extend({
+            className:'',
+            childView:Editors.Checkbox,
+            initialize:function(){
+                this.collection = this.collection || new Juggler.Enities.Collection(this.model.get('options'));
+            },
+            childViewOptions:function(model,index){
+                model.set('name',this.model.get('name'));
+                return Editors.Checkboxes.__super__.childViewOptions.apply(this,arguments);
+            }
+        });
+    
     });
 
     Juggler.module('Components', function(Components, Juggler, Backbone, Marionette, $, _) {

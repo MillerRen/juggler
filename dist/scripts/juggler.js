@@ -44,54 +44,77 @@
     
         Templates.dialog = _.template('<div class="modal-dialog">\
                 <div class="modal-content">\
-                    <div class="modal-header">\
+                    <div class="modal-header alert alert-<%- type %>">\
                      <button type="button" class="close" data-dismiss="modal">\
                      <span aria-hidden="true">&times;</span>\
                      <span class="sr-only">Close</span></button>\
                      <h4 class="modal-title"><%= title %></h4>\
                     </div>\
-                    <div class="modal-body"><%= content %></div>\
+                    <div class="modal-body"><%= body %></div>\
                     <div class="modal-footer">\
                     <button class="btn btn-primary">确定</button>\
                     </div>\
                 </div>\
             </div>');
     
-        Templates.alert = _.template('<button type="button" class="close" data-dismiss="alert">\
-                <span aria-hidden="true">&times;</span>\
-                <span class="sr-only">Close</span>\
-            </button>\
-            <span class="alert-message">\
-                <%= message %>\
-            </span>');
+        Templates.alert = _.template(
+        '<button type="button" class="close" data-dismiss="alert">\
+            <span aria-hidden="true">&times;</span>\
+            <span class="sr-only">Close</span>\
+        </button>\
+        <span class="alert-message">\
+            <%= message %>\
+        </span>');
     
         Templates.form = _.template('');
     
         Templates.form_row = _.template(
-            '<label class="col-md-2 contorl-label"><%- label %></label>\
-            <div class="col-md-10"></div>\
-            ');
+        '<label class="col-md-2 control-label" for="<%- name %>"><%- label %></label>\
+        <div class="col-md-10 control-field"></div>\
+        ');
         
         Templates.navbar = _.template('<div class="container">\
-                  <div class="navbar-header">\
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">\
-                      <span class="sr-only">Toggle navigation</span>\
-                      <span class="icon-bar"></span>\
-                      <span class="icon-bar"></span>\
-                      <span class="icon-bar"></span>\
-                    </button>\
-                    <a class="navbar-brand" href="#"><%= brand %></a>\
-                  </div>\
-                  <div class="collapse navbar-collapse" id="navbar-collapse" data-region="navbar">\
-                    <ul class="nav navbar-nav navbar-nav-primary"></ul>\
-                    <ul class="nav navbar-nav navbar-nav-secondary"></ul>\
-                  </div>\
-                </div>');
+          <div class="navbar-header">\
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">\
+              <span class="sr-only">Toggle navigation</span>\
+              <span class="icon-bar"></span>\
+              <span class="icon-bar"></span>\
+              <span class="icon-bar"></span>\
+            </button>\
+            <a class="navbar-brand" href="#"><%= brand %></a>\
+          </div>\
+          <div class="collapse navbar-collapse" id="navbar-collapse" data-region="navbar">\
+            <ul class="nav navbar-nav navbar-nav-primary"></ul>\
+            <ul class="nav navbar-nav navbar-nav-secondary"></ul>\
+          </div>\
+        </div>'
+        );
+    
+        Templates.panel = _.template(
+            '<div class="panel-heading"><%= header %></div>\
+            <div class="panel-body"><%= body %></div>\
+            <div class="panel-footer"><%= footer %></div>'
+        );
     
     });
 
     Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
-    
+        
+        Enities.model_to_collection = function(model, name, value, Collection){
+            Collection = Collection||Enities.Collection;
+            name = name||'name';
+            value = value||'label';
+            return new Collection(
+                _.map(model.toJSON(), function(item,i){
+                    var data = {};
+                    data[name]=item;
+                    data[value]=i;
+                    
+                    return data;
+                })
+            );
+        };
+        
         Enities.Model = Backbone.RelationalModel.extend({
             urlRoot: '/test',
             message: Juggler.Config.Message,
@@ -117,56 +140,80 @@
             }
         });
     
-        Enities.model_to_collection = function(model, name, value, Collection){
-            Collection = Collection||Enities.Collection;
-            name = name||'name';
-            value = value||'value';
-            return new Collection(
-                _.map(model.toJSON(), function(item,i){
-                    var data = {};
-                    data[name]=item;
-                    data[value]=i;
-                    
-                    return data;
-                })
-            );
-        };
+        Enities.Cell = Enities.Model.extend({
+    
+        });
+    
+        Enities.Row = Enities.Collection.extend({
+            model:Enities.Cell
+        });
+    
+        Enities.Column = Enities.Model.extend({
+            defaults: {
+                name: undefined,
+                label: undefined,
+                sortable: false,
+                editable: false,
+                renderable: true,
+                formatter: undefined,
+                sortType: "cycle",
+                sortValue: undefined,
+                direction: null,
+                cell: undefined,
+                headerCell: undefined
+            }
+        });
+    
+        Enities.Columns = Enities.Collection.extend({
+            model:Enities.Column
+        });
+    
+        Enities.Field = Enities.Model.extend({
+           defaults:{
+               label:'label',
+               editor:'Input'
+           } 
+        });
+    
+        Enities.Fields = Enities.Collection.extend({
+            model:Enities.Field
+        });
+    
+        Enities.Form = Enities.Model.extend({
+    
+        });
     
     });
 
     Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         
         Views.ItemView = Marionette.ItemView.extend({
-            constructor: function(options) {
-                Marionette.ItemView.prototype.constructor.apply(this, arguments);
-                _.defaults(this.options,this.defaults);
-            },
             template: _.template(''),
-            serializeData: function() {
-                return this.model?this.model.toJSON():this.options;
+            templateHelpers: function() {
+                return this.options;
             }
         });
     
         Views.EmptyView = Views.ItemView.extend({
             className: 'alert alert-warning',
             template: _.template('<%= text %>'),
-            defaults: {text: 'not found！'},
-            serializeData:function(){
-                return this.options;
-            }
+            options: {text: 'not found！'}
         });
     
-        Views.Layout = Marionette.LayoutView.extend({
+        Views.LayoutView = Marionette.LayoutView.extend({
             className:'row',
             regionAttr:'data-region',
             template: _.template(''),
-            constructor: function(options) {
-                Marionette.LayoutView.apply(this, arguments);
-                _.defaults(this.options,this.defaults);
-            },
             render: function() {
-                Views.Layout.__super__.render.apply(this,arguments);
+                this.resolveUIRegions();
+                Views.LayoutView.__super__.render.apply(this,arguments);
                 this.resolveTemplateRegions();
+            },
+            resolveUIRegions:function(){
+                if(!this.ui)return;
+                for(var i in this.ui){
+                    this.addRegion(i+'Region',this.ui[i])
+                }
             },
             resolveTemplateRegions:function(){
                 var that = this,
@@ -179,38 +226,42 @@
                 });
                 this.triggerMethod('resoveregion');
             },
-            serializeData: function() {
-                return this.model?this.model.toJSON():this.options;
+            templateHelpers: function() {
+                return this.options;
             }
         });
     
         Views.CompositeView = Marionette.CompositeView.extend({
-            constructor: function(options) {
-                Views.CompositeView.__super__.constructor.apply(this, arguments);
-                _.defaults(this.options,this.defaults);
-            },
             emptyView: Views.EmptyView,
             childViewContainer: "",
-            template: _.template('')
+            template: _.template(''),
+            childViewOptions:function(model,index){
+                return {
+                    parentModel:this.model
+                };
+            },
+            templateHelpers: function() {
+                return this.options;
+            }
         });
     
-        Views.Item = Views.ItemView.extend({
+        Views.ListItemView = Views.ItemView.extend({
             tagName: 'li',
-            template: _.template('<a data-target="#<%- value %>" data-toggle="tab"><%- name %></a>'),
+            template: _.template('<a data-target="#<%- name %>" data-toggle="tab"><%- label %></a>'),
             triggers:{
                'click a':'click' 
             }
         });
     
-        Views.List = Views.CompositeView.extend({
+        Views.ListView = Views.CompositeView.extend({
             tagName: 'ul',
             template: _.template(''),
-            childView: Views.Item,
+            childView: Views.ListItemView,
             childEvents:{
               'click':'onClick'  
             },
             onClick:function(view){
-              Backbone.history.navigate(view.model.get('value')); 
+              Backbone.history.navigate(view.model.get('name')); 
             }
         });
     
@@ -219,13 +270,14 @@
 
     Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
     
-        Widgets.Dialog = Juggler.Views.Layout.extend({
+        Widgets.Dialog = Juggler.Views.LayoutView.extend({
             className:'modal fade',
             template:Juggler.Templates.dialog,
-            defaults:{
+            options:{
                 type:'success',
+                size:'md',
                 title:'',
-                content:'',
+                body:'',
                 buttons:{
                     'positive':{},
                     'negative':{}
@@ -233,17 +285,21 @@
                 backdrop:'static'
             },
             ui:{
-                header:'.modal-header',
+                header:'.modal-title',
                 body:'.modal-body',
                 footer:'.modal-footer'
             },
-            regions:{
-                headerRegion:'.modal-header',
-                bodyRegion:'.modal-body',
-                footerRegion:'.modal-footer'
+            get:function(key){
+                return _.extend(this.serializeData(),this.templateHelpers())[key];
+            },
+            set:function(key, value){
+                this[key+'Region'].close();
+                this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
+                value?this.ui[key].show():this.ui[key].hide();
             },
             onRender:function(){
-                this.ui.header.addClass('alert alert-'+this.options.type);
+                this.get('header')?this.ui.header.show():this.ui.header.hide();
+                this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
                 if(!this.options.buttons){
                     this.ui.footer.remove()
                     return;
@@ -257,20 +313,18 @@
             }
         });
     
-        Widgets.Notice = Juggler.Views.ItemView.extend({
+        Widgets.Alert = Juggler.Views.ItemView.extend({
             className:'alert alert-dismissable fade in animated juggler-alert',
             template:Juggler.Templates.alert,
-            defaults:{
-                type:'warning'
+            options:{
+                type:'warning',
+                message:''
             },
             events:{
                 'close.bs.alert':'onClose'
             },
             initialize:function(options){
-                this.$el.addClass('alert-'+options.type);
-            },
-            serializeData:function(){
-                return this.options;
+                this.$el.addClass('alert-'+this.options.type);
             },
             onShow:function(){
                 this.$el.css('margin-left',-this.$el.outerWidth()/2+'px');
@@ -284,7 +338,7 @@
         Widgets.Progressbar = Marionette.ItemView.extend({
             className:'progress progress-striped active juggler-progress',
             template:_.template('<div class="progress-bar"></div>'),
-            defaults:{
+            options:{
                 type: 'success'
             },
             ui:{
@@ -292,9 +346,6 @@
             },
             modelEvents:{
                 'progress':'onProgress'
-            },
-            initialize:function(options){
-                this.options = _.defaults(options,Marionette.getOption(this, 'defaults'));
             },
             progress:function(progress){
                 progress = progress<0?0:progress;
@@ -311,41 +362,66 @@
             }
         });
     
-        Widgets.GroupItem = Juggler.Views.Item.extend({
-            className: 'list-group-item'
+        Widgets.Panel = Juggler.Views.LayoutView.extend({
+            className:'panel panel-default',
+            template:Juggler.Templates.panel,
+            ui:{
+                header:'.panel-heading',
+                body:'.panel-body',
+                footer:'.panel-footer'
+            },
+            options:{
+                header:'',
+                body:'',
+                footer:''
+            },
+            get:function(key){
+                return _.extend(this.serializeData(),this.templateHelpers())[key];
+            },
+            set:function(key, value){
+                this[key+'Region'].close();
+                this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
+                value?this.ui[key].show():this.ui[key].hide();
+            },
+            onRender:function(){
+                this.get('header')?this.ui.header.show():this.ui.header.hide();
+                this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
+            }
         });
     
-        Widgets.GroupList = Juggler.Views.List.extend({
+        Widgets.GroupList = Juggler.Views.ListView.extend({
             className: 'list-group',
-            childView: Widgets.GroupItem
+            childView: Juggler.Views.ListItemView.extend({
+                className: 'list-group-item'
+            })
         });
     
-        Widgets.Tabs = Juggler.Views.List.extend({
+        Widgets.Tabs = Juggler.Views.ListView.extend({
             className: 'nav nav-tabs'
         });
     
-        Widgets.Pills = Juggler.Views.List.extend({
+        Widgets.Pills = Juggler.Views.ListView.extend({
             className: 'nav nav-pills'
         });
     
-        Widgets.Stack = Juggler.Views.List.extend({
+        Widgets.Stack = Juggler.Views.ListView.extend({
             className: 'nav nav-pills nav-stacked'
         });
     
-        Widgets.Nav = Juggler.Views.List.extend({
+        Widgets.Nav = Juggler.Views.ListView.extend({
             className: 'nav navbar-nav'
         });
     
-        Widgets.Breadcrumb = Juggler.Views.List.extend({
+        Widgets.Breadcrumb = Juggler.Views.ListView.extend({
            className: 'breadcrumb' 
         });
     
-        Widgets.Navbar = Juggler.Views.List.extend({
-            className:'navbar navbar-static-top navbar-default',
+        Widgets.Navbar = Juggler.Views.ListView.extend({
             tagName:'div',
-            childViewContainer:'.navbar-nav-primary',
             template:Juggler.Templates.navbar,
-            defaults:{
+            childViewContainer:'.navbar-nav-primary',
+            className:'navbar navbar-static-top navbar-default',
+            options:{
                 brand:'Home'
             },
             serializeData:function(){
@@ -353,45 +429,201 @@
             }
         });
     
-        Widgets.DropdownMenu = Juggler.Views.List.extend({
+        Widgets.DropdownMenu = Juggler.Views.ListItemView.extend({
            className:'dropdown-menu' 
         });
     
-        Widgets.Pagination = Juggler.Views.List.extend({
+        Widgets.Pagination = Juggler.Views.ListItemView.extend({
             className:'pagination'
         });
     
-        Widgets.MediaList = Juggler.Views.List.extend({
+        Widgets.MediaList = Juggler.Views.ListItemView.extend({
             className:'media-list'
+        });
+    
+        Widgets.Th = Juggler.Views.ItemView.extend({
+            tagName:'th',
+            template:_.template('<%= label %>')
         });
     
         Widgets.Td = Juggler.Views.ItemView.extend({
             tagName:'td',
-            template:_.template('<%= name %>')
+            template:_.template('<%= text %>'),
+            serializeData:function(){
+                return {text:this.options.parentModel.get(this.model.get('name'))};
+            }
         });
     
         Widgets.Tr = Juggler.Views.CompositeView.extend({
             tagName:'tr',
-            childView:Widgets.Td,
-            initialize:function(options){
-                this.collection = this.collection || Juggler.Enities.model_to_collection(this.model);
+            childView:Widgets.Td
+        });
+    
+        Widgets.Thead = Widgets.Tr.extend({
+            childView:Widgets.Th
+        });
+    
+        Widgets.Tbody = Juggler.Views.CompositeView.extend({
+            childView:Widgets.Tr,
+            childViewOptions:function(){
+                return {collection:this.options.columns}
             }
         });
     
-        Widgets.Table = Juggler.Views.CompositeView.extend({
+        Widgets.Table = Juggler.Views.LayoutView.extend({
             tagName:'table',
-            className:'table',
+            className:'table table-hover table-striped',
             childView:Widgets.Tr,
             childViewContainer:'tbody',
             template:_.template('<thead></thead><tbody></tbody><tfoot></tfoot>'),
+            regions:{
+                theadRegion:'thead',
+                tbodyRegion:'tbody',
+                tfootRegion:'tfoot'
+            },
+            initialize:function(){
+                this.head = new Widgets.Thead({
+                    collection:this.options.columns,
+                    parent:this
+                });
+                this.body = new Widgets.Tbody({
+                    collection:this.collection,
+                    columns:this.options.columns
+                });
+                this.tbodyRegion.attachHtml = function(view){
+                    this.$el.html(view.$el.html())
+                };
+            },
+            onRender:function(){
+                this.theadRegion.show(this.head);
+                this.tbodyRegion.show(this.body);
+            }
+        });
+    
+        Widgets.GridLayout = Juggler.Views.LayoutView.extend({
+            className:'grid-layout',
+            template:function(data){
+                var tdata = data.items||[data],
+                    tpl =  _.map(tdata,function(region,r){
+                    var columns = _.map(region,function(item,i){
+                        var className,t,region_name;
+                        region_name = !_.isNaN(Number(i))?'col-'+i:i;
+                        className = _.map(item,function(item2,i2){
+                                    return _.isObject(item2)?_.map(item2,function(item3,i3){
+                                        return 'col-'+i2+'-'+i3+(item3?'-'+item3:'');
+                                    }).join(' '):'col-'+i2+'-'+item2;
+                                }).join(' ');
+                        return '<div class="'+className+'" data-region="'+region_name+'"></div>';
+                        
+                    }).join('');
+                    return '<div class="row">'+columns+'</div>'
+                }).join('');
+                return tpl;
+            }
     
         });
+    
+        Widgets.Field = Juggler.Views.LayoutView.extend({
+            className:'form-group',
+            template:Juggler.Templates.form_row,
+            ui:{
+                label:'.control-label',
+                field:'.control-field'
+            },
+            initialize:function(){
+                this.Editor = Juggler.module('Editors.'+this.serializeData().editor);
+                this.model.set('value',this.options.parentModel.get(this.model.get('name')));
+            },
+            onRender:function(){
+                var editor = new this.Editor({model:this.model});
+                this.fieldRegion.show(editor);
+            }
+        });
+        
+        Widgets.Form = Juggler.Views.CompositeView.extend({
+            tagName:'form',
+            childView:Widgets.Field,
+            options:{
+                type:'horizontal'
+            },
+            initialize:function(){
+                this.setType(this.options.type);
+            },
+            setType:function(type){
+                this.$el.removeClass('form-'+this.options.type).addClass('form-'+type);
+                this.options.type = type;
+            }
+        });
+    
     
     });
 
     Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
     
+        Editors.Base = Juggler.Views.ItemView.extend({
+            className:'form-control',
+            setName:function(name){
+                this.$el.attr('name',name);
+            },
+            setValue:function(value){
+                this.$el.val(value);
+            },
+            getValue:function(){
+                return this.$el.val();
+            },
+            onRender:function(){
+                this.setValue(this.model.get('value'));
+                this.setName(this.model.get('name'));
+            }
+        });
         
+        Editors.Input = Editors.Base.extend({
+            tagName:'input'
+        });
+    
+        Editors.Textarea = Editors.Base.extend({
+            tagName:'textarea',
+            className:'form-control',
+            setValue:function(value){
+                this.$el.text(value);
+            },
+            getValue:function(){
+                return this.$el.text();
+            }
+        });
+    
+        Editors.Select = Juggler.Views.CompositeView.extend({
+            tagName:'select',
+            className:'form-control',
+            childView:Juggler.Views.ItemView.extend({
+                tagName:'option',
+                onRender:function(){
+                    this.$el.attr('value',this.model.get('value'))
+                        .text(this.model.get('name'));
+                }
+            }),
+            initialize:function(){
+                this.collection = new Juggler.Enities.Collection(this.model.get('options'));
+            },
+            onRender:function(){
+                this.setValue(this.model.get('value'));
+            },
+            setValue:function(value){
+                this.$el.find('[value='+value+']').attr('selected','selected');
+            },
+            getValue:function(){
+                return this.$el.val();
+            }
+        });
+    
+        Editors.Checkbox = Editors.Input.extend({
+            attrs:{type:'checkbox'}
+        })
+    
+        Editors.Checkboxes = Juggler.Views.CompositeView.extend({
+            className:'checkbox',
+            childView:Editors.Checkbox
+        });
     
     });
 
