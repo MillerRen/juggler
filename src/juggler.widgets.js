@@ -104,6 +104,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             return _.extend(this.serializeData(),this.templateHelpers())[key];
         },
         set:function(key, value){
+            this[key+'Region'].close();
             this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
             value?this.ui[key].show():this.ui[key].hide();
         },
@@ -174,16 +175,13 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         tagName:'td',
         template:_.template('<%= text %>'),
         serializeData:function(){
-            return {text:this.options.tr.model.get(this.model.get('name'))};
+            return {text:this.options.parentModel.get(this.model.get('name'))};
         }
     });
 
     Widgets.Tr = Juggler.Views.CompositeView.extend({
         tagName:'tr',
-        childView:Widgets.Td,
-        childViewOptions:function(){
-            return {tr:this}
-        }
+        childView:Widgets.Td
     });
 
     Widgets.Thead = Widgets.Tr.extend({
