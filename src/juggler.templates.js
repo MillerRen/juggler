@@ -28,7 +28,9 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
 
     Templates.form_row = _.template(
     '<label class="col-md-2 control-label" for="<%- name %>"><%- label %></label>\
-    <div class="col-md-10 control-field"></div>\
+    <div class="col-md-10 control-field">\
+    </div>\
+    <span class="glyphicon form-control-feedback hidden"></span>\
     ');
     
     Templates.navbar = _.template('<div class="container">\

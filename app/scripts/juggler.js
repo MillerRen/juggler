@@ -70,7 +70,9 @@
     
         Templates.form_row = _.template(
         '<label class="col-md-2 control-label" for="<%- name %>"><%- label %></label>\
-        <div class="col-md-10 control-field"></div>\
+        <div class="col-md-10 control-field">\
+        </div>\
+        <span class="glyphicon form-control-feedback hidden"></span>\
         ');
         
         Templates.navbar = _.template('<div class="container">\
@@ -539,7 +541,7 @@
         });
     
         Widgets.Field = Juggler.Views.LayoutView.extend({
-            className:'form-group',
+            className:'form-group has-feedback',
             template:Juggler.Templates.form_row,
             ui:{
                 label:'.control-label',
@@ -691,6 +693,31 @@
     
     });
 
+    Juggler.addInitializer(function(){
+        
+        Backbone.Validation.callbacks =  {
+            valid: function (view, attr, selector) {
+                var $el = view.$('[name=' + attr + ']'), 
+                    $group = $el.closest('.form-group'),
+                    $feedback = view.$('.form-control-feedback');
+    
+                $group.removeClass('has-error');
+                $group.find('.help-block').html('').addClass('hidden');
+                $feedback.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+            },
+            invalid: function (view, attr, error, selector) {
+                var $el = view.$('[name=' + attr + ']'), 
+                    $group = $el.closest('.form-group'),
+                    $feedback = view.$('.form-control-feedback');
+    
+                $group.addClass('has-error');
+                $group.find('.help-block').html(error).removeClass('hidden');
+                $feedback.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+            }
+        }
+    
+    });
+    
     Juggler.addInitializer(function() {
     
         Juggler.addRegions({

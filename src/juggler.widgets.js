@@ -254,7 +254,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     });
 
     Widgets.Field = Juggler.Views.LayoutView.extend({
-        className:'form-group',
+        className:'form-group has-feedback',
         template:Juggler.Templates.form_row,
         ui:{
             label:'.control-label',

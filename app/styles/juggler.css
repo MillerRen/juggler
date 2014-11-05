@@ -13,3 +13,7 @@
     left:50%;
     position:fixed;
 }
+
+.form-horizontal label ~ .form-control-feedback{
+    top:0;
+}
