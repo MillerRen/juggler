@@ -37,6 +37,21 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
         message: Juggler.Config.Message,
         parse: function(resp, options) {
             return options.collection ? resp : resp.data;
+        },
+        up: function(model) {
+          var index = this.indexOf(model);
+          if (index > 0){
+            this.swap(index, index-1);
+          }
+        },
+        down: function(model) {
+          var index = this.indexOf(model);
+          if (index < this.models.length) {
+            this.swap(index, index+1);
+          }
+        },
+        swap: function (indexA, indexB) {
+          this.models[indexA] = this.models.splice(indexB, 1, this.models[indexA])[0];
         }
     });
 
