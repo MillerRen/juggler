@@ -61,7 +61,7 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
         className:'checkbox-inline',
         template:_.template('<input type="checkbox" name="<%- name %>" checked="" /><%- label %>'),
         setName:function(name){
-            this.$el.attr('for',name);
+            //this.$el.attr('for',name);
         }
     })
 
@@ -82,7 +82,7 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
         className:'radio-inline',
         template:_.template('<input type="radio" name="<%- name %>" checked="" /><%- label %>'),
         setName:function(name){
-            this.$el.attr('for',name);
+            //this.$el.attr('for',name);
         }
     })
 

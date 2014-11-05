@@ -621,7 +621,7 @@
             className:'checkbox-inline',
             template:_.template('<input type="checkbox" name="<%- name %>" checked="" /><%- label %>'),
             setName:function(name){
-                this.$el.attr('for',name);
+                //this.$el.attr('for',name);
             }
         })
     
@@ -642,7 +642,7 @@
             className:'radio-inline',
             template:_.template('<input type="radio" name="<%- name %>" checked="" /><%- label %>'),
             setName:function(name){
-                this.$el.attr('for',name);
+                //this.$el.attr('for',name);
             }
         })
     
