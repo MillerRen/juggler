@@ -70,10 +70,11 @@
     
         Templates.form_row = _.template(
         '<label class="col-md-2 control-label" for="<%- name %>"><%- label %></label>\
-        <div class="col-md-10 control-field">\
-        </div>\
+        <div class="col-md-10">\
+        <div class="control-field"></div>\
         <span class="glyphicon form-control-feedback hidden"></span>\
         <span class="help-block"></span>\
+        </div>\
         ');
         
         Templates.navbar = _.template('<div class="container">\
@@ -551,7 +552,7 @@
                 label:'.control-label',
                 field:'.control-field',
                 help:'.help-block',
-                feedback:'.feedback'
+                feedback:'.form-control-feedback'
             },
             modelEvents:{
               'validated':'onValidate'  
@@ -564,8 +565,17 @@
                 var editor = new this.Editor({model:this.model});
                 this.fieldRegion.show(editor);
             },
-            onValidate:function(isValid){console.log(isValid)
-                isValid?this.$el.removeClass('has-error'):this.$el.addClass('has-error');
+            onValidate:function(isValid,model,msg){
+                if(isValid){
+                    this.$el.removeClass('has-error');
+                    this.ui.help.empty().hide();
+                    this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-ok')
+                }
+                else{
+                    this.$el.addClass('has-error');
+                    this.ui.help.show().text(msg.value);
+                    this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-remove');
+                }
             }
         });
         

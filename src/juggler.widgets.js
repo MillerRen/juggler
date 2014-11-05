@@ -260,7 +260,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             label:'.control-label',
             field:'.control-field',
             help:'.help-block',
-            feedback:'.feedback'
+            feedback:'.form-control-feedback'
         },
         modelEvents:{
           'validated':'onValidate'  
@@ -273,8 +273,17 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             var editor = new this.Editor({model:this.model});
             this.fieldRegion.show(editor);
         },
-        onValidate:function(isValid){console.log(isValid)
-            isValid?this.$el.removeClass('has-error'):this.$el.addClass('has-error');
+        onValidate:function(isValid,model,msg){
+            if(isValid){
+                this.$el.removeClass('has-error');
+                this.ui.help.empty().hide();
+                this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-ok')
+            }
+            else{
+                this.$el.addClass('has-error');
+                this.ui.help.show().text(msg.value);
+                this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-remove');
+            }
         }
     });
     
