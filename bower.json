@@ -23,8 +23,8 @@
     "bootstrap": ">3.0.0",
     "marionette": ">=2.0.0",
     "backbone-relational": "~0.8.8",
-    "backbone.modelbinder": "~1.0.5",
-    "backbone.validate": "~0.10.0"
+    "backbone.validate": "~0.10.0",
+    "backbone.stickit": "~0.8.0"
   },
   "devDependencies": {
     "mocha": "~1.21.4",

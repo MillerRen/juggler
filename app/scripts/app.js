@@ -72,7 +72,7 @@
     		}
     	});
     
-    	Enities.Form = Juggler.Enities.Model.extend({
+    	Enities.Form = Juggler.Enities.Form.extend({
     		defaults:{
     			input:'input',
     			textarea:'textarea',
