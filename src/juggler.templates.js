@@ -31,6 +31,7 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
     <div class="col-md-10 control-field">\
     </div>\
     <span class="glyphicon form-control-feedback hidden"></span>\
+    <span class="help-block"></span>\
     ');
     
     Templates.navbar = _.template('<div class="container">\

@@ -2,6 +2,19 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
 
     Editors.Base = Juggler.Views.ItemView.extend({
         className:'form-control',
+        events:{
+            'blur':'onBlur'
+        },
+        bindings:{
+            ':el':{
+                observe:'value',
+                setOptions:{validate:true}
+            }
+        },
+        initialize:function(){
+            this.validator = this.model.get('validation');
+            Backbone.Validation.bind(this);
+        },
         setName:function(name){
             this.$el.attr('name',name);
         },
@@ -14,6 +27,11 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
         onRender:function(){
             this.setValue(this.model.get('value'));
             this.setName(this.model.get('name'));
+            
+            this.stickit();
+        },
+        onBlur:function(){
+            console.log(this.model.isValid('value'));
         }
     });
     

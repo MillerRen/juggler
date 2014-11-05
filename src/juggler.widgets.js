@@ -258,7 +258,12 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         template:Juggler.Templates.form_row,
         ui:{
             label:'.control-label',
-            field:'.control-field'
+            field:'.control-field',
+            help:'.help-block',
+            feedback:'.feedback'
+        },
+        modelEvents:{
+          'validated':'onValidate'  
         },
         initialize:function(){
             this.Editor = Juggler.module('Editors.'+this.serializeData().editor);
@@ -267,6 +272,9 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         onRender:function(){
             var editor = new this.Editor({model:this.model});
             this.fieldRegion.show(editor);
+        },
+        onValidate:function(isValid){console.log(isValid)
+            isValid?this.$el.removeClass('has-error'):this.$el.addClass('has-error');
         }
     });
     

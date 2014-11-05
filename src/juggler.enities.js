@@ -87,7 +87,10 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
        defaults:{
            label:'label',
            editor:'Input'
-       } 
+       },
+       validation:function(){
+           return {value:{pattern:'email'}}
+       }
     });
 
     Enities.Fields = Enities.Collection.extend({
@@ -95,7 +98,7 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
     });
 
     Enities.Form = Enities.Model.extend({
-
+        
     });
 
 });

@@ -73,6 +73,7 @@
         <div class="col-md-10 control-field">\
         </div>\
         <span class="glyphicon form-control-feedback hidden"></span>\
+        <span class="help-block"></span>\
         ');
         
         Templates.navbar = _.template('<div class="container">\
@@ -189,7 +190,10 @@
            defaults:{
                label:'label',
                editor:'Input'
-           } 
+           },
+           validation:function(){
+               return {value:{pattern:'email'}}
+           }
         });
     
         Enities.Fields = Enities.Collection.extend({
@@ -197,7 +201,7 @@
         });
     
         Enities.Form = Enities.Model.extend({
-    
+            
         });
     
     });
@@ -545,7 +549,12 @@
             template:Juggler.Templates.form_row,
             ui:{
                 label:'.control-label',
-                field:'.control-field'
+                field:'.control-field',
+                help:'.help-block',
+                feedback:'.feedback'
+            },
+            modelEvents:{
+              'validated':'onValidate'  
             },
             initialize:function(){
                 this.Editor = Juggler.module('Editors.'+this.serializeData().editor);
@@ -554,6 +563,9 @@
             onRender:function(){
                 var editor = new this.Editor({model:this.model});
                 this.fieldRegion.show(editor);
+            },
+            onValidate:function(isValid){console.log(isValid)
+                isValid?this.$el.removeClass('has-error'):this.$el.addClass('has-error');
             }
         });
         
@@ -579,6 +591,19 @@
     
         Editors.Base = Juggler.Views.ItemView.extend({
             className:'form-control',
+            events:{
+                'blur':'onBlur'
+            },
+            bindings:{
+                ':el':{
+                    observe:'value',
+                    setOptions:{validate:true}
+                }
+            },
+            initialize:function(){
+                this.validator = this.model.get('validation');
+                Backbone.Validation.bind(this);
+            },
             setName:function(name){
                 this.$el.attr('name',name);
             },
@@ -591,6 +616,11 @@
             onRender:function(){
                 this.setValue(this.model.get('value'));
                 this.setName(this.model.get('name'));
+                
+                this.stickit();
+            },
+            onBlur:function(){
+                console.log(this.model.isValid('value'));
             }
         });
         
@@ -695,26 +725,16 @@
 
     Juggler.addInitializer(function(){
         
-        Backbone.Validation.callbacks =  {
-            valid: function (view, attr, selector) {
-                var $el = view.$('[name=' + attr + ']'), 
-                    $group = $el.closest('.form-group'),
-                    $feedback = view.$('.form-control-feedback');
+        Backbone.Stickit.addHandler({
+            selector: '*',
+            setOptions: {validate:true}
+        });
     
-                $group.removeClass('has-error');
-                $group.find('.help-block').html('').addClass('hidden');
-                $feedback.addClass('glyphicon-ok').removeClass('glyphicon-remove');
-            },
-            invalid: function (view, attr, error, selector) {
-                var $el = view.$('[name=' + attr + ']'), 
-                    $group = $el.closest('.form-group'),
-                    $feedback = view.$('.form-control-feedback');
-    
-                $group.addClass('has-error');
-                $group.find('.help-block').html(error).removeClass('hidden');
-                $feedback.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-            }
-        }
+        Backbone.Validation.configure({
+          forceUpdate: true
+        });
+        
+        
     
     });
     
