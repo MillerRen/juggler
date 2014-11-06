@@ -70,7 +70,7 @@
         '<div class="fields"></div>\
             <div class="form-group">\
             <div class="col-md-10 col-md-offset-2">\
-                <button type="submit" class="btn btn-success btn-submit col-md-2"></button>\
+                <button type="submit" class="btn btn-success btn-submit col-md-2 hidden"></button>\
             </div>\
         </div>');
     
@@ -607,10 +607,17 @@
             template:Juggler.Templates.form,
             childViewContainer:'.fields',
             options:{
-                type:'horizontal'
+                type:'horizontal',
+                submit:''
             },
             ui:{
                 submit:'.btn-submit'
+            },
+            events:{
+                'click @ui.submit':'onSubmit'
+            },
+            modelEvents:{
+                'request':'onRequest'
             },
             initialize:function(){
                 this.setType(this.options.type);
@@ -618,6 +625,37 @@
             setType:function(type){
                 this.$el.removeClass('form-'+this.options.type).addClass('form-'+type);
                 this.options.type = type;
+            },
+            commit:function(){
+                var isInvalid = this.collection
+                    .some(function(item){
+                        item.validate();
+                        return !item.isValid();
+                    });
+    
+                var data = this.collection.reduce(function(item1,item2){
+                    return item1.set(item2.get('name'),item2.get('value'))
+                },new Juggler.Enities.Model);
+    
+                return !isInvalid&&this.model.set(data);
+            },
+            submit:function(){
+                this.commit()&&this.model.save();
+            },
+            onRender:function(){
+                if(this.options.submit){
+                    this.ui.submit.removeClass('hidden').text(this.options.submit);
+                }
+                else{
+                    this.ui.submit.addClass('hidden');
+                }
+            },
+            onSubmit:function(e){
+                e.preventDefault();
+                this.submit();
+            },
+            onRequest:function(){
+                this.ui.submit.attr('disabled',true);
             }
         });
     

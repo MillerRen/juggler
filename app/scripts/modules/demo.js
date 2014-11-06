@@ -35,6 +35,7 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		layout.contentRegion.show(table);
 
 		var form = new Juggler.Widgets.Form({
+			submit:'提交',
 			model:new App.Enities.Form(),
 			collection:new Juggler.Enities.Fields([
 				{name:'input',label:'Input',editor:'input',validator:{pattern:'email'}},

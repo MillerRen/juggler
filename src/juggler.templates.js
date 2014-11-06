@@ -28,7 +28,7 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
     '<div class="fields"></div>\
         <div class="form-group">\
         <div class="col-md-10 col-md-offset-2">\
-            <button type="submit" class="btn btn-success btn-submit col-md-2"></button>\
+            <button type="submit" class="btn btn-success btn-submit col-md-2 hidden"></button>\
         </div>\
     </div>');
 
