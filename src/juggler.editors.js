@@ -25,6 +25,16 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
         tagName:'input'
     });
 
+    Editors.Number = Editors.Input.extend({});
+
+    Editors.Email = Editors.Input.extend({});
+
+    Editors.Url = Editors.Input.extend({});
+
+    Editors.Date = Editors.Input.extend({});
+
+    Editors.Datetime = Editors.Input.extend({});
+
     Editors.Textarea = Editors.Base.extend({
         tagName:'textarea'
     });
