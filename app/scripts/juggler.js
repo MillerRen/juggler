@@ -193,7 +193,7 @@
                editor:'Input'
            },
            validation:function(){
-               return {value:{pattern:'email'}}
+               return {value:this.get('validator')||{}};
            }
         });
     
@@ -558,7 +558,7 @@
               'validated':'onValidate'  
             },
             initialize:function(){
-                this.Editor = Juggler.module('Editors.'+this.serializeData().editor);
+                this.Editor = Juggler.module('Editors.'+this.model.get('editor').toUperCase());
                 this.model.set('value',this.options.parentModel.get(this.model.get('name')));
             },
             onRender:function(){
@@ -602,20 +602,11 @@
     
         Editors.Base = Juggler.Views.CompositeView.extend({
             className:'form-control',
-            bindings:{
-                ':el':{
-                    observe:'value',
-                    setOptions:{validate:true}
-                }
-            },
+            bindings:{':el':'value'},
             initialize:function(){
                 this.collection = new Juggler.Enities.Collection(this.model.get('options')||[]);
             },
-            setName:function(name){
-                this.$el.attr('name',name);
-            },
             onRender:function(){
-                this.setName(this.model.get('name'));
                 Backbone.Validation.bind(this);
                 this.stickit();
             },
@@ -643,40 +634,27 @@
             })
         });
     
-        Editors.Checkbox = Juggler.Views.ItemView.extend({
+        Editors.Check = Juggler.Views.ItemView.extend({
             tagName:'label',
             className:'checkbox-inline',
-            template:_.template('<input type="checkbox" name="<%- name %>" checked="" /><%- label %>')
+            template:_.template('<input type="<%- type %>" name="<%- name %>" value="<%- value %>"/><span><%- label %></span>')
         })
     
-        Editors.Checkboxes = Editors.Base.extend({
+        Editors.Checkbox = Editors.Base.extend({
             className:'',
-            childView:Editors.Checkbox,
+            childView:Editors.Check,
+            bindings:{'input':'value'},
             childViewOptions:function(model,index){
                 model.set('name',this.model.get('name'));
-                return Editors.Checkboxes.__super__.childViewOptions.apply(this,arguments);
+                model.set('type',this.model.get('editor'));
+                return Editors.Checkbox.__super__.childViewOptions.apply(this,arguments);
             }
         });
     
-        Editors.Radio = Editors.Input.extend({
-            tagName:'label',
-            className:'radio-inline',
-            template:_.template('<input type="radio" name="<%- name %>" checked="" /><%- label %>'),
-            setName:function(name){
-                //this.$el.attr('for',name);
-            }
-        })
-    
-        Editors.Radios = Juggler.Views.CompositeView.extend({
-            className:'',
-            childView:Editors.Radio,
-            initialize:function(){
-                this.collection = this.collection || new Juggler.Enities.Collection(this.model.get('options'));
-            },
-            childViewOptions:function(model,index){
-                model.set('name',this.model.get('name'));
-                return Editors.Checkboxes.__super__.childViewOptions.apply(this,arguments);
-            }
+        Editors.Radio = Editors.Checkbox.extend({
+            childView:Editors.Check.extend({
+                className:'radio-inline'
+            })
         });
     
     });

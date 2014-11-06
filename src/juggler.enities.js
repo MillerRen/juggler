@@ -89,7 +89,7 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
            editor:'Input'
        },
        validation:function(){
-           return {value:{pattern:'email'}}
+           return {value:this.get('validator')||{}};
        }
     });
 

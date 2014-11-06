@@ -32,7 +32,8 @@ App.module('Enities',function(Enities, App, Backbone, Marionette, $, _){
 			input:'input',
 			textarea:'textarea',
 			select:'2',
-			checkbox:['1']
+			checkbox:['1'],
+			radio:['2']
 		}
 	});
 

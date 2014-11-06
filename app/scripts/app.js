@@ -77,7 +77,8 @@
     			input:'input',
     			textarea:'textarea',
     			select:'2',
-    			checkbox:['1']
+    			checkbox:['1'],
+    			radio:['2']
     		}
     	});
     
@@ -133,11 +134,11 @@
     		var form = new Juggler.Widgets.Form({
     			model:new App.Enities.Form(),
     			collection:new Juggler.Enities.Fields([
-    				{name:'input',label:'Input',editor:'Input'},
+    				{name:'input',label:'Input',editor:'Input',validator:{pattern:'email'}},
     				{name:'textarea',label:'Textarea',editor:'Textarea'},
     				{name:'select',label:'Select',editor:'Select',options:[{value:'1',name:'option1'},{value:'2',name:'option2'}]},
-    				{name:'checkbox',label:'Checkboxes',editor:'Checkboxes',options:[{value:'1',label:'option1'},{value:'2',label:'option2'}]},
-    				{name:'radio',label:'Radios',editor:'Radios',options:[{value:'1',label:'option1'},{value:'2',label:'option2'}]}
+    				{name:'checkbox',label:'Checkboxes',editor:'Checkbox',options:[{value:'1',label:'option1'},{value:'2',label:'option2'}]},
+    				{name:'radio',label:'Radios',editor:'Radio',options:[{value:'1',label:'option1'},{value:'2',label:'option2'}]}
     			])
     		});
     
