@@ -69,7 +69,7 @@
         Templates.form = _.template('');
     
         Templates.form_row = _.template(
-        '<label class="col-md-2 control-label" for="<%- name %>"><%- label %></label>\
+        '<label class="col-md-2 control-label"></label>\
         <div class="col-md-10">\
         <div class="control-field"></div>\
         <span class="glyphicon form-control-feedback hidden"></span>\
@@ -190,7 +190,8 @@
         Enities.Field = Enities.Model.extend({
            defaults:{
                label:'label',
-               editor:'Input'
+               editor:'input',
+               isValid:0
            },
            validation:function(){
                return {value:this.get('validator')||{}};
@@ -557,6 +558,9 @@
             modelEvents:{
               'validated':'onValidate'  
             },
+            bindings:{
+                'label':'label'
+            },
             initialize:function(){
                 var name = this.model.get('editor');
                 name = name[0].toUpperCase()+name.substr(1,name.length);
@@ -564,8 +568,9 @@
                 this.model.set('value',this.options.parentModel.get(this.model.get('name')));
             },
             onRender:function(){
+                this.stickit();
                 var editor = new this.Editor({model:this.model});
-                this.fieldRegion.show(editor);
+                editor&&this.fieldRegion.show(editor);
             },
             onValidate:function(isValid,model,msg){
                 if(isValid){
@@ -607,6 +612,7 @@
             bindings:{':el':'value'},
             initialize:function(){
                 this.collection = new Juggler.Enities.Collection(this.model.get('options')||[]);
+                this.$el.attr('name',this.model.get('name'));
             },
             onRender:function(){
                 Backbone.Validation.bind(this);
@@ -639,7 +645,7 @@
         Editors.Check = Juggler.Views.ItemView.extend({
             tagName:'label',
             className:'checkbox-inline',
-            template:_.template('<input type="<%- type %>" name="<%- name %>" value="<%- value %>"/><span><%- label %></span>')
+            template:_.template('<input type="<%- type %>" value="<%- value %>" name="<%- name %>" /><span><%- label %></span>')
         })
     
         Editors.Checkbox = Editors.Base.extend({

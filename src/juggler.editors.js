@@ -5,6 +5,7 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
         bindings:{':el':'value'},
         initialize:function(){
             this.collection = new Juggler.Enities.Collection(this.model.get('options')||[]);
+            this.$el.attr('name',this.model.get('name'));
         },
         onRender:function(){
             Backbone.Validation.bind(this);
@@ -37,7 +38,7 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
     Editors.Check = Juggler.Views.ItemView.extend({
         tagName:'label',
         className:'checkbox-inline',
-        template:_.template('<input type="<%- type %>" name="<%- name %>" value="<%- value %>"/><span><%- label %></span>')
+        template:_.template('<input type="<%- type %>" value="<%- value %>" name="<%- name %>" /><span><%- label %></span>')
     })
 
     Editors.Checkbox = Editors.Base.extend({

@@ -27,7 +27,7 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
     Templates.form = _.template('');
 
     Templates.form_row = _.template(
-    '<label class="col-md-2 control-label" for="<%- name %>"><%- label %></label>\
+    '<label class="col-md-2 control-label"></label>\
     <div class="col-md-10">\
     <div class="control-field"></div>\
     <span class="glyphicon form-control-feedback hidden"></span>\

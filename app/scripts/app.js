@@ -77,8 +77,8 @@
     			input:'input',
     			textarea:'textarea',
     			select:'2',
-    			checkbox:['1'],
-    			radio:['2']
+    			checkbox:['1','2'],
+    			radio:2
     		}
     	});
     

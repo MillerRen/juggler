@@ -265,6 +265,9 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         modelEvents:{
           'validated':'onValidate'  
         },
+        bindings:{
+            'label':'label'
+        },
         initialize:function(){
             var name = this.model.get('editor');
             name = name[0].toUpperCase()+name.substr(1,name.length);
@@ -272,8 +275,9 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             this.model.set('value',this.options.parentModel.get(this.model.get('name')));
         },
         onRender:function(){
+            this.stickit();
             var editor = new this.Editor({model:this.model});
-            this.fieldRegion.show(editor);
+            editor&&this.fieldRegion.show(editor);
         },
         onValidate:function(isValid,model,msg){
             if(isValid){

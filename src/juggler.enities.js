@@ -86,7 +86,8 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
     Enities.Field = Enities.Model.extend({
        defaults:{
            label:'label',
-           editor:'Input'
+           editor:'input',
+           isValid:0
        },
        validation:function(){
            return {value:this.get('validator')||{}};
