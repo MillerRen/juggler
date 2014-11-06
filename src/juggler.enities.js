@@ -24,11 +24,8 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
         index:function(){
             return this.collection.indexOf(this);
         },
-        prev:function(){
-            return this.collection.at(this.index()-1);
-        },
-        next:function(){
-            return this.collection.at(this.index()+1);
+        reset:function(){
+            this.clear().set(this.defaults);
         }
     });
 
@@ -52,6 +49,14 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
         },
         swap: function (indexA, indexB) {
           this.models[indexA] = this.models.splice(indexB, 1, this.models[indexA])[0];
+        },
+        next:function(model){
+            var index = this.indexOf(model);
+            return this.at(index+1);
+        },
+        prev:function(model){
+            var index = this.indexOf(model);
+            return this.at(index-1);
         }
     });
 
