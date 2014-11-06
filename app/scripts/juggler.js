@@ -570,13 +570,20 @@
               'validated':'onValidate'  
             },
             bindings:{
-                'label':'label'
+                'label':{
+                    observe:'label',
+                    attributes:[{
+                        name:'for',
+                        observe:'cid'
+                    }]
+                }
             },
             initialize:function(){
                 var name = this.model.get('editor');
                 name = name[0].toUpperCase()+name.substr(1,name.length);
                 this.Editor = Juggler.module('Editors.'+name);
                 this.model.set('value',this.options.parentModel.get(this.model.get('name')));
+                this.model.set('cid',this.model.cid);
             },
             onRender:function(){
                 this.stickit();
@@ -676,7 +683,7 @@
                 observe:'value',
                 attributes:[
                     {name:'value',observe:'value'},
-                    {name:'id',observe:'id'},
+                    {name:'id',observe:'cid'},
                     {name:'placeholder',observe:'placeholder'},
                     {name:'name',observe:'name'}
                 ]

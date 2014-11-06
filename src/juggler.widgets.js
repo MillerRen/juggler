@@ -266,13 +266,20 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
           'validated':'onValidate'  
         },
         bindings:{
-            'label':'label'
+            'label':{
+                observe:'label',
+                attributes:[{
+                    name:'for',
+                    observe:'cid'
+                }]
+            }
         },
         initialize:function(){
             var name = this.model.get('editor');
             name = name[0].toUpperCase()+name.substr(1,name.length);
             this.Editor = Juggler.module('Editors.'+name);
             this.model.set('value',this.options.parentModel.get(this.model.get('name')));
+            this.model.set('cid',this.model.cid);
         },
         onRender:function(){
             this.stickit();

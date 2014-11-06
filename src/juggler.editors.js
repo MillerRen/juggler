@@ -7,7 +7,7 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
             observe:'value',
             attributes:[
                 {name:'value',observe:'value'},
-                {name:'id',observe:'id'},
+                {name:'id',observe:'cid'},
                 {name:'placeholder',observe:'placeholder'},
                 {name:'name',observe:'name'}
             ]
