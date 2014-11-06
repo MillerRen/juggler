@@ -275,16 +275,17 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         },
         onValidate:function(isValid,model,msg){
             if(isValid){
-                this.$el.removeClass('has-error');
+                this.$el.removeClass('has-error').addClass('has-success');
                 this.ui.help.empty().hide();
                 this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-ok')
             }
             else{
-                this.$el.addClass('has-error');
+                this.$el.addClass('has-error').removeClass('has-success');
                 this.ui.help.show().text(msg.value);
                 this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-remove');
             }
-        }
+        },
+        
     });
     
     Widgets.Form = Juggler.Views.CompositeView.extend({

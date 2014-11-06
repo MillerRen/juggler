@@ -567,16 +567,17 @@
             },
             onValidate:function(isValid,model,msg){
                 if(isValid){
-                    this.$el.removeClass('has-error');
+                    this.$el.removeClass('has-error').addClass('has-success');
                     this.ui.help.empty().hide();
                     this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-ok')
                 }
                 else{
-                    this.$el.addClass('has-error');
+                    this.$el.addClass('has-error').removeClass('has-success');
                     this.ui.help.show().text(msg.value);
                     this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-remove');
                 }
-            }
+            },
+            
         });
         
         Widgets.Form = Juggler.Views.CompositeView.extend({
@@ -599,11 +600,8 @@
 
     Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
     
-        Editors.Base = Juggler.Views.ItemView.extend({
+        Editors.Base = Juggler.Views.CompositeView.extend({
             className:'form-control',
-            events:{
-                'blur':'onBlur'
-            },
             bindings:{
                 ':el':{
                     observe:'value',
@@ -611,26 +609,18 @@
                 }
             },
             initialize:function(){
-                this.validator = this.model.get('validation');
-                Backbone.Validation.bind(this);
+                this.collection = new Juggler.Enities.Collection(this.model.get('options')||[]);
             },
             setName:function(name){
                 this.$el.attr('name',name);
             },
-            setValue:function(value){
-                this.$el.val(value);
-            },
-            getValue:function(){
-                return this.$el.val();
-            },
             onRender:function(){
-                this.setValue(this.model.get('value'));
                 this.setName(this.model.get('name'));
-                
+                Backbone.Validation.bind(this);
                 this.stickit();
             },
-            onBlur:function(){
-                console.log(this.model.isValid('value'));
+            onDestory:function(){
+                Backbone.Validation.unbind(this);
             }
         });
         
@@ -639,55 +629,29 @@
         });
     
         Editors.Textarea = Editors.Base.extend({
-            tagName:'textarea',
-            className:'form-control',
-            setValue:function(value){
-                this.$el.text(value);
-            },
-            getValue:function(){
-                return this.$el.text();
-            }
+            tagName:'textarea'
         });
     
-        Editors.Select = Juggler.Views.CompositeView.extend({
+        Editors.Select = Editors.Base.extend({
             tagName:'select',
-            className:'form-control',
             childView:Juggler.Views.ItemView.extend({
                 tagName:'option',
                 onRender:function(){
                     this.$el.attr('value',this.model.get('value'))
                         .text(this.model.get('name'));
                 }
-            }),
-            initialize:function(){
-                this.collection = new Juggler.Enities.Collection(this.model.get('options'));
-            },
-            onRender:function(){
-                this.setValue(this.model.get('value'));
-            },
-            setValue:function(value){
-                this.$el.find('[value='+value+']').attr('selected','selected');
-            },
-            getValue:function(){
-                return this.$el.val();
-            }
+            })
         });
     
-        Editors.Checkbox = Editors.Input.extend({
+        Editors.Checkbox = Juggler.Views.ItemView.extend({
             tagName:'label',
             className:'checkbox-inline',
-            template:_.template('<input type="checkbox" name="<%- name %>" checked="" /><%- label %>'),
-            setName:function(name){
-                //this.$el.attr('for',name);
-            }
+            template:_.template('<input type="checkbox" name="<%- name %>" checked="" /><%- label %>')
         })
     
-        Editors.Checkboxes = Juggler.Views.CompositeView.extend({
+        Editors.Checkboxes = Editors.Base.extend({
             className:'',
             childView:Editors.Checkbox,
-            initialize:function(){
-                this.collection = this.collection || new Juggler.Enities.Collection(this.model.get('options'));
-            },
             childViewOptions:function(model,index){
                 model.set('name',this.model.get('name'));
                 return Editors.Checkboxes.__super__.childViewOptions.apply(this,arguments);
