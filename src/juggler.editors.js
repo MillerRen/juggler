@@ -2,11 +2,16 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
 
     Editors.Base = Juggler.Views.CompositeView.extend({
         className:'form-control',
-        bindings:{':el':'value'},
-        initialize:function(){
-            this.collection = new Juggler.Enities.Collection(this.model.get('options')||[]);
-            this.$el.attr('name',this.model.get('name'));
-        },
+        childView:Juggler.Views.ItemView,
+        bindings:{':el':{
+            observe:'value',
+            attributes:[
+                {name:'value',observe:'value'},
+                {name:'id',observe:'id'},
+                {name:'placeholder',observe:'placeholder'},
+                {name:'name',observe:'name'}
+            ]
+        }},
         onRender:function(){
             Backbone.Validation.bind(this);
             this.stickit();
@@ -38,7 +43,20 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
     Editors.Check = Juggler.Views.ItemView.extend({
         tagName:'label',
         className:'checkbox-inline',
-        template:_.template('<input type="<%- type %>" value="<%- value %>" name="<%- name %>" /><span><%- label %></span>')
+        bindings:{
+            'input':{
+                attributes:[
+                    {name:'type',observe:'type'},
+                    {name:'value',observe:'value'},
+                    {name:'name',observe:'name'}
+                ]
+            },
+            'span':'label'
+        },
+        template:_.template('<input /><span></span>'),
+        onRender:function(){
+            this.stickit();
+        }
     })
 
     Editors.Checkbox = Editors.Base.extend({

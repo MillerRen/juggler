@@ -52,7 +52,7 @@
                     </div>\
                     <div class="modal-body"><%= body %></div>\
                     <div class="modal-footer">\
-                    <button class="btn btn-primary">确定</button>\
+                    <button class="btn btn-primary"></button>\
                     </div>\
                 </div>\
             </div>');
@@ -66,14 +66,20 @@
             <%= message %>\
         </span>');
     
-        Templates.form = _.template('');
+        Templates.form = _.template(
+        '<div class="fields"></div>\
+            <div class="form-group">\
+            <div class="col-md-10 col-md-offset-2">\
+                <button type="submit" class="btn btn-success btn-submit col-md-2"></button>\
+            </div>\
+        </div>');
     
         Templates.form_row = _.template(
         '<label class="col-md-2 control-label"></label>\
         <div class="col-md-10">\
-        <div class="control-field"></div>\
-        <span class="glyphicon form-control-feedback hidden"></span>\
-        <span class="help-block"></span>\
+            <div class="control-field"></div>\
+            <span class="glyphicon form-control-feedback hidden"></span>\
+            <span class="help-block"></span>\
         </div>\
         ');
         
@@ -255,7 +261,7 @@
         });
     
         Views.CompositeView = Marionette.CompositeView.extend({
-            emptyView: Views.EmptyView,
+            emptyView: Views.ItemView,
             childViewContainer: "",
             template: _.template(''),
             childViewOptions:function(model,index){
@@ -569,7 +575,15 @@
             },
             onRender:function(){
                 this.stickit();
-                var editor = new this.Editor({model:this.model});
+                var options = {
+                    model:this.model
+                };
+                if(this.model.get('options')){
+                    _.extend(options,{
+                        collection:new Juggler.Enities.Collection(this.model.get('options'))
+                    })
+                }
+                var editor = new this.Editor(options);
                 editor&&this.fieldRegion.show(editor);
             },
             onValidate:function(isValid,model,msg){
@@ -590,8 +604,13 @@
         Widgets.Form = Juggler.Views.CompositeView.extend({
             tagName:'form',
             childView:Widgets.Field,
+            template:Juggler.Templates.form,
+            childViewContainer:'.fields',
             options:{
                 type:'horizontal'
+            },
+            ui:{
+                submit:'.btn-submit'
             },
             initialize:function(){
                 this.setType(this.options.type);
@@ -609,11 +628,16 @@
     
         Editors.Base = Juggler.Views.CompositeView.extend({
             className:'form-control',
-            bindings:{':el':'value'},
-            initialize:function(){
-                this.collection = new Juggler.Enities.Collection(this.model.get('options')||[]);
-                this.$el.attr('name',this.model.get('name'));
-            },
+            childView:Juggler.Views.ItemView,
+            bindings:{':el':{
+                observe:'value',
+                attributes:[
+                    {name:'value',observe:'value'},
+                    {name:'id',observe:'id'},
+                    {name:'placeholder',observe:'placeholder'},
+                    {name:'name',observe:'name'}
+                ]
+            }},
             onRender:function(){
                 Backbone.Validation.bind(this);
                 this.stickit();
@@ -645,7 +669,20 @@
         Editors.Check = Juggler.Views.ItemView.extend({
             tagName:'label',
             className:'checkbox-inline',
-            template:_.template('<input type="<%- type %>" value="<%- value %>" name="<%- name %>" /><span><%- label %></span>')
+            bindings:{
+                'input':{
+                    attributes:[
+                        {name:'type',observe:'type'},
+                        {name:'value',observe:'value'},
+                        {name:'name',observe:'name'}
+                    ]
+                },
+                'span':'label'
+            },
+            template:_.template('<input /><span></span>'),
+            onRender:function(){
+                this.stickit();
+            }
         })
     
         Editors.Checkbox = Editors.Base.extend({

@@ -276,7 +276,15 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         },
         onRender:function(){
             this.stickit();
-            var editor = new this.Editor({model:this.model});
+            var options = {
+                model:this.model
+            };
+            if(this.model.get('options')){
+                _.extend(options,{
+                    collection:new Juggler.Enities.Collection(this.model.get('options'))
+                })
+            }
+            var editor = new this.Editor(options);
             editor&&this.fieldRegion.show(editor);
         },
         onValidate:function(isValid,model,msg){
@@ -297,8 +305,13 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     Widgets.Form = Juggler.Views.CompositeView.extend({
         tagName:'form',
         childView:Widgets.Field,
+        template:Juggler.Templates.form,
+        childViewContainer:'.fields',
         options:{
             type:'horizontal'
+        },
+        ui:{
+            submit:'.btn-submit'
         },
         initialize:function(){
             this.setType(this.options.type);

@@ -10,7 +10,7 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
                 </div>\
                 <div class="modal-body"><%= body %></div>\
                 <div class="modal-footer">\
-                <button class="btn btn-primary">确定</button>\
+                <button class="btn btn-primary"></button>\
                 </div>\
             </div>\
         </div>');
@@ -24,14 +24,20 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
         <%= message %>\
     </span>');
 
-    Templates.form = _.template('');
+    Templates.form = _.template(
+    '<div class="fields"></div>\
+        <div class="form-group">\
+        <div class="col-md-10 col-md-offset-2">\
+            <button type="submit" class="btn btn-success btn-submit col-md-2"></button>\
+        </div>\
+    </div>');
 
     Templates.form_row = _.template(
     '<label class="col-md-2 control-label"></label>\
     <div class="col-md-10">\
-    <div class="control-field"></div>\
-    <span class="glyphicon form-control-feedback hidden"></span>\
-    <span class="help-block"></span>\
+        <div class="control-field"></div>\
+        <span class="glyphicon form-control-feedback hidden"></span>\
+        <span class="help-block"></span>\
     </div>\
     ');
     
