@@ -1,47 +1,6 @@
 Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
 
-    Widgets.Dialog = Juggler.Views.LayoutView.extend({
-        className:'modal fade',
-        template:Juggler.Templates.dialog,
-        options:{
-            type:'success',
-            size:'md',
-            title:'',
-            body:'',
-            buttons:{
-                'positive':{},
-                'negative':{}
-            },
-            backdrop:'static'
-        },
-        ui:{
-            header:'.modal-title',
-            body:'.modal-body',
-            footer:'.modal-footer'
-        },
-        get:function(key){
-            return _.extend(this.serializeData(),this.templateHelpers())[key];
-        },
-        set:function(key, value){
-            this[key+'Region'].close();
-            this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
-            value?this.ui[key].show():this.ui[key].hide();
-        },
-        onRender:function(){
-            this.get('header')?this.ui.header.show():this.ui.header.hide();
-            this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
-            if(!this.options.buttons){
-                this.ui.footer.remove()
-                return;
-            }
-        },
-        onShow:function(){
-            this.$el.modal(this.options);
-        },
-        onClose:function(){
-            this.$el.modal('destroy');
-        }
-    });
+    
 
     Widgets.Alert = Juggler.Views.ItemView.extend({
         className:'alert alert-dismissable fade in animated juggler-alert',
@@ -169,6 +128,49 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
 
     Widgets.MediaList = Juggler.Views.ListItemView.extend({
         className:'media-list'
+    });
+
+    Widgets.Dialog = Juggler.Views.LayoutView.extend({
+        className:'modal fade',
+        template:Juggler.Templates.dialog,
+        options:{
+            type:'success',
+            size:'md',
+            title:'',
+            body:'',
+            buttons:{
+                'positive':{},
+                'negative':{}
+            },
+            backdrop:'static'
+        },
+        ui:{
+            header:'.modal-title',
+            body:'.modal-body',
+            footer:'.modal-footer'
+        },
+        get:function(key){
+            return _.extend(this.serializeData(),this.templateHelpers())[key];
+        },
+        set:function(key, value){
+            this[key+'Region'].close();
+            this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
+            value?this.ui[key].show():this.ui[key].hide();
+        },
+        onRender:function(){
+            this.get('header')?this.ui.header.show():this.ui.header.hide();
+            this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
+            if(!this.options.buttons){
+                this.ui.footer.remove()
+                return;
+            }
+        },
+        onShow:function(){
+            this.$el.modal(this.options);
+        },
+        onClose:function(){
+            this.$el.modal('destroy');
+        }
     });
 
     Widgets.Th = Juggler.Views.ItemView.extend({
@@ -305,8 +307,8 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
                 this.ui.help.show().text(msg.value);
                 this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-remove');
             }
-        },
-        
+            this.options.parentModel.trigger('validated',isValid,model);
+        }
     });
     
     Widgets.Form = Juggler.Views.CompositeView.extend({
@@ -325,7 +327,9 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             'click @ui.submit':'onSubmit'
         },
         modelEvents:{
-            'request':'onRequest'
+            'request':'disableSubmit',
+            'sync':'enableSubmit',
+            'validated':'onValidate'
         },
         initialize:function(){
             this.setType(this.options.type);
@@ -334,11 +338,10 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             this.$el.removeClass('form-'+this.options.type).addClass('form-'+type);
             this.options.type = type;
         },
-        commit:function(){
+        commit:function(validate){
             var isInvalid = this.collection
                 .some(function(item){
-                    item.validate();
-                    return !item.isValid();
+                    return !item.isValid(true);
                 });
 
             var data = this.collection.reduce(function(item1,item2){
@@ -350,6 +353,12 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         submit:function(){
             this.commit()&&this.model.save();
         },
+        disableSubmit:function(model,xhr){
+            this.ui.submit.attr('disabled',true);
+        },
+        enableSubmit:function(){
+            this.ui.submit.removeAttr('disabled');
+        },
         onRender:function(){
             if(this.options.submit){
                 this.ui.submit.removeClass('hidden').text(this.options.submit);
@@ -357,17 +366,14 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             else{
                 this.ui.submit.addClass('hidden');
             }
+            //this.commit()?this.enableSubmit():this.disableSubmit();
         },
         onSubmit:function(e){
             e.preventDefault();
             this.submit();
         },
-        onRequest:function(model,xhr){
-            var that = this;
-            this.ui.submit.attr('disabled',true);
-            xhr.complete(function(){
-                that.ui.submit.removeAttr('disabled');
-            });
+        onValidate:function(){
+            //this.commit();
         }
     });
 
