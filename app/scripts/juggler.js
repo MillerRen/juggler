@@ -666,8 +666,12 @@
                 e.preventDefault();
                 this.submit();
             },
-            onRequest:function(){
+            onRequest:function(model,xhr){
+                var that = this;
                 this.ui.submit.attr('disabled',true);
+                xhr.complete(function(){
+                    that.ui.submit.removeAttr('disabled');
+                });
             }
         });
     
