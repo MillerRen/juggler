@@ -266,7 +266,9 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
           'validated':'onValidate'  
         },
         initialize:function(){
-            this.Editor = Juggler.module('Editors.'+this.model.get('editor').toUperCase());
+            var name = this.model.get('editor');
+            name = name[0].toUpperCase()+name.substr(1,name.length);
+            this.Editor = Juggler.module('Editors.'+name);
             this.model.set('value',this.options.parentModel.get(this.model.get('name')));
         },
         onRender:function(){
