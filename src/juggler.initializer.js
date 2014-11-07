@@ -5,9 +5,9 @@ Juggler.addInitializer(function(){
         setOptions: {validate:true}
     });
 
-    Backbone.Validation.configure({
-      forceUpdate: true
-    });   
+//     Backbone.Validation.configure({
+//       forceUpdate: true
+//     });   
 
 });
 

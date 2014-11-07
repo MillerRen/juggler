@@ -349,7 +349,8 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             var editor = new this.Editor(options);
             editor&&this.fieldRegion.show(editor);
         },
-        onValidate:function(isValid,model,msg){
+        onValidate:function(model,attributes,errors){console.log(errors)
+            var isValid = !(errors&&errors.value.length);
             if(isValid){
                 this.$el.removeClass('has-error').addClass('has-success');
                 this.ui.help.empty().hide();
@@ -357,7 +358,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             }
             else{
                 this.$el.addClass('has-error').removeClass('has-success');
-                this.ui.help.show().text(msg.value);
+                this.ui.help.show().text(errors.value.join(' '));
                 this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-remove');
             }
             this.options.parentModel.trigger('validated',isValid,model);
@@ -394,7 +395,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         commit:function(validate){
             var isInvalid = this.collection
                 .some(function(item){
-                    return !item.isValid(true);
+                    return !item.isValid();
                 });
 
             var data = this.collection.reduce(function(item1,item2){

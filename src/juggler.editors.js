@@ -13,11 +13,11 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
             ]
         }},
         onRender:function(){
-            Backbone.Validation.bind(this);
+            //Backbone.Validation.bind(this);
             this.stickit();
         },
         onDestory:function(){
-            Backbone.Validation.unbind(this);
+            //Backbone.Validation.unbind(this);
         }
     });
     
