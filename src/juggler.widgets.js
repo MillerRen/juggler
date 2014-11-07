@@ -130,6 +130,37 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         className:'media-list'
     });
 
+    Widgets.Button = Juggler.Views.ItemView.extend({
+        tagName:'button',
+        className:'btn',
+        bindings:{
+            ':el':{
+                observe:'name',
+                attributes:[
+                    {name:'class',observe:'type'}
+                ]
+            }
+        },
+        onRender:function(){
+            this.stickit();
+        }
+    });
+
+    Widgets.ButtonGroup = Juggler.Views.CompositeView.extend({
+        className:'btn-group',
+        childView:Widgets.Button
+    });
+
+    Widgets.Toolbar = Juggler.Views.CompositeView.extend({
+        className:'btn-toolbar',
+        childView:Widgets.ButtonGroup,
+        childViewOptions:function(model,index){
+            return {
+                collection:new Juggler.Enities.Collection(model.values())
+            };
+        }
+    });
+
     Widgets.Dialog = Juggler.Views.LayoutView.extend({
         className:'modal fade',
         template:Juggler.Templates.dialog,

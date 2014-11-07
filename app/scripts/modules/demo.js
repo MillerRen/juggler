@@ -5,7 +5,7 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 			collection:new Juggler.Enities.Collection([
 				{sidebar:{md:{3:'',push:9}},content:{md:{9:'',pull:3}}},
 				{panel:{md:3},form:{md:9}},
-				[{md:3},{md:9}],
+				{test:{md:3},toolbar:{md:9}},
 			])
 		});
 		Juggler.mainRegion.show(layout);
@@ -57,6 +57,15 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		//Juggler.dialogRegion.show(dialog);
 
 		//dialog.bodyRegion.show(form)
+
+		var toolbar = new Juggler.Widgets.Toolbar({
+			collection:new Juggler.Enities.Collection([
+			[{type:'btn-default',name:'Button'},{type:'btn-default',name:'Group'}],
+			[{type:'btn-default',name:'Button'},{type:'btn-default',name:'Group'}]
+			])
+		});
+
+		layout.toolbarRegion.show(toolbar);
 		
 	});
 
