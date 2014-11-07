@@ -327,6 +327,31 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
                     name:'for',
                     observe:'cid'
                 }]
+            },
+            ':el':{
+                attributes:[{
+                    name:'class',
+                    observe:'errors',
+                    onGet:function(val){
+                        if(val===undefined)return '';
+                        return !val?'has-success':'has-error'
+                    }
+                }]
+            },
+            '.help-block':{
+                observe:'errors',
+                onGet:function(errors){
+                    return errors&&errors.value.join(' ')
+                }
+            },
+            '.form-control-feedback':{
+                attributes:[{
+                    name:'class',
+                    observe:'errors',
+                    onGet:function(errors){
+                        return errors?'glyphicon-remove':'glyphicon-ok'
+                    }
+                }]
             }
         },
         initialize:function(){
@@ -351,16 +376,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         },
         onValidate:function(model,attributes,errors){console.log(errors)
             var isValid = !(errors&&errors.value.length);
-            if(isValid){
-                this.$el.removeClass('has-error').addClass('has-success');
-                this.ui.help.empty().hide();
-                this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-ok')
-            }
-            else{
-                this.$el.addClass('has-error').removeClass('has-success');
-                this.ui.help.show().text(errors.value.join(' '));
-                this.ui.feedback.removeClass('hidden glyphicon-remove').addClass('glyphicon-remove');
-            }
+            model.set('errors',errors);
             this.options.parentModel.trigger('validated',isValid,model);
         }
     });
