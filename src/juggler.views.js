@@ -16,7 +16,10 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     Views.LayoutView = Marionette.LayoutView.extend({
         className:'row',
         regionAttr:'data-region',
-        template: _.template(''),
+        template: function(data){
+            
+            return '';
+        },
         render: function() {
             this.resolveUIRegions();
             Views.LayoutView.__super__.render.apply(this,arguments);
@@ -60,9 +63,24 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
 
     Views.ListItemView = Views.ItemView.extend({
         tagName: 'li',
-        template: _.template('<a data-target="#<%- name %>" data-toggle="tab"><%- label %></a>'),
+        template: _.template('<a data-toggle="tab"></a>'),
         triggers:{
            'click a':'click' 
+        },
+        bindings:{
+            'a':{
+                observe:'label',
+                attributes:[{
+                    name:'data-target',
+                    observe:'name',
+                    onGet:function(val){
+                        return '#'+val;
+                    }
+                }]
+            }
+        },
+        onRender:function(){
+            this.stickit();
         }
     });
 

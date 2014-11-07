@@ -31,7 +31,7 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
 
     Enities.Collection = Backbone.Collection.extend({
         url:'/test',
-        message: Juggler.Config.Message,
+        model:Enities.Model,
         parse: function(resp, options) {
             return options.collection ? resp : resp.data;
         },

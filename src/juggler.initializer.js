@@ -7,9 +7,7 @@ Juggler.addInitializer(function(){
 
     Backbone.Validation.configure({
       forceUpdate: true
-    });
-    
-    
+    });   
 
 });
 

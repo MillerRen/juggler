@@ -141,7 +141,7 @@
     
         Enities.Collection = Backbone.Collection.extend({
             url:'/test',
-            message: Juggler.Config.Message,
+            model:Enities.Model,
             parse: function(resp, options) {
                 return options.collection ? resp : resp.data;
             },
@@ -251,7 +251,10 @@
         Views.LayoutView = Marionette.LayoutView.extend({
             className:'row',
             regionAttr:'data-region',
-            template: _.template(''),
+            template: function(data){
+                
+                return '';
+            },
             render: function() {
                 this.resolveUIRegions();
                 Views.LayoutView.__super__.render.apply(this,arguments);
@@ -295,9 +298,24 @@
     
         Views.ListItemView = Views.ItemView.extend({
             tagName: 'li',
-            template: _.template('<a data-target="#<%- name %>" data-toggle="tab"><%- label %></a>'),
+            template: _.template('<a data-toggle="tab"></a>'),
             triggers:{
                'click a':'click' 
+            },
+            bindings:{
+                'a':{
+                    observe:'label',
+                    attributes:[{
+                        name:'data-target',
+                        observe:'name',
+                        onGet:function(val){
+                            return '#'+val;
+                        }
+                    }]
+                }
+            },
+            onRender:function(){
+                this.stickit();
             }
         });
     
@@ -407,6 +425,10 @@
             className: 'nav nav-tabs'
         });
     
+        Widgets.Panels = Juggler.Views.CompositeView.extend({
+            
+        });
+    
         Widgets.Pills = Juggler.Views.ListView.extend({
             className: 'nav nav-pills'
         });
@@ -420,7 +442,16 @@
         });
     
         Widgets.Breadcrumb = Juggler.Views.ListView.extend({
-           className: 'breadcrumb' 
+           className: 'breadcrumb',
+           onClick:function(view){
+               var model = view.model;
+               var path = _.chain(model.collection.toJSON())
+                  .first(model.index()+1)
+                  .pluck('name')
+                  .value()
+                  .join('/');
+               Backbone.history.navigate(path);
+           }
         });
     
         Widgets.Navbar = Juggler.Views.ListView.extend({
@@ -471,7 +502,7 @@
         Widgets.ButtonGroup = Juggler.Views.CompositeView.extend({
             className:'btn-group',
             childView:Widgets.Button,
-            initialize:function(){console.log(this.model.values())
+            initialize:function(){
                 this.collection = new Juggler.Enities.ButtonGroup(this.model.values());
             }
         });
@@ -822,6 +853,25 @@
     });
 
     Juggler.module('Components', function(Components, Juggler, Backbone, Marionette, $, _) {
+        
+        Components.TabsPanels = Juggler.Views.LayoutView.extend({
+            className:'tabs-panels',
+            template:_.template('<div class="tabs"></div><div class="panels"></div>'),
+            regions:{
+                tabsRegion:'.tabs',
+                panelsRegion:'.panels'
+            },
+            onRender:function(){
+                var tabs = new Juggler.Widgets.Tabs({
+                    collection:this.collection
+                });
+                var panels = new Juggler.Widgets.Panels({
+                    collection:this.collection
+                });
+                this.tabsRegion.show(tabs);
+                this.panelsRegion.show(panels);
+            }
+        });
     
     });
 
@@ -834,9 +884,7 @@
     
         Backbone.Validation.configure({
           forceUpdate: true
-        });
-        
-        
+        });   
     
     });
     

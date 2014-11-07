@@ -89,6 +89,10 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         className: 'nav nav-tabs'
     });
 
+    Widgets.Panels = Juggler.Views.CompositeView.extend({
+        
+    });
+
     Widgets.Pills = Juggler.Views.ListView.extend({
         className: 'nav nav-pills'
     });
@@ -102,7 +106,16 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     });
 
     Widgets.Breadcrumb = Juggler.Views.ListView.extend({
-       className: 'breadcrumb' 
+       className: 'breadcrumb',
+       onClick:function(view){
+           var model = view.model;
+           var path = _.chain(model.collection.toJSON())
+              .first(model.index()+1)
+              .pluck('name')
+              .value()
+              .join('/');
+           Backbone.history.navigate(path);
+       }
     });
 
     Widgets.Navbar = Juggler.Views.ListView.extend({
@@ -153,7 +166,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     Widgets.ButtonGroup = Juggler.Views.CompositeView.extend({
         className:'btn-group',
         childView:Widgets.Button,
-        initialize:function(){console.log(this.model.values())
+        initialize:function(){
             this.collection = new Juggler.Enities.ButtonGroup(this.model.values());
         }
     });
