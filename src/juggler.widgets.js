@@ -146,16 +146,23 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     Widgets.Button = Juggler.Views.ItemView.extend({
         tagName:'button',
         className:'btn',
+        template:_.template('<i /> <span />'),
         bindings:{
             ':el':{
-                observe:'name',
                 attributes:[
                     {name:'class',
-                    observe:'type',
+                    observe:['type','size'],
                     onGet:function(val){
-                        return 'btn-'+val;
+                        return 'btn-'+val[0]+' btn-'+val[1];
                     }}
                 ]
+            },
+            'span':'name',
+            'i':{
+                attributes:[{
+                    name:'class',
+                    observe:'icon'
+                }]
             }
         },
         onRender:function(){

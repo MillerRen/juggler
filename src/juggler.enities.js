@@ -111,7 +111,8 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
         defaults:{
             'type':'default',
             'name':'',
-            'icon':''
+            'icon':'',
+            'size':''
         }
     });
 

@@ -157,8 +157,9 @@
     
     		var toolbar = new Juggler.Widgets.Toolbar({
     			collection:new Juggler.Enities.ButtonGroup([
-    			[{name:'Button'},{type:'warning',name:'Group'}],
-    			[{type:'primary',name:'Button'},{type:'danger',name:'Group'}]
+    			[{name:'Button',icon:'glyphicon glyphicon-star'},{type:'warning',name:'Group'}],
+    			[{type:'primary',name:'Button'},{type:'danger',name:'Group'}],
+    			[{size:'lg',name:'Large'}]
     			])
     		});
     
