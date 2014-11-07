@@ -107,4 +107,18 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
         
     });
 
+    Enities.Button = Enities.Model.extend({
+        defaults:{
+            'type':'default',
+            'name':'',
+            'icon':''
+        }
+    });
+
+    Enities.Toolbar = Enities.Collection.extend({});
+
+    Enities.ButtonGroup = Enities.Collection.extend({
+        model:Enities.Button
+    });
+
 });

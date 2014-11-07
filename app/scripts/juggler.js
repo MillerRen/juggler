@@ -217,6 +217,20 @@
             
         });
     
+        Enities.Button = Enities.Model.extend({
+            defaults:{
+                'type':'default',
+                'name':'',
+                'icon':''
+            }
+        });
+    
+        Enities.Toolbar = Enities.Collection.extend({});
+    
+        Enities.ButtonGroup = Enities.Collection.extend({
+            model:Enities.Button
+        });
+    
     });
 
     Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
@@ -441,7 +455,11 @@
                 ':el':{
                     observe:'name',
                     attributes:[
-                        {name:'class',observe:'type'}
+                        {name:'class',
+                        observe:'type',
+                        onGet:function(val){
+                            return 'btn-'+val;
+                        }}
                     ]
                 }
             },
@@ -452,17 +470,15 @@
     
         Widgets.ButtonGroup = Juggler.Views.CompositeView.extend({
             className:'btn-group',
-            childView:Widgets.Button
+            childView:Widgets.Button,
+            initialize:function(){console.log(this.model.values())
+                this.collection = new Juggler.Enities.ButtonGroup(this.model.values());
+            }
         });
     
         Widgets.Toolbar = Juggler.Views.CompositeView.extend({
             className:'btn-toolbar',
-            childView:Widgets.ButtonGroup,
-            childViewOptions:function(model,index){
-                return {
-                    collection:new Juggler.Enities.Collection(model.values())
-                };
-            }
+            childView:Widgets.ButtonGroup
         });
     
         Widgets.Dialog = Juggler.Views.LayoutView.extend({

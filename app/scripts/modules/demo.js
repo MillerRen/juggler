@@ -59,9 +59,9 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		//dialog.bodyRegion.show(form)
 
 		var toolbar = new Juggler.Widgets.Toolbar({
-			collection:new Juggler.Enities.Collection([
-			[{type:'btn-default',name:'Button'},{type:'btn-default',name:'Group'}],
-			[{type:'btn-default',name:'Button'},{type:'btn-default',name:'Group'}]
+			collection:new Juggler.Enities.ButtonGroup([
+			[{name:'Button'},{type:'warning',name:'Group'}],
+			[{type:'primary',name:'Button'},{type:'danger',name:'Group'}]
 			])
 		});
 
