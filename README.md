@@ -1,8 +1,8 @@
-About Juggler 
-=======
-![juggler](https://raw.githubusercontent.com/MillerRen/juggler/master/app/images/juggler.jpg)
-Juggler is an UI framework for Backbone.Marionette width Bootstrap.
-
+<h1 align="center">Juggler</h1>
+<p align="center">
+  <img title="backbone marionette" src='https://raw.githubusercontent.com/MillerRen/juggler/master/app/images/juggler.jpg' />
+</p>
+<p align="center">The Marionette UI framework</p>
 
 ##Compatibility and Requirements
 
