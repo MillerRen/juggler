@@ -1,14 +1,12 @@
-juggler
+About Juggler 
 =======
 
-Juggler is an UI Kits for Backbone.Marionette based on Bootstrap. 
-This project is a front end scaffold based on nodejs and with yeoman.
+Juggler is an UI framework width Backbone.Marionette and Bootstrap.
 
-##Initialize
-This project need `nodejs` and `npm` and `bower`.
-We must ensure that tools be installed.
-Clone this repository to your computer and access.
-Execute `npm install` `npm update` `bower install` bootstrap it.
 
-##Run
-Execute `grunt serve` or `grunt serve:dist`
+##Compatibility and Requirements
+
+* [Marionette](https://github.com/marionettejs/backbone.marionette) v2.0+
+* [Bootstrap](https://github.com/twbs/bootstrap) v3.0+
+* [Backbone.stickit](https://github.com/nytimes/backbone.stickit) v0.8.0
+* [Backbone-validator](https://github.com/fantactuka/backbone-validator) 0.3.0
