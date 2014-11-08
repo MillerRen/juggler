@@ -10,3 +10,12 @@
 * [Bootstrap](https://github.com/twbs/bootstrap) v3.0+
 * [Backbone.stickit](https://github.com/nytimes/backbone.stickit) v0.8.0
 * [Backbone-validator](https://github.com/fantactuka/backbone-validator) 0.3.0
+
+##Source Code and Downloads
+
+You can download the latest builds directly from the "dist" folder above.The **vendor.min.js** is dependencies bundle of juggler.
+
+###Install width bower
+
+You can install juggler with bower.Just execute `bower install juggler`.
+
