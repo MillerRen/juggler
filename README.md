@@ -1,7 +1,7 @@
 About Juggler 
 =======
-
-Juggler is an UI framework width Backbone.Marionette and Bootstrap.
+![juggler](https://raw.githubusercontent.com/MillerRen/juggler/master/app/images/juggler.jpg)
+Juggler is an UI framework for Backbone.Marionette width Bootstrap.
 
 
 ##Compatibility and Requirements
