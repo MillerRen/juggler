@@ -19,3 +19,22 @@ You can download the latest builds directly from the "dist" folder above.The **v
 
 You can install juggler with bower.Just execute `bower install juggler`.
 
+##Development 
+
+    We use [grunt](http://gruntjs.com/) to manage the build tasks,
+    use [bower](http://www.bower.io/) to manage the front end lib dependency,
+    use [yeoman](http://yeoman.io/) create the scaffolding.
+     
+###Get started
+
+* install [nodejs](http://nodejs.org/) and [npm](https://www.npmjs.org/).
+
+* install yeoman width npm. `npm install yo`. This will install grunt-cli,bower and yo commands globally.
+
+* Git clone this project and access it
+
+* `npm install&&bower install`
+
+* `grunt serve`. It will open your browser `http://localhost:9000`
+
+
