@@ -13,7 +13,7 @@
 
 ##Source Code and Downloads
 
-You can download the latest builds directly from the "dist" folder above.The **vendor.min.js** is dependencies bundle of juggler.
+You can download the latest builds directly from the "dist" folder above.The file **vendor.min.js** is dependencies bundle of juggler.
 
 ###Install width bower
 
