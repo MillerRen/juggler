@@ -22,8 +22,8 @@ You can install juggler with bower.Just execute `bower install juggler`.
 ##Development 
 
     We use [grunt](http://gruntjs.com/) to manage the build tasks,
-    use [bower](http://www.bower.io/) to manage the front end lib dependency,
-    use [yeoman](http://yeoman.io/) create the scaffolding.
+use [bower](http://www.bower.io/) to manage the front end lib dependency,
+use [yeoman](http://yeoman.io/) create the scaffolding.
      
 ###Get started
 
