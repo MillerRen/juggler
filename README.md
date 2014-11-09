@@ -4,6 +4,17 @@
 </p>
 <p align="center">The Marionette UI framework</p>
 
+##What's included
+
+* GridLayout
+* Form 
+* Table
+* Nav Tabs Navbar Breadcrumb Pagination Pills Stack
+* Dialog
+* Progressbar
+* ListGroup
+* Panel
+
 ##Compatibility and Requirements
 
 * [Marionette](https://github.com/marionettejs/backbone.marionette) v2.0+
