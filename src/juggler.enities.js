@@ -92,7 +92,7 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
        defaults:{
            label:'label',
            editor:'input',
-           isValid:0
+           errors:[]
        },
        validation:function(){
            return {value:this.get('validator')||{}};

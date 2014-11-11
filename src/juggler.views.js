@@ -52,9 +52,13 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         childViewContainer: "",
         template: _.template(''),
         childViewOptions:function(model,index){
-            return {
+            var options =  {
                 parentModel:this.model
             };
+            model.get('items')&&_.extend(options,{
+                collection:new Juggler.Enities.Collection(model.get('items'))
+            });
+            return options;
         },
         templateHelpers: function() {
             return this.options;
@@ -63,25 +67,10 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
 
     Views.ListItemView = Views.ItemView.extend({
         tagName: 'li',
-        template: _.template('<a data-toggle="tab"></a>'),
+        template: _.template('<a><%- label %></a>'),
         triggers:{
            'click a':'click' 
         },
-        bindings:{
-            'a':{
-                observe:'label',
-                attributes:[{
-                    name:'data-target',
-                    observe:'name',
-                    onGet:function(val){
-                        return '#'+val;
-                    }
-                }]
-            }
-        },
-        onRender:function(){
-            this.stickit();
-        }
     });
 
     Views.ListView = Views.CompositeView.extend({

@@ -1,8 +1,7 @@
 Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
 
-    Editors.Base = Juggler.Views.CompositeView.extend({
+    Editors.Base = Juggler.Views.ItemView.extend({
         className:'form-control',
-        childView:Juggler.Views.ItemView,
         bindings:{':el':{
             observe:'value',
             attributes:[
@@ -13,11 +12,10 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
             ]
         }},
         onRender:function(){
-            //Backbone.Validation.bind(this);
             this.stickit();
         },
         onDestory:function(){
-            //Backbone.Validation.unbind(this);
+            this.unstickit()
         }
     });
     
@@ -41,49 +39,37 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
 
     Editors.Select = Editors.Base.extend({
         tagName:'select',
-        childView:Juggler.Views.ItemView.extend({
-            tagName:'option',
-            onRender:function(){
-                this.$el.attr('value',this.model.get('value'))
-                    .text(this.model.get('name'));
-            }
-        })
+        template:function(data){
+            return _.map(data.items,function(item,i){
+                return '<option value="'+item.value+'">'+item.name+'</option>';
+            }).join('');
+        }
     });
 
-    Editors.Check = Juggler.Views.ItemView.extend({
-        tagName:'label',
-        className:'checkbox-inline',
-        bindings:{
-            'input':{
-                attributes:[
-                    {name:'type',observe:'type'},
-                    {name:'value',observe:'value'},
-                    {name:'name',observe:'name'}
-                ]
-            },
-            'span':'label'
+    Editors.Checkbox = Juggler.Views.ItemView.extend({
+        className:'checkbox',
+        bindings:{'input':'value'},
+        template:function(data){
+            return _.map(data.items,function(item,i){
+                return '<label class="checkbox-inline"><input type="checkbox" value="'+item.value+'">'+item.name+'</label>';
+            }).join('');
         },
-        template:_.template('<input /><span></span>'),
         onRender:function(){
             this.stickit();
-        }
-    })
-
-    Editors.Checkbox = Editors.Base.extend({
-        className:'',
-        childView:Editors.Check,
-        bindings:{'input':'value'},
-        childViewOptions:function(model,index){
-            model.set('name',this.model.get('name'));
-            model.set('type',this.model.get('editor'));
-            return Editors.Checkbox.__super__.childViewOptions.apply(this,arguments);
+        },
+        onDestory:function(){
+            this.unstickit()
         }
     });
 
     Editors.Radio = Editors.Checkbox.extend({
-        childView:Editors.Check.extend({
-            className:'radio-inline'
-        })
+        className:'radio',
+        bindings:{'input':'value'},
+        template:function(data){
+            return _.map(data.items,function(item,i){
+                return '<label class="checkbox-inline"><input type="radio" value="'+item.value+'">'+item.name+'</label>';
+            }).join('');
+        }
     });
 
 });

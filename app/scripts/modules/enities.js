@@ -21,8 +21,8 @@ App.module('Enities',function(Enities, App, Backbone, Marionette, $, _){
 	Enities.Table = Juggler.Enities.Collection.extend({
 		initialize:function(){
 			this.reset([
-				{name:'Demo',label:'demo'},
-				{name:'Examples',label:'examples'}
+				{name:'Demo',value:'demo'},
+				{name:'Examples',value:'examples'}
 			]);
 		}
 	});

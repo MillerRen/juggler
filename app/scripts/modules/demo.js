@@ -29,7 +29,7 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 
 		var table = new Juggler.Widgets.Table({
 			collection:new App.Enities.Table,
-			columns:new Juggler.Enities.Collection([{name:'name',label:'名称'},{name:'label',label:'标签'}])
+			columns:new Juggler.Enities.Columns([{name:'name',value:'名称'},{name:'value',value:'标签'}])
 		});
 
 		layout.contentRegion.show(table);
@@ -40,9 +40,9 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 			collection:new Juggler.Enities.Fields([
 				{name:'input',label:'Input',editor:'input',validator:{format:'email'}},
 				{name:'textarea',label:'Textarea',editor:'textarea'},
-				{name:'select',label:'Select',editor:'select',options:[{value:'1',name:'option1'},{value:'2',name:'option2'}]},
-				{name:'checkbox',label:'Checkboxes',editor:'checkbox',options:[{value:'1',label:'option1'},{value:'2',label:'option2'}]},
-				{name:'radio',label:'Radios',editor:'radio',options:[{value:'1',label:'option1'},{value:'2',label:'option2'}]}
+				{name:'select',label:'Select',editor:'select',items:[{value:'1',name:'option1'},{value:'2',name:'option2'}]},
+				{name:'checkbox',label:'Checkboxes',editor:'checkbox',items:[{value:'1',name:'option1'},{value:'2',name:'option2'}]},
+				{name:'radio',label:'Radios',editor:'radio',items:[{value:'1',name:'option1'},{value:'2',name:'option2'}]}
 			])
 		});
 

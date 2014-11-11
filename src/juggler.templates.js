@@ -33,11 +33,11 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
     </div>');
 
     Templates.form_row = _.template(
-    '<label class="col-md-2 control-label"></label>\
+    '<label class="col-md-2 control-label" for="<%- cid %>"><%- label %></label>\
     <div class="col-md-10">\
         <div class="control-field"></div>\
         <span class="glyphicon form-control-feedback"></span>\
-        <span class="help-block"></span>\
+        <span class="help-block"><%- errors %></span>\
     </div>\
     ');
     

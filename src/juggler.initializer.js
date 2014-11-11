@@ -3,11 +3,7 @@ Juggler.addInitializer(function(){
     Backbone.Stickit.addHandler({
         selector: '*',
         setOptions: {validate:true}
-    });
-
-//     Backbone.Validation.configure({
-//       forceUpdate: true
-//     });   
+    });  
 
 });
 

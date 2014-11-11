@@ -75,11 +75,11 @@
         </div>');
     
         Templates.form_row = _.template(
-        '<label class="col-md-2 control-label"></label>\
+        '<label class="col-md-2 control-label" for="<%- cid %>"><%- label %></label>\
         <div class="col-md-10">\
             <div class="control-field"></div>\
             <span class="glyphicon form-control-feedback"></span>\
-            <span class="help-block"></span>\
+            <span class="help-block"><%- errors %></span>\
         </div>\
         ');
         
@@ -202,7 +202,7 @@
            defaults:{
                label:'label',
                editor:'input',
-               isValid:0
+               errors:[]
            },
            validation:function(){
                return {value:this.get('validator')||{}};
@@ -288,9 +288,13 @@
             childViewContainer: "",
             template: _.template(''),
             childViewOptions:function(model,index){
-                return {
+                var options =  {
                     parentModel:this.model
                 };
+                model.get('items')&&_.extend(options,{
+                    collection:new Juggler.Enities.Collection(model.get('items'))
+                });
+                return options;
             },
             templateHelpers: function() {
                 return this.options;
@@ -299,25 +303,10 @@
     
         Views.ListItemView = Views.ItemView.extend({
             tagName: 'li',
-            template: _.template('<a data-toggle="tab"></a>'),
+            template: _.template('<a><%- label %></a>'),
             triggers:{
                'click a':'click' 
             },
-            bindings:{
-                'a':{
-                    observe:'label',
-                    attributes:[{
-                        name:'data-target',
-                        observe:'name',
-                        onGet:function(val){
-                            return '#'+val;
-                        }
-                    }]
-                }
-            },
-            onRender:function(){
-                this.stickit();
-            }
         });
     
         Views.ListView = Views.CompositeView.extend({
@@ -462,9 +451,6 @@
             className:'navbar navbar-static-top navbar-default',
             options:{
                 brand:'Home'
-            },
-            serializeData:function(){
-                return this.options;
             }
         });
     
@@ -482,29 +468,10 @@
     
         Widgets.Button = Juggler.Views.ItemView.extend({
             tagName:'button',
-            className:'btn',
-            template:_.template('<i /> <span />'),
-            bindings:{
-                ':el':{
-                    attributes:[
-                        {name:'class',
-                        observe:['type','size'],
-                        onGet:function(val){
-                            return 'btn-'+val[0]+' btn-'+val[1];
-                        }}
-                    ]
-                },
-                'span':'name',
-                'i':{
-                    attributes:[{
-                        name:'class',
-                        observe:'icon'
-                    }]
-                }
+            className:function(){
+                return 'btn btn-'+this.serializeData().type;
             },
-            onRender:function(){
-                this.stickit();
-            }
+            template:_.template('<i class="<%- icon %>"/> <span><%- name %></span>')
         });
     
         Widgets.ButtonGroup = Juggler.Views.CompositeView.extend({
@@ -565,14 +532,25 @@
     
         Widgets.Th = Juggler.Views.ItemView.extend({
             tagName:'th',
-            template:_.template('<%= label %>')
+            template:_.template('<%- label %>')
         });
     
         Widgets.Td = Juggler.Views.ItemView.extend({
             tagName:'td',
-            template:_.template('<%= text %>'),
-            serializeData:function(){
-                return {text:this.options.parentModel.get(this.model.get('name'))};
+            template:_.template('<%= value %>'),
+            events:{
+                'click':'onClick'
+            },
+            initialize:function(){
+                this.model.set('value',this.options.parentModel.get(this.model.get('name')));
+            },
+            onClick:function(){
+                console.log(this.model.toJSON())
+                var Editor = Juggler.module('Editors.Input');
+                var editor = new Editor({
+                    model:new Juggler.Enities.Field(this.serializeData())
+                });
+                this.$el.html(editor.render().el)
             }
         });
     
@@ -581,14 +559,16 @@
             childView:Widgets.Td
         });
     
-        Widgets.Thead = Widgets.Tr.extend({
+        Widgets.Thead = Juggler.Views.CompositeView.extend({
+            tagName:'tr',
             childView:Widgets.Th
         });
     
         Widgets.Tbody = Juggler.Views.CompositeView.extend({
+            tagName:'tbody',
             childView:Widgets.Tr,
             childViewOptions:function(){
-                return {collection:this.options.columns}
+                return {collection:this.options.columns.clone()}
             }
         });
     
@@ -597,12 +577,12 @@
             className:'table table-hover table-striped',
             childView:Widgets.Tr,
             childViewContainer:'tbody',
-            template:_.template('<thead></thead><tbody></tbody><tfoot></tfoot>'),
             regions:{
                 theadRegion:'thead',
                 tbodyRegion:'tbody',
                 tfootRegion:'tfoot'
             },
+            template:_.template('<thead></thead><tbody></tbody><tfoot></tfoot>'),
             initialize:function(){
                 this.head = new Widgets.Thead({
                     collection:this.options.columns,
@@ -613,7 +593,7 @@
                     columns:this.options.columns
                 });
                 this.tbodyRegion.attachHtml = function(view){
-                    this.$el.html(view.$el.html())
+                    this.$el.replaceWith(view.$el)
                 };
             },
             onRender:function(){
@@ -657,64 +637,27 @@
             modelEvents:{
               'validated':'onValidate'  
             },
-            bindings:{
-                'label':{
-                    observe:'label',
-                    attributes:[{
-                        name:'for',
-                        observe:'cid'
-                    }]
-                },
-                ':el':{
-                    attributes:[{
-                        name:'class',
-                        observe:'errors',
-                        onGet:function(val){
-                            if(val===undefined)return '';
-                            return !val?'has-success':'has-error'
-                        }
-                    }]
-                },
-                '.help-block':{
-                    observe:'errors',
-                    onGet:function(errors){
-                        return errors&&errors.value.join(' ')
-                    }
-                },
-                '.form-control-feedback':{
-                    attributes:[{
-                        name:'class',
-                        observe:'errors',
-                        onGet:function(errors){
-                            return errors?'glyphicon-remove':'glyphicon-ok'
-                        }
-                    }]
-                }
-            },
             initialize:function(){
-                var name = this.model.get('editor');
-                name = name[0].toUpperCase()+name.substr(1,name.length);
-                this.Editor = Juggler.module('Editors.'+name);
+                
                 this.model.set('value',this.options.parentModel.get(this.model.get('name')));
                 this.model.set('cid',this.model.cid);
             },
             onRender:function(){
-                this.stickit();
-                var options = {
-                    model:this.model
-                };
-                if(this.model.get('options')){
-                    _.extend(options,{
-                        collection:new Juggler.Enities.Collection(this.model.get('options'))
-                    })
-                }
-                var editor = new this.Editor(options);
-                editor&&this.fieldRegion.show(editor);
+                this._createEditor();
             },
-            onValidate:function(model,attributes,errors){console.log(errors)
-                var isValid = !(errors&&errors.value.length);
-                model.set('errors',errors);
-                this.options.parentModel.trigger('validated',isValid,model);
+            _createEditor:function(){
+                var name = this.model.get('editor')
+                .replace(/\w/,function(val){
+                    return val.toUpperCase();
+                });
+                var View = Juggler.Editors[name];
+                View&&this.fieldRegion.show(new View({model:this.model}));
+            },
+            onValidate:function(model,attributes,errors){
+                this.$el.attr('class',this.className+' '+(errors?'has-error':'has-success'));
+                this.ui.feedback.removeClass(errors?'glyphicon-ok':'glyphicon-remove')
+                    .addClass(errors?'glyphicon-remove':'glyphicon-ok');
+                this.ui.help.text(errors&&errors.value.join(',')||'');
             }
         });
         
@@ -735,8 +678,7 @@
             },
             modelEvents:{
                 'request':'disableSubmit',
-                'sync':'enableSubmit',
-                'validated':'onValidate'
+                'sync':'enableSubmit'
             },
             initialize:function(){
                 this.setType(this.options.type);
@@ -773,14 +715,10 @@
                 else{
                     this.ui.submit.addClass('hidden');
                 }
-                //this.commit()?this.enableSubmit():this.disableSubmit();
             },
             onSubmit:function(e){
                 e.preventDefault();
                 this.submit();
-            },
-            onValidate:function(){
-                //this.commit();
             }
         });
     
@@ -789,9 +727,8 @@
 
     Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
     
-        Editors.Base = Juggler.Views.CompositeView.extend({
+        Editors.Base = Juggler.Views.ItemView.extend({
             className:'form-control',
-            childView:Juggler.Views.ItemView,
             bindings:{':el':{
                 observe:'value',
                 attributes:[
@@ -802,11 +739,10 @@
                 ]
             }},
             onRender:function(){
-                //Backbone.Validation.bind(this);
                 this.stickit();
             },
             onDestory:function(){
-                //Backbone.Validation.unbind(this);
+                this.unstickit()
             }
         });
         
@@ -830,49 +766,37 @@
     
         Editors.Select = Editors.Base.extend({
             tagName:'select',
-            childView:Juggler.Views.ItemView.extend({
-                tagName:'option',
-                onRender:function(){
-                    this.$el.attr('value',this.model.get('value'))
-                        .text(this.model.get('name'));
-                }
-            })
+            template:function(data){
+                return _.map(data.items,function(item,i){
+                    return '<option value="'+item.value+'">'+item.name+'</option>';
+                }).join('');
+            }
         });
     
-        Editors.Check = Juggler.Views.ItemView.extend({
-            tagName:'label',
-            className:'checkbox-inline',
-            bindings:{
-                'input':{
-                    attributes:[
-                        {name:'type',observe:'type'},
-                        {name:'value',observe:'value'},
-                        {name:'name',observe:'name'}
-                    ]
-                },
-                'span':'label'
+        Editors.Checkbox = Juggler.Views.ItemView.extend({
+            className:'checkbox',
+            bindings:{'input':'value'},
+            template:function(data){
+                return _.map(data.items,function(item,i){
+                    return '<label class="checkbox-inline"><input type="checkbox" value="'+item.value+'">'+item.name+'</label>';
+                }).join('');
             },
-            template:_.template('<input /><span></span>'),
             onRender:function(){
                 this.stickit();
-            }
-        })
-    
-        Editors.Checkbox = Editors.Base.extend({
-            className:'',
-            childView:Editors.Check,
-            bindings:{'input':'value'},
-            childViewOptions:function(model,index){
-                model.set('name',this.model.get('name'));
-                model.set('type',this.model.get('editor'));
-                return Editors.Checkbox.__super__.childViewOptions.apply(this,arguments);
+            },
+            onDestory:function(){
+                this.unstickit()
             }
         });
     
         Editors.Radio = Editors.Checkbox.extend({
-            childView:Editors.Check.extend({
-                className:'radio-inline'
-            })
+            className:'radio',
+            bindings:{'input':'value'},
+            template:function(data){
+                return _.map(data.items,function(item,i){
+                    return '<label class="checkbox-inline"><input type="radio" value="'+item.value+'">'+item.name+'</label>';
+                }).join('');
+            }
         });
     
     });
@@ -905,11 +829,7 @@
         Backbone.Stickit.addHandler({
             selector: '*',
             setOptions: {validate:true}
-        });
-    
-    //     Backbone.Validation.configure({
-    //       forceUpdate: true
-    //     });   
+        });  
     
     });
     
