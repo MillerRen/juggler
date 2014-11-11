@@ -110,21 +110,6 @@
 
     Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
         
-        Enities.model_to_collection = function(model, name, value, Collection){
-            Collection = Collection||Enities.Collection;
-            name = name||'name';
-            value = value||'label';
-            return new Collection(
-                _.map(model.toJSON(), function(item,i){
-                    var data = {};
-                    data[name]=item;
-                    data[value]=i;
-                    
-                    return data;
-                })
-            );
-        };
-        
         Enities.Model = Backbone.RelationalModel.extend({
             urlRoot: '/test',
             message: Juggler.Config.Message,
@@ -532,7 +517,7 @@
     
         Widgets.Th = Juggler.Views.ItemView.extend({
             tagName:'th',
-            template:_.template('<%- label %>')
+            template:_.template('<%- value %>')
         });
     
         Widgets.Td = Juggler.Views.ItemView.extend({
@@ -541,16 +526,18 @@
             events:{
                 'click':'onClick'
             },
-            initialize:function(){
-                this.model.set('value',this.options.parentModel.get(this.model.get('name')));
+            serializeData:function(){
+                var model = this.model.clone();
+                model.set('value',this.options.parentModel.get(this.model.get('name')));
+                return model.toJSON();
             },
             onClick:function(){
-                console.log(this.model.toJSON())
+                if(this.editor)return;
                 var Editor = Juggler.module('Editors.Input');
-                var editor = new Editor({
+                this.editor = new Editor({
                     model:new Juggler.Enities.Field(this.serializeData())
                 });
-                this.$el.html(editor.render().el)
+                this.$el.html(this.editor.render().el)
             }
         });
     
@@ -568,7 +555,7 @@
             tagName:'tbody',
             childView:Widgets.Tr,
             childViewOptions:function(){
-                return {collection:this.options.columns.clone()}
+                return {collection:this.options.columns}
             }
         });
     
@@ -638,7 +625,6 @@
               'validated':'onValidate'  
             },
             initialize:function(){
-                
                 this.model.set('value',this.options.parentModel.get(this.model.get('name')));
                 this.model.set('cid',this.model.cid);
             },

@@ -206,7 +206,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
 
     Widgets.Th = Juggler.Views.ItemView.extend({
         tagName:'th',
-        template:_.template('<%- label %>')
+        template:_.template('<%- value %>')
     });
 
     Widgets.Td = Juggler.Views.ItemView.extend({
@@ -215,16 +215,18 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         events:{
             'click':'onClick'
         },
-        initialize:function(){
-            this.model.set('value',this.options.parentModel.get(this.model.get('name')));
+        serializeData:function(){
+            var model = this.model.clone();
+            model.set('value',this.options.parentModel.get(this.model.get('name')));
+            return model.toJSON();
         },
         onClick:function(){
-            console.log(this.model.toJSON())
+            if(this.editor)return;
             var Editor = Juggler.module('Editors.Input');
-            var editor = new Editor({
+            this.editor = new Editor({
                 model:new Juggler.Enities.Field(this.serializeData())
             });
-            this.$el.html(editor.render().el)
+            this.$el.html(this.editor.render().el)
         }
     });
 
@@ -242,7 +244,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         tagName:'tbody',
         childView:Widgets.Tr,
         childViewOptions:function(){
-            return {collection:this.options.columns.clone()}
+            return {collection:this.options.columns}
         }
     });
 
@@ -312,7 +314,6 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
           'validated':'onValidate'  
         },
         initialize:function(){
-            
             this.model.set('value',this.options.parentModel.get(this.model.get('name')));
             this.model.set('cid',this.model.cid);
         },

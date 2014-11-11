@@ -1,20 +1,5 @@
 Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
     
-    Enities.model_to_collection = function(model, name, value, Collection){
-        Collection = Collection||Enities.Collection;
-        name = name||'name';
-        value = value||'label';
-        return new Collection(
-            _.map(model.toJSON(), function(item,i){
-                var data = {};
-                data[name]=item;
-                data[value]=i;
-                
-                return data;
-            })
-        );
-    };
-    
     Enities.Model = Backbone.RelationalModel.extend({
         urlRoot: '/test',
         message: Juggler.Config.Message,
