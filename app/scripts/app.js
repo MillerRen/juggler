@@ -102,7 +102,7 @@
     			collection:new Juggler.Enities.Collection([
     				{sidebar:{md:{3:'',push:9}},content:{md:{9:'',pull:3}}},
     				{panel:{md:3},form:{md:9}},
-    				{test:{md:3},toolbar:{md:9}},
+    				{tabs:{md:3},toolbar:{md:9}},
     			])
     		});
     		Juggler.mainRegion.show(layout);
@@ -164,6 +164,15 @@
     		});
     
     		layout.toolbarRegion.show(toolbar);
+    
+    		var tabs_panels = new Juggler.Components.TabsPanels({
+    			collection:new Juggler.Enities.Collection([
+    			{name:'tabs1',label:'tabs1',content:'tabs content 1'},
+    			{name:'tabs2',label:'tabs2',content:'tabs content 2'}
+    			])
+    		});
+    
+    		layout.tabsRegion.show(tabs_panels);
     		
     	});
     

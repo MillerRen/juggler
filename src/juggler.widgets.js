@@ -122,12 +122,40 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     Widgets.Tabs = Widgets.List.extend({
         className: 'nav nav-tabs',
         childView:Widgets.ListItem.extend({
-            template:_.template('<a data-toggle="tabs" data-target="<%- name %>"><%- label %></a>')
-        })
+            template:_.template('<a data-toggle="tab" data-target="#<%- name %>"><%- label %></a>')
+        }),
+        collectionEvents:{
+            'change':'onChange'
+        },
+        initialize:function(){
+            this._actived = this.serializeData().active||0;
+        },
+        active:function(index){
+            this.collection.at(this._actived).unset('active');
+            this.collection.at(index).set('active',true);
+            this._actived = index;
+        },
+        onRender:function(){
+            this.active(this._actived);
+        },
+        onClick:function(view){
+            this.active(view.model.index());
+        },
+        onChange:function(model){
+            var index = model.index();
+            this.$el.find('a').eq(index).tab('show');
+        }
     });
 
     Widgets.TabsContent = Juggler.Views.CompositeView.extend({
-        
+        className:'tab-content',
+        childView:Juggler.Views.ItemView.extend({
+            className:'tab-pane',
+            attributes:function(){
+                return {id:this.model.get('name')}
+            },
+            template:_.template('<%= content %>')
+        })
     });
 
     Widgets.Pills = Widgets.List.extend({
