@@ -88,11 +88,27 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         tagName: 'ul',
         template: _.template(''),
         childView: Widgets.ListItem,
+        getChildView:function(model){
+            return model.get('items')?Widgets.DropdownMenu:Widgets.List.__super__.getChildView.apply(this,arguments);
+        },
         childEvents:{
           'click':'onClick'  
         },
         onClick:function(view){
           Backbone.history.navigate(view.model.get('name')); 
+        }
+    });
+
+    Widgets.DropdownMenu = Widgets.List.extend({
+        className:'dropdown',
+        tagName: 'li',
+        childViewContainer:'.dropdown-menu',
+        template: _.template('<a data-toggle="dropdown" class="dropdown-toggle" href="#"><%- label %><span class="caret"></span></a><ul class="dropdown-menu"></ul>'),
+        triggers:{
+           'click a':'click' 
+        },
+        onRender:function(){
+            this.$el.find('.dropdown-toggle').dropdown()
         }
     });
 
@@ -146,9 +162,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         }
     });
 
-    Widgets.DropdownMenu = Widgets.List.extend({
-       className:'dropdown-menu' 
-    });
+    
 
     Widgets.Pagination = Widgets.List.extend({
         className:'pagination'
