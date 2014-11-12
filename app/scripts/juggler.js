@@ -565,7 +565,7 @@
     
         Widgets.Table = Juggler.Views.LayoutView.extend({
             tagName:'table',
-            className:'table table-hover table-striped',
+            className:'table table-hover table-striped table-bordered',
             childView:Widgets.Tr,
             childViewContainer:'tbody',
             regions:{
