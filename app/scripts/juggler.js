@@ -541,7 +541,8 @@
                 this.editor = new Editor({
                     model:new Juggler.Enities.Field(this.serializeData())
                 });
-                this.$el.html(this.editor.render().el)
+                this.$el.html(this.editor.render().el);
+                this.editor.focus();
             }
         });
     
@@ -728,6 +729,9 @@
                     {name:'name',observe:'name'}
                 ]
             }},
+            focus:function(){
+                this.$el.focus();
+            },
             onRender:function(){
                 this.stickit();
             },

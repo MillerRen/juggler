@@ -11,6 +11,9 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
                 {name:'name',observe:'name'}
             ]
         }},
+        focus:function(){
+            this.$el.focus();
+        },
         onRender:function(){
             this.stickit();
         },

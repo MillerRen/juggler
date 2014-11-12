@@ -230,7 +230,8 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             this.editor = new Editor({
                 model:new Juggler.Enities.Field(this.serializeData())
             });
-            this.$el.html(this.editor.render().el)
+            this.$el.html(this.editor.render().el);
+            this.editor.focus();
         }
     });
 
