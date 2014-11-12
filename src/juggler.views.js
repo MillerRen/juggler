@@ -65,25 +65,5 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         }
     });
 
-    Views.ListItemView = Views.ItemView.extend({
-        tagName: 'li',
-        template: _.template('<a><%- label %></a>'),
-        triggers:{
-           'click a':'click' 
-        },
-    });
-
-    Views.ListView = Views.CompositeView.extend({
-        tagName: 'ul',
-        template: _.template(''),
-        childView: Views.ListItemView,
-        childEvents:{
-          'click':'onClick'  
-        },
-        onClick:function(view){
-          Backbone.history.navigate(view.model.get('name')); 
-        }
-    });
-
 
 });

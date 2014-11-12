@@ -48,7 +48,7 @@
     	Enities.Navs = Juggler.Enities.Collection.extend({
     		initialize:function(){
     			this.reset([
-    				{name:'Docs',label:'docs'},
+    				{name:'Docs',label:'docs',items:[{name:'dropdown1',label:'dropdown1'}]},
     				{name:'Examples',label:'examples'}
     			]);
     		}

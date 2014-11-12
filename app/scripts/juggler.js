@@ -286,32 +286,10 @@
             }
         });
     
-        Views.ListItemView = Views.ItemView.extend({
-            tagName: 'li',
-            template: _.template('<a><%- label %></a>'),
-            triggers:{
-               'click a':'click' 
-            },
-        });
-    
-        Views.ListView = Views.CompositeView.extend({
-            tagName: 'ul',
-            template: _.template(''),
-            childView: Views.ListItemView,
-            childEvents:{
-              'click':'onClick'  
-            },
-            onClick:function(view){
-              Backbone.history.navigate(view.model.get('name')); 
-            }
-        });
-    
     
     });
 
     Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
-    
-        
     
         Widgets.Alert = Juggler.Views.ItemView.extend({
             className:'alert alert-dismissable fade in animated juggler-alert',
@@ -388,15 +366,35 @@
                 this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
             }
         });
+        
+        Widgets.ListItem = Juggler.Views.ItemView.extend({
+            tagName: 'li',
+            template: _.template('<a><%- label %></a>'),
+            triggers:{
+               'click a':'click' 
+            },
+        });
     
-        Widgets.GroupList = Juggler.Views.ListView.extend({
+        Widgets.List = Juggler.Views.CompositeView.extend({
+            tagName: 'ul',
+            template: _.template(''),
+            childView: Widgets.ListItem,
+            childEvents:{
+              'click':'onClick'  
+            },
+            onClick:function(view){
+              Backbone.history.navigate(view.model.get('name')); 
+            }
+        });
+    
+        Widgets.GroupList = Widgets.List.extend({
             className: 'list-group',
-            childView: Juggler.Views.ListItemView.extend({
+            childView: Widgets.ListItem.extend({
                 className: 'list-group-item'
             })
         });
     
-        Widgets.Tabs = Juggler.Views.ListView.extend({
+        Widgets.Tabs = Widgets.List.extend({
             className: 'nav nav-tabs'
         });
     
@@ -404,19 +402,19 @@
             
         });
     
-        Widgets.Pills = Juggler.Views.ListView.extend({
+        Widgets.Pills = Widgets.List.extend({
             className: 'nav nav-pills'
         });
     
-        Widgets.Stack = Juggler.Views.ListView.extend({
+        Widgets.Stack = Widgets.List.extend({
             className: 'nav nav-pills nav-stacked'
         });
     
-        Widgets.Nav = Juggler.Views.ListView.extend({
+        Widgets.Nav = Widgets.List.extend({
             className: 'nav navbar-nav'
         });
     
-        Widgets.Breadcrumb = Juggler.Views.ListView.extend({
+        Widgets.Breadcrumb = Widgets.List.extend({
            className: 'breadcrumb',
            onClick:function(view){
                var model = view.model;
@@ -429,7 +427,7 @@
            }
         });
     
-        Widgets.Navbar = Juggler.Views.ListView.extend({
+        Widgets.Navbar = Widgets.List.extend({
             tagName:'div',
             template:Juggler.Templates.navbar,
             childViewContainer:'.navbar-nav-primary',
@@ -439,19 +437,19 @@
             }
         });
     
-        Widgets.DropdownMenu = Juggler.Views.ListItemView.extend({
+        Widgets.DropdownMenu = Widgets.List.extend({
            className:'dropdown-menu' 
         });
     
-        Widgets.Pagination = Juggler.Views.ListItemView.extend({
+        Widgets.Pagination = Widgets.List.extend({
             className:'pagination'
         });
     
-        Widgets.MediaList = Juggler.Views.ListItemView.extend({
+        Widgets.MediaList = Widgets.List.extend({
             className:'media-list'
         });
     
-        Widgets.Button = Juggler.Views.ItemView.extend({
+        Widgets.Button = Widgets.ListItem.extend({
             tagName:'button',
             template:_.template('<i class="<%- icon %>"/> <span><%- name %></span>'),
             onRender:function(){
