@@ -380,7 +380,7 @@
             template: _.template(''),
             childView: Widgets.ListItem,
             getChildView:function(model){
-                return model.get('items')?Widgets.DropdownMenu:Widgets.List.__super__.getChildView.apply(this,arguments);
+                return !_.isEmpty(model.get('items'))?Widgets.DropdownMenu:Widgets.List.__super__.getChildView.apply(this,arguments);
             },
             childEvents:{
               'click':'onClick'  
@@ -394,12 +394,12 @@
             className:'dropdown',
             tagName: 'li',
             childViewContainer:'.dropdown-menu',
-            template: _.template('<a data-toggle="dropdown" class="dropdown-toggle" href="#"><%- label %><span class="caret"></span></a><ul class="dropdown-menu"></ul>'),
+            template: _.template('<a class="dropdown-toggle" data-toggle="dropdown" href="#"><%- label %><span class="caret"></span></a><ul class="dropdown-menu"></ul>'),
             triggers:{
                'click a':'click' 
             },
             onRender:function(){
-                this.$el.find('.dropdown-toggle').dropdown()
+                this.$el.find('.dropdown-toggle').dropdown();
             }
         });
     
