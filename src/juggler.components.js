@@ -8,14 +8,8 @@ Juggler.module('Components', function(Components, Juggler, Backbone, Marionette,
             panelsRegion:'.panels'
         },
         onRender:function(){
-            var tabs = new Juggler.Widgets.Tabs({
-                collection:this.collection
-            });
-            var panels = new Juggler.Widgets.Panels({
-                collection:this.collection
-            });
-            this.tabsRegion.show(tabs);
-            this.panelsRegion.show(panels);
+            this.tabsRegion.show(new Juggler.Widgets.Tabs(this.options));
+            this.panelsRegion.show(new Juggler.Widgets.TabsContent(this.options));
         }
     });
 

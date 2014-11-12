@@ -412,10 +412,13 @@
         });
     
         Widgets.Tabs = Widgets.List.extend({
-            className: 'nav nav-tabs'
+            className: 'nav nav-tabs',
+            childView:Widgets.ListItem.extend({
+                template:_.template('<a data-toggle="tabs" data-target="<%- name %>"><%- label %></a>')
+            })
         });
     
-        Widgets.Panels = Juggler.Views.CompositeView.extend({
+        Widgets.TabsContent = Juggler.Views.CompositeView.extend({
             
         });
     
@@ -818,14 +821,8 @@
                 panelsRegion:'.panels'
             },
             onRender:function(){
-                var tabs = new Juggler.Widgets.Tabs({
-                    collection:this.collection
-                });
-                var panels = new Juggler.Widgets.Panels({
-                    collection:this.collection
-                });
-                this.tabsRegion.show(tabs);
-                this.panelsRegion.show(panels);
+                this.tabsRegion.show(new Juggler.Widgets.Tabs(this.options));
+                this.panelsRegion.show(new Juggler.Widgets.TabsContent(this.options));
             }
         });
     

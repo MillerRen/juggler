@@ -120,10 +120,13 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     });
 
     Widgets.Tabs = Widgets.List.extend({
-        className: 'nav nav-tabs'
+        className: 'nav nav-tabs',
+        childView:Widgets.ListItem.extend({
+            template:_.template('<a data-toggle="tabs" data-target="<%- name %>"><%- label %></a>')
+        })
     });
 
-    Widgets.Panels = Juggler.Views.CompositeView.extend({
+    Widgets.TabsContent = Juggler.Views.CompositeView.extend({
         
     });
 
