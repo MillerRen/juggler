@@ -174,6 +174,7 @@
                 sortType: "cycle",
                 sortValue: undefined,
                 direction: null,
+                readonly:true,
                 cell: undefined,
                 headerCell: undefined
             }
@@ -548,7 +549,7 @@
                 return model.toJSON();
             },
             onClick:function(){
-                if(this.editor)return;
+                if(this.serializeData().readonly||this.editor)return;
                 var Editor = Juggler.module('Editors.Input');
                 this.editor = new Editor({
                     model:new Juggler.Enities.Field(this.serializeData())

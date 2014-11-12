@@ -257,7 +257,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             return model.toJSON();
         },
         onClick:function(){
-            if(this.editor)return;
+            if(this.serializeData().readonly||this.editor)return;
             var Editor = Juggler.module('Editors.Input');
             this.editor = new Editor({
                 model:new Juggler.Enities.Field(this.serializeData())

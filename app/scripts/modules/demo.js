@@ -29,7 +29,7 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 
 		var table = new Juggler.Widgets.Table({
 			collection:new App.Enities.Table,
-			columns:new Juggler.Enities.Columns([{name:'name',value:'名称'},{name:'value',value:'标签'}])
+			columns:new Juggler.Enities.Columns([{name:'name',value:'名称',readonly:false},{name:'value',value:'标签'}])
 		});
 
 		layout.contentRegion.show(table);

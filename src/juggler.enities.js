@@ -64,6 +64,7 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
             sortType: "cycle",
             sortValue: undefined,
             direction: null,
+            readonly:true,
             cell: undefined,
             headerCell: undefined
         }
