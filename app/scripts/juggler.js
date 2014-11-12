@@ -465,15 +465,15 @@
     
         Widgets.ButtonGroup = Juggler.Views.CompositeView.extend({
             className:'btn-group',
-            childView:Widgets.Button,
-            initialize:function(){
-                this.collection = new Juggler.Enities.ButtonGroup(this.model.values());
-            }
+            childView:Widgets.Button
         });
     
         Widgets.Toolbar = Juggler.Views.CompositeView.extend({
             className:'btn-toolbar',
-            childView:Widgets.ButtonGroup
+            childView:Widgets.ButtonGroup,
+            childViewOptions:function(model,index){
+                return {collection:new Juggler.Enities.ButtonGroup(model.values())}
+            }
         });
     
         Widgets.Dialog = Juggler.Views.LayoutView.extend({
