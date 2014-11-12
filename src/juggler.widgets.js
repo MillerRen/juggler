@@ -142,10 +142,14 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
 
     Widgets.Button = Juggler.Views.ItemView.extend({
         tagName:'button',
-        className:function(){
-            return 'btn btn-'+this.serializeData().type;
-        },
-        template:_.template('<i class="<%- icon %>"/> <span><%- name %></span>')
+        template:_.template('<i class="<%- icon %>"/> <span><%- name %></span>'),
+        onRender:function(){
+            var data = this.serializeData();
+            var type = 'btn-'+data.type;
+            var size = 'btn-'+data.size;
+            var className = ['btn',type,size].join(' ');
+            this.$el.attr('class',className);
+        }
     });
 
     Widgets.ButtonGroup = Juggler.Views.CompositeView.extend({
