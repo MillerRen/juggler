@@ -9,10 +9,10 @@
   "homepage": "https://github.com/MillerRen/juggler.git",
   "keywords": [
     "backbone",
+    "marionette",
     "framework",
-    "client",
-    "browser",
-    "composite"
+    "UI",
+    "SPA"
   ],
   "author": {
     "name": "Miller Ren",
