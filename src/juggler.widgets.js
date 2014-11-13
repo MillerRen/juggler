@@ -150,7 +150,9 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     Widgets.TabsContent = Juggler.Views.CompositeView.extend({
         className:'tab-content',
         childView:Juggler.Views.ItemView.extend({
-            className:'tab-pane',
+            className:function(){
+                return 'tab-pane '+(this.model.get('active')?'active':'');
+            },
             attributes:function(){
                 return {id:this.model.get('name')}
             },
