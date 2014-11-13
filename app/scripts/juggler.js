@@ -793,7 +793,8 @@
                     {name:'value',observe:'value'},
                     {name:'id',observe:'cid'},
                     {name:'placeholder',observe:'placeholder'},
-                    {name:'name',observe:'name'}
+                    {name:'name',observe:'name'},
+                    {name:'type',observe:'editor'}
                 ]
             }},
             focus:function(){

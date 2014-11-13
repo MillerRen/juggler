@@ -38,7 +38,7 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 			submit:'提交',
 			model:new App.Enities.Form(),
 			collection:new Juggler.Enities.Fields([
-				{name:'input',label:'Input',editor:'input',validator:{format:'email'}},
+				{name:'input',label:'Input',editor:'email',validator:{format:'email',required:true}},
 				{name:'textarea',label:'Textarea',editor:'textarea'},
 				{name:'select',label:'Select',editor:'select',items:[{value:'1',name:'option1'},{value:'2',name:'option2'}]},
 				{name:'checkbox',label:'Checkboxes',editor:'checkbox',items:[{value:'1',name:'option1'},{value:'2',name:'option2'}]},
