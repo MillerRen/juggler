@@ -443,7 +443,7 @@
             className:'tab-content',
             childView:Juggler.Views.ItemView.extend({
                 className:function(){
-                    return 'tab-pane '+(this.model.get('active')?'active':'');
+                    return 'tab-pane '+(this.serializeData().active?'active':'');
                 },
                 attributes:function(){
                     return {id:this.model.get('name')}
