@@ -550,8 +550,8 @@
                 value?this.ui[key].show():this.ui[key].hide();
             },
             onRender:function(){
-                this.get('header')?this.ui.header.show():this.ui.header.hide();
-                this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
+                this.get('header')?this.ui.header.show().html(this.get('header')):this.ui.header.hide();
+                this.get('footer')?this.ui.footer.show().html(this.get('footer')):this.ui.footer.hide();
                 if(!this.options.buttons){
                     this.ui.footer.remove()
                     return;

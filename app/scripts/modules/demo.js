@@ -46,17 +46,17 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 			])
 		});
 
-		layout.formRegion.show(form);
+		//layout.formRegion.show(form);
 
 		var panel = new Juggler.Widgets.Panel({header:'panel title',body:'panel body',footer:'panel footer'});
 
 		layout.panelRegion.show(panel);
 
-		var dialog = new Juggler.Widgets.Dialog();
+		var dialog = new Juggler.Widgets.Dialog({header:'form title'});
 
-		//Juggler.dialogRegion.show(dialog);
+		Juggler.dialogRegion.show(dialog);
 
-		//dialog.bodyRegion.show(form)
+		dialog.bodyRegion.show(form)
 
 		var toolbar = new Juggler.Widgets.Toolbar({
 			collection:new Juggler.Enities.ButtonGroup([
