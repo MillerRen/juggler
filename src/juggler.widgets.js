@@ -6,10 +6,19 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         options:{
             type:'warning',
             message:'',
-            zIndex:9999
+            zIndex:9999,
+            delay:3000
         },
         events:{
             'close.bs.alert':'onClose'
+        },
+        initialize:function(){
+            var that = this;
+            if(this.options.delay){
+                _.delay(function(){
+                    that.$el.alert('close');
+                },this.options.delay);
+            }
         },
         onRender:function(options){
             this.$el.addClass('alert-'+this.options.type)
