@@ -446,6 +446,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             return !isInvalid&&this.model.set(data);
         },
         submit:function(){
+            var that = this;
             this.commit()&&
             this.model.save()
             .success(function(xhr,type,msg){
@@ -461,13 +462,16 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
                     type:'danger'
                 });
                 Juggler.notifyRegion.show(notice);
+            })
+            .complete(function(){
+                that.enableSubmit();
             });
         },
         disableSubmit:function(model,xhr){
-            this.ui.submit.attr('disabled',true);
+            this.ui.submit.button('loading');
         },
         enableSubmit:function(){
-            this.ui.submit.removeAttr('disabled');
+            this.ui.submit.button('reset');
         },
         onRender:function(){
             if(this.options.submit){
