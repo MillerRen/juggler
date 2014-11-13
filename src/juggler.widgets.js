@@ -451,7 +451,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             var data = this.collection.reduce(function(item1,item2){
                 return item1.set(item2.get('name'),item2.get('value'))
             },new Juggler.Enities.Model);
-
+            console.log(data)
             return !isInvalid&&this.model.set(data);
         },
         submit:function(){

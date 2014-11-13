@@ -2,24 +2,28 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
 
     Editors.Base = Juggler.Views.ItemView.extend({
         className:'form-control',
-        bindings:{':el':{
-            observe:'value',
-            attributes:[
-                {name:'value',observe:'value'},
-                {name:'id',observe:'cid'},
-                {name:'placeholder',observe:'placeholder'},
-                {name:'name',observe:'name'},
-                {name:'type',observe:'editor'}
-            ]
-        }},
+        attributes:function(){
+            var data = this.serializeData();
+            return {
+                id:data.cid,
+                value:data.value,
+                placeholder:data.placeholder,
+                name:data.name,
+                type:data.editor
+            }
+        },
+        events:{
+            'change':'onChange',
+            'keyup':'onChange'
+        },
         focus:function(){
             this.$el.focus();
         },
         onRender:function(){
-            this.stickit();
+            this.$el.attr(this.attributes())
         },
-        onDestory:function(){
-            this.unstickit()
+        onChange:function(){
+            this.model.set({value:this.$el.val()},{validate:true})
         }
     });
     
@@ -38,42 +42,69 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
     Editors.Datetime = Editors.Input.extend({});
 
     Editors.Textarea = Editors.Base.extend({
-        tagName:'textarea'
+        tagName:'textarea',
+        template:_.template('<%- value %>')
     });
 
     Editors.Select = Editors.Base.extend({
         tagName:'select',
         template:function(data){
             return _.map(data.items,function(item,i){
-                return '<option value="'+item.value+'">'+item.name+'</option>';
+                return '<option value="'+item.value+'">'+item.label+'</option>';
             }).join('');
         }
     });
 
-    Editors.Checkbox = Juggler.Views.ItemView.extend({
-        className:'checkbox',
-        bindings:{'input':'value'},
-        template:function(data){
-            return _.map(data.items,function(item,i){
-                return '<label class="checkbox-inline"><input type="checkbox" value="'+item.value+'">'+item.name+'</label>';
-            }).join('');
+    Editors.CheckboxItem = Juggler.Views.ItemView.extend({
+        tagName:'label',
+        className:'checkbox-inline',
+        template:_.template('<input type="<%- type %>" value="<%- value %>" <%- checked %> /><%- label %>'),
+        serializeData:function(){
+            var checked = this.getChecked();
+            return {
+                label:this.model.get('label'),
+                value:this.model.get('value'),
+                name:this.options.parentModel.get('name'),
+                checked:checked?'checked':'',
+                type:this.options.parentModel.get('editor')
+            }
+        },
+        getChecked:function(){
+            return _.contains(this.options.parentModel.get('value'),this.model.get('value'));
+        }
+    });
+
+    Editors.Checkbox = Juggler.Views.CompositeView.extend({
+        className:'',
+        childView:Editors.CheckboxItem,
+        template:_.template(''),
+        events:{
+            'change input':'onChange'
+        },
+        initialize:function(){
+            var items = this.model.get('items');
+            this.collection = new Juggler.Enities.Collection(items);
         },
         onRender:function(){
-            this.stickit();
+            console.log(this.model.get('items'))
         },
-        onDestory:function(){
-            this.unstickit()
+        onChange:function(e){
+            var value = _.map(this.$('input').serializeArray(),function(item){
+                return item.value;
+            });
+            var res = this.model.set({value:value},{validate:true,update:true});
+        }
+    });
+
+    Editors.RadioItem = Editors.CheckboxItem.extend({
+        className:'radio-inline',
+        getChecked:function(){
+            return this.options.parentModel.get('value')==this.model.get('value');
         }
     });
 
     Editors.Radio = Editors.Checkbox.extend({
-        className:'radio',
-        bindings:{'input':'value'},
-        template:function(data){
-            return _.map(data.items,function(item,i){
-                return '<label class="checkbox-inline"><input type="radio" value="'+item.value+'">'+item.name+'</label>';
-            }).join('');
-        }
+        childView:Editors.RadioItem
     });
 
 });
