@@ -29,7 +29,7 @@ App.module('Enities',function(Enities, App, Backbone, Marionette, $, _){
 
 	Enities.Form = Juggler.Enities.Form.extend({
 		defaults:{
-			input:'input',
+			input:'MillerRen@github.com',
 			textarea:'textarea',
 			select:'2',
 			checkbox:['1','2'],

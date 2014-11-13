@@ -12,6 +12,7 @@
     top:20px;
     left:50%;
     position:fixed;
+    z-index:9999;
 }
 
 .form-horizontal label ~ .form-control-feedback{

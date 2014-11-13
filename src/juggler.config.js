@@ -1,7 +1,8 @@
 Juggler.module('Config', function(Config, Juggler, Backbone, Marionette, $, _) {
 
     Config.Message = {
-        //test:''
+        NET_ERROR:'Network error!',
+        NET_SUCCESS:'Network success!'
     };
 
 });

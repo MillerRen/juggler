@@ -5,17 +5,18 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         template:Juggler.Templates.alert,
         options:{
             type:'warning',
-            message:''
+            message:'',
+            zIndex:9999
         },
         events:{
             'close.bs.alert':'onClose'
         },
-        initialize:function(options){
-            this.$el.addClass('alert-'+this.options.type);
+        onRender:function(options){
+            this.$el.addClass('alert-'+this.options.type)
+                .attr('z-index',this.serializeData().zIndex);
         },
         onShow:function(){
             this.$el.css('margin-left',-this.$el.outerWidth()/2+'px');
-            this.$el.addClass('bounceInDown')
         },
         onClose:function(e){
             this.destroy();
@@ -445,7 +446,22 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             return !isInvalid&&this.model.set(data);
         },
         submit:function(){
-            this.commit()&&this.model.save();
+            this.commit()&&
+            this.model.save()
+            .success(function(xhr,type,msg){
+                var notice = new Juggler.Widgets.Alert({
+                    message:msg,
+                    type:'success'
+                });
+                Juggler.notifyRegion.show(notice);
+            })
+            .fail(function(xhr,type,msg){
+                var notice = new Juggler.Widgets.Alert({
+                    message:msg,
+                    type:'danger'
+                });
+                Juggler.notifyRegion.show(notice);
+            });
         },
         disableSubmit:function(model,xhr){
             this.ui.submit.attr('disabled',true);
