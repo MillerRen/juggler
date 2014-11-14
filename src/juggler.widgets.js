@@ -445,7 +445,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         commit:function(validate){
             var isInvalid = this.collection
                 .some(function(item){
-                    return !item.isValid();
+                    return !item.isValid('value');
                 });
 
             var data = this.collection.reduce(function(item1,item2){

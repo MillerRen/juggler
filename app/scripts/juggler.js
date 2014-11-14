@@ -738,7 +738,7 @@
             commit:function(validate){
                 var isInvalid = this.collection
                     .some(function(item){
-                        return !item.isValid();
+                        return !item.isValid('value');
                     });
     
                 var data = this.collection.reduce(function(item1,item2){
@@ -813,11 +813,9 @@
             focus:function(){
                 this.$el.focus();
             },
-            onRender:function(){
-                this.$el.attr(this.attributes())
-            },
             onChange:function(){
-                this.model.set({value:this.$el.val()},{validate:true})
+                this.model.set({value:this.$el.val()},{validate:false});
+                this.model.validate('value');
             }
         });
         
@@ -844,61 +842,41 @@
             tagName:'select',
             template:function(data){
                 return _.map(data.items,function(item,i){
-                    return '<option value="'+item.value+'">'+item.label+'</option>';
+                    var checked = data.value==item.value?'selected':'';
+                    return '<option value="'+item.value+'" '+checked+'>'+item.label+'</option>';
                 }).join('');
             }
         });
     
-        Editors.CheckboxItem = Juggler.Views.ItemView.extend({
-            tagName:'label',
-            className:'checkbox-inline',
-            template:_.template('<input type="<%- type %>" value="<%- value %>" <%- checked %> /><%- label %>'),
-            serializeData:function(){
-                var checked = this.getChecked();
-                return {
-                    label:this.model.get('label'),
-                    value:this.model.get('value'),
-                    name:this.options.parentModel.get('name'),
-                    checked:checked?'checked':'',
-                    type:this.options.parentModel.get('editor')
-                }
-            },
-            getChecked:function(){
-                return _.contains(this.options.parentModel.get('value'),this.model.get('value'));
-            }
-        });
-    
-        Editors.Checkbox = Juggler.Views.CompositeView.extend({
+        Editors.Checkbox = Juggler.Views.ItemView.extend({
             className:'',
-            childView:Editors.CheckboxItem,
-            template:_.template(''),
+            bindings:{'input':'value'},
+            template:function(data){
+                return _.map(data.items,function(item,i){
+                    var checked = _.contains(data.value,item.value)||data.value==item.value?'checked':'';
+                    return '<label class="'+data.editor+'-inline">'+
+                    '<input type="'+data.editor+'" value="'+item.value+'" name="'+data.name+'[]" '+checked+'>'
+                    +item.label+'</label>';
+                }).join('');
+            },
             events:{
                 'change input':'onChange'
             },
-            initialize:function(){
-                var items = this.model.get('items');
-                this.collection = new Juggler.Enities.Collection(items);
-            },
-            onRender:function(){
-                console.log(this.model.get('items'))
-            },
-            onChange:function(e){
+            onChange:function(){
                 var value = _.map(this.$('input').serializeArray(),function(item){
                     return item.value;
                 });
-                var res = this.model.set({value:value},{validate:true,update:true});
-            }
-        });
-    
-        Editors.RadioItem = Editors.CheckboxItem.extend({
-            className:'radio-inline',
-            getChecked:function(){
-                return this.options.parentModel.get('value')==this.model.get('value');
+                this.model.set({value:value},{validate:false});
+                this.model.validate('value');
             }
         });
     
         Editors.Radio = Editors.Checkbox.extend({
-            childView:Editors.RadioItem
+            onChange:function(){
+                var value = this.$('input').val();
+                this.model.set({value:value},{validate:false});
+                this.model.validate('value');
+            }
         });
     
     });
