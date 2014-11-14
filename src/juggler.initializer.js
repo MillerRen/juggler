@@ -1,11 +1,3 @@
-Juggler.addInitializer(function(){
-    
-    Backbone.Stickit.addHandler({
-        selector: '*',
-        setOptions: {validate:true}
-    });  
-
-});
 
 Juggler.addInitializer(function() {
 

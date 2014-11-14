@@ -14,12 +14,12 @@
 * Progressbar
 * ListGroup
 * Panel
+* Button ButtonGroup Toolbar
 
 ##Compatibility and Requirements
 
 * [Marionette](https://github.com/marionettejs/backbone.marionette) v2.0+
 * [Bootstrap](https://github.com/twbs/bootstrap) v3.0+
-* [Backbone.stickit](https://github.com/nytimes/backbone.stickit) v0.8.0
 * [Backbone-validator](https://github.com/fantactuka/backbone-validator) 0.3.0
 
 ##Source Code and Downloads
@@ -32,9 +32,9 @@ You can install juggler with bower.Just execute `bower install juggler`.
 
 ##Development 
 
-We use [grunt](http://gruntjs.com/) to manage the build tasks,
-use [bower](http://www.bower.io/) to manage the front end lib dependency,
-use [yeoman](http://yeoman.io/) create the scaffolding.
+* We use [grunt](http://gruntjs.com/) to manage the build tasks,
+* use [bower](http://www.bower.io/) to manage the front end lib dependency,
+* use [yeoman](http://yeoman.io/) create the scaffolding.
      
 ###Get started
 
