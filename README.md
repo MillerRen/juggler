@@ -19,7 +19,7 @@
 
 ##Demo
 
-See `index.html` in the `dist` directory.
+See `index.html` in `dist`.
 
 ##Doc and usage
 
