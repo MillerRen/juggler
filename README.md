@@ -16,6 +16,15 @@
 * Panel
 * Button ButtonGroup Toolbar
 
+
+##Demo
+
+See `index.html` in the `dist` directory.
+
+##Doc and usage
+
+See [http://millerren.github.io/juggler/](http://millerren.github.io/juggler/)
+
 ##Compatibility and Requirements
 
 * [Marionette](https://github.com/marionettejs/backbone.marionette) v2.0+
@@ -30,9 +39,6 @@ You can download the latest builds directly from the "dist" folder above.The fil
 
 You can install juggler with bower.Just execute `bower install juggler`.
 
-##Demo
-
-See `index.html` in the `dist` directory.
 
 ##Development 
 
