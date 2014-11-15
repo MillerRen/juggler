@@ -30,6 +30,10 @@ You can download the latest builds directly from the "dist" folder above.The fil
 
 You can install juggler with bower.Just execute `bower install juggler`.
 
+##Demo
+
+See `index.html` in the `dist` directory.
+
 ##Development 
 
 * We use [grunt](http://gruntjs.com/) to manage the build tasks,
