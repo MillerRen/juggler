@@ -295,18 +295,8 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             'click':'onClick'
         },
         serializeData:function(){
-            var model = this.model.clone();
-            model.set('value',this.options.parentModel.get(this.model.get('name')));
-            return model.toJSON();
-        },
-        onClick:function(){
-            if(this.serializeData().readonly||this.editor)return;
-            var Editor = Juggler.module('Editors.Input');
-            this.editor = new Editor({
-                model:new Juggler.Enities.Field(this.serializeData())
-            });
-            this.$el.html(this.editor.render().el);
-            this.editor.focus();
+            var origin=Widgets.Td.__super__.serializeData.apply(this,arguments);
+            return _.extend(origin,{value:this.options.parentModel.get(this.model.get('name'))});
         }
     });
 
