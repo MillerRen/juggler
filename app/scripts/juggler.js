@@ -352,18 +352,24 @@
             }
         });
     
-        Widgets.Panel = Juggler.Views.LayoutView.extend({
-            className:'panel panel-default',
-            template:Juggler.Templates.panel,
-            ui:{
-                header:'.panel-heading',
-                body:'.panel-body',
-                footer:'.panel-footer'
-            },
+        Widgets.Dialog = Juggler.Views.LayoutView.extend({
+            className:'modal fade',
+            template:Juggler.Templates.dialog,
             options:{
-                header:'',
+                type:'success',
+                size:'md',
+                title:'',
                 body:'',
-                footer:''
+                buttons:{
+                    'positive':{},
+                    'negative':{}
+                },
+                backdrop:'static'
+            },
+            ui:{
+                header:'.modal-title',
+                body:'.modal-body',
+                footer:'.modal-footer'
             },
             get:function(key){
                 return _.extend(this.serializeData(),this.templateHelpers())[key];
@@ -374,10 +380,24 @@
                 value?this.ui[key].show():this.ui[key].hide();
             },
             onRender:function(){
-                this.get('header')?this.ui.header.show():this.ui.header.hide();
-                this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
+                this.get('header')?this.ui.header.show().html(this.get('header')):this.ui.header.hide();
+                this.get('footer')?this.ui.footer.show().html(this.get('footer')):this.ui.footer.hide();
+                if(!this.options.buttons){
+                    this.ui.footer.remove()
+                    return;
+                }
+            },
+            onShow:function(){
+                this.$el.modal(this.options);
+            },
+            onClose:function(){
+                this.$el.modal('destroy');
             }
         });
+    
+    });
+
+    Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
         
         Widgets.ListItem = Juggler.Views.ItemView.extend({
             tagName: 'li',
@@ -498,8 +518,6 @@
             }
         });
     
-        
-    
         Widgets.Pagination = Widgets.List.extend({
             className:'pagination'
         });
@@ -507,6 +525,10 @@
         Widgets.MediaList = Widgets.List.extend({
             className:'media-list'
         });
+    
+    });
+
+    Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
     
         Widgets.Button = Widgets.ListItem.extend({
             tagName:'button',
@@ -533,136 +555,9 @@
             }
         });
     
-        Widgets.Dialog = Juggler.Views.LayoutView.extend({
-            className:'modal fade',
-            template:Juggler.Templates.dialog,
-            options:{
-                type:'success',
-                size:'md',
-                title:'',
-                body:'',
-                buttons:{
-                    'positive':{},
-                    'negative':{}
-                },
-                backdrop:'static'
-            },
-            ui:{
-                header:'.modal-title',
-                body:'.modal-body',
-                footer:'.modal-footer'
-            },
-            get:function(key){
-                return _.extend(this.serializeData(),this.templateHelpers())[key];
-            },
-            set:function(key, value){
-                this[key+'Region'].close();
-                this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
-                value?this.ui[key].show():this.ui[key].hide();
-            },
-            onRender:function(){
-                this.get('header')?this.ui.header.show().html(this.get('header')):this.ui.header.hide();
-                this.get('footer')?this.ui.footer.show().html(this.get('footer')):this.ui.footer.hide();
-                if(!this.options.buttons){
-                    this.ui.footer.remove()
-                    return;
-                }
-            },
-            onShow:function(){
-                this.$el.modal(this.options);
-            },
-            onClose:function(){
-                this.$el.modal('destroy');
-            }
-        });
-    
-        Widgets.Th = Juggler.Views.ItemView.extend({
-            tagName:'th',
-            template:_.template('<%- value %>')
-        });
-    
-        Widgets.Td = Juggler.Views.ItemView.extend({
-            tagName:'td',
-            template:_.template('<%= value %>'),
-            events:{
-                'click':'onClick'
-            },
-            serializeData:function(){
-                var origin=Widgets.Td.__super__.serializeData.apply(this,arguments);
-                return _.extend(origin,{value:this.options.parentModel.get(this.model.get('name'))});
-            }
-        });
-    
-        Widgets.Tr = Juggler.Views.CompositeView.extend({
-            tagName:'tr',
-            childView:Widgets.Td
-        });
-    
-        Widgets.Thead = Juggler.Views.CompositeView.extend({
-            tagName:'tr',
-            childView:Widgets.Th
-        });
-    
-        Widgets.Tbody = Juggler.Views.CompositeView.extend({
-            tagName:'tbody',
-            childView:Widgets.Tr,
-            childViewOptions:function(){
-                return {collection:this.options.columns}
-            }
-        });
-    
-        Widgets.Table = Juggler.Views.LayoutView.extend({
-            tagName:'table',
-            className:'table table-hover table-striped table-bordered',
-            childView:Widgets.Tr,
-            childViewContainer:'tbody',
-            regions:{
-                theadRegion:'thead',
-                tbodyRegion:'tbody',
-                tfootRegion:'tfoot'
-            },
-            template:_.template('<thead></thead><tbody></tbody><tfoot></tfoot>'),
-            initialize:function(){
-                this.head = new Widgets.Thead({
-                    collection:this.options.columns,
-                    parent:this
-                });
-                this.body = new Widgets.Tbody({
-                    collection:this.collection,
-                    columns:this.options.columns
-                });
-                this.tbodyRegion.attachHtml = function(view){
-                    this.$el.replaceWith(view.$el)
-                };
-            },
-            onRender:function(){
-                this.theadRegion.show(this.head);
-                this.tbodyRegion.show(this.body);
-            }
-        });
-    
-        Widgets.GridLayout = Juggler.Views.LayoutView.extend({
-            className:'grid-layout',
-            template:function(data){
-                var tdata = data.items||[data],
-                    tpl =  _.map(tdata,function(region,r){
-                    var columns = _.map(region,function(item,i){
-                        var className,t,region_name;
-                        region_name = !_.isNaN(Number(i))?'col-'+i:i;
-                        className = _.map(item,function(item2,i2){
-                                    return _.isObject(item2)?_.map(item2,function(item3,i3){
-                                        return 'col-'+i2+'-'+i3+(item3?'-'+item3:'');
-                                    }).join(' '):'col-'+i2+'-'+item2;
-                                }).join(' ');
-                        return '<div class="'+className+'" data-region="'+region_name+'"></div>';
-                        
-                    }).join('');
-                    return '<div class="row">'+columns+'</div>'
-                }).join('');
-                return tpl;
-            }
-    
-        });
+    });
+
+    Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
     
         Widgets.Field = Juggler.Views.LayoutView.extend({
             className:'form-group has-feedback',
@@ -779,6 +674,129 @@
             }
         });
     
+    
+    });
+
+    Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
+    
+        Widgets.Panel = Juggler.Views.LayoutView.extend({
+            className:'panel panel-default',
+            template:Juggler.Templates.panel,
+            ui:{
+                header:'.panel-heading',
+                body:'.panel-body',
+                footer:'.panel-footer'
+            },
+            options:{
+                header:'',
+                body:'',
+                footer:''
+            },
+            get:function(key){
+                return _.extend(this.serializeData(),this.templateHelpers())[key];
+            },
+            set:function(key, value){
+                this[key+'Region'].close();
+                this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
+                value?this.ui[key].show():this.ui[key].hide();
+            },
+            onRender:function(){
+                this.get('header')?this.ui.header.show():this.ui.header.hide();
+                this.get('footer')?this.ui.footer.show():this.ui.footer.hide();
+            }
+        });
+    
+        Widgets.GridLayout = Juggler.Views.LayoutView.extend({
+            className:'grid-layout',
+            template:function(data){
+                var tdata = data.items||[data],
+                    tpl =  _.map(tdata,function(region,r){
+                    var columns = _.map(region,function(item,i){
+                        var className,t,region_name;
+                        region_name = !_.isNaN(Number(i))?'col-'+i:i;
+                        className = _.map(item,function(item2,i2){
+                                    return _.isObject(item2)?_.map(item2,function(item3,i3){
+                                        return 'col-'+i2+'-'+i3+(item3?'-'+item3:'');
+                                    }).join(' '):'col-'+i2+'-'+item2;
+                                }).join(' ');
+                        return '<div class="'+className+'" data-region="'+region_name+'"></div>';
+                        
+                    }).join('');
+                    return '<div class="row">'+columns+'</div>'
+                }).join('');
+                return tpl;
+            }
+    
+        });
+    
+    });
+    
+    Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
+    
+        Widgets.Th = Juggler.Views.ItemView.extend({
+            tagName:'th',
+            template:_.template('<%- value %>')
+        });
+    
+        Widgets.Td = Juggler.Views.ItemView.extend({
+            tagName:'td',
+            template:_.template('<%= value %>'),
+            events:{
+                'click':'onClick'
+            },
+            serializeData:function(){
+                var origin=Widgets.Td.__super__.serializeData.apply(this,arguments);
+                return _.extend(origin,{value:this.options.parentModel.get(this.model.get('name'))});
+            }
+        });
+    
+        Widgets.Tr = Juggler.Views.CompositeView.extend({
+            tagName:'tr',
+            childView:Widgets.Td
+        });
+    
+        Widgets.Thead = Juggler.Views.CompositeView.extend({
+            tagName:'tr',
+            childView:Widgets.Th
+        });
+    
+        Widgets.Tbody = Juggler.Views.CompositeView.extend({
+            tagName:'tbody',
+            childView:Widgets.Tr,
+            childViewOptions:function(){
+                return {collection:this.options.columns}
+            }
+        });
+    
+        Widgets.Table = Juggler.Views.LayoutView.extend({
+            tagName:'table',
+            className:'table table-hover table-striped table-bordered',
+            childView:Widgets.Tr,
+            childViewContainer:'tbody',
+            regions:{
+                theadRegion:'thead',
+                tbodyRegion:'tbody',
+                tfootRegion:'tfoot'
+            },
+            template:_.template('<thead></thead><tbody></tbody><tfoot></tfoot>'),
+            initialize:function(){
+                this.head = new Widgets.Thead({
+                    collection:this.options.columns,
+                    parent:this
+                });
+                this.body = new Widgets.Tbody({
+                    collection:this.collection,
+                    columns:this.options.columns
+                });
+                this.tbodyRegion.attachHtml = function(view){
+                    this.$el.replaceWith(view.$el)
+                };
+            },
+            onRender:function(){
+                this.theadRegion.show(this.head);
+                this.tbodyRegion.show(this.body);
+            }
+        });
     
     });
 

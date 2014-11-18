@@ -40,7 +40,17 @@
 
     // @include ./juggler.views.js
 
-    // @include ./juggler.widgets.js
+    // @include ./juggler.widgets_notice.js
+
+    // @include ./juggler.widgets_nav.js
+
+    // @include ./juggler.widgets_button.js
+
+    // @include ./juggler.widgets_form.js
+
+    // @include ./juggler.widgets_layout.js
+    
+    // @include ./juggler.widgets_table.js
 
     // @include ./juggler.editors.js
 
