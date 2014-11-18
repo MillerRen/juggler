@@ -46,13 +46,13 @@
 
     // @include ./juggler.widgets_button.js
 
+    // @include ./juggler.editors.js
+
     // @include ./juggler.widgets_form.js
 
-    // @include ./juggler.widgets_layout.js
-    
     // @include ./juggler.widgets_table.js
 
-    // @include ./juggler.editors.js
+    // @include ./juggler.widgets_layout.js
 
     // @include ./juggler.components.js
 
