@@ -114,4 +114,18 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         }
     });
 
+    Widgets.Popover = Juggler.Views.ItemView.extend({
+        className:function(){
+            return ['popover',this.serializeData.placement].join(' ')
+        },
+        template:_.template('<div class="tooltip-arror"></div>\
+            <div class="popover-title"><%- title %></div>\
+            <div class="popover-content"><%= content %></div>'),
+        options:{
+            placement:'top',
+            title:'',
+            content:''
+        }
+    });
+
 });
