@@ -52,6 +52,8 @@
 
     // @include ./juggler.widgets_table.js
 
+    // @include ./juggler.widgets_panel.js
+
     // @include ./juggler.widgets_layout.js
 
     // @include ./juggler.components.js

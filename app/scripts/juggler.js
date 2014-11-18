@@ -890,6 +890,10 @@
             }
         });
     
+    });
+
+    Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
+    
         Widgets.GridLayout = Juggler.Views.LayoutView.extend({
             className:'grid-layout',
             template:function(data){
