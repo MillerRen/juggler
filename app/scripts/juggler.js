@@ -395,6 +395,18 @@
             }
         });
     
+        Widgets.Tooltip = Juggler.Views.ItemView.extend({
+            className:function(){
+                return ['tooltip',this.serializeData.placement].join(' ')
+            },
+            template:_.template('<div class="tooltip-arror"></div>\
+                <div class="tooltip-inner"><%- content %></div>'),
+            options:{
+                placement:'top',
+                content:''
+            }
+        });
+    
     });
 
     Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _) {
