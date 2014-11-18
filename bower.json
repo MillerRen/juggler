@@ -22,7 +22,6 @@
     "jquery": ">1.10.0",
     "bootstrap": ">3.0.0",
     "marionette": ">=2.0.0",
-    "backbone-relational": "~0.8.8",
     "backbone-validator": "~0.3.0"
   },
   "devDependencies": {

@@ -111,7 +111,7 @@
 
     Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
         
-        Enities.Model = Backbone.RelationalModel.extend({
+        Enities.Model = Backbone.Model.extend({
             urlRoot: '/test',
             message: Juggler.Config.Message,
             parse: function(resp, options) {
