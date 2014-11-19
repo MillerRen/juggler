@@ -547,7 +547,13 @@
             options:{
                 brand:'Home',
                 container:'container'
-            }
+            },
+            ui:{
+                brand:'.navbar-brand',
+                primary:'.navbar-nav-primary',
+                secondary:'.navbar-nav-secondary',
+                form:'.navbar-form'
+            },
         });
     
         Widgets.Pagination = Widgets.List.extend({
