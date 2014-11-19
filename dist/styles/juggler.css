@@ -1,0 +1,37 @@
+.juggler-progress{
+    height:5px;
+    overflow:hidden;
+    border-radius:0;
+}
+.juggler-progress .progress-bar{
+    min-width:20px;
+}
+
+.juggler-alert{
+    display:inline-block;
+    top:20px;
+    left:50%;
+    position:fixed;
+    z-index:9999;
+}
+
+.form-horizontal label ~ .form-control-feedback{
+    top:0;
+}
+
+.has-feedback .form-control-feedback{
+    display:none;
+}
+
+.has-error .form-control-feedback,
+.has-success .form-control-feedback{
+    display:block;
+}
+
+.has-error .help-block{
+    display:block;
+}
+
+.has-success .help-block{
+    display:none;
+}
