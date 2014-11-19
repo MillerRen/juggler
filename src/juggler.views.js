@@ -2,8 +2,9 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     
     Views.ItemView = Marionette.ItemView.extend({
         template: _.template(''),
-        templateHelpers: function() {
-            return this.options;
+        serializeData: function() {
+            var data = Views.ItemView.__super__.serializeData.apply(this,arguments);
+            return _.extend(this.options,data);
         }
     });
 
@@ -42,8 +43,9 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
             });
             this.triggerMethod('resoveregion');
         },
-        templateHelpers: function() {
-            return this.options;
+        serializeData: function() {
+            var data = Views.LayoutView.__super__.serializeData.apply(this,arguments);
+            return _.extend(this.options,data);
         }
     });
 
@@ -59,8 +61,9 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
             });
             return options;
         },
-        templateHelpers: function() {
-            return this.options;
+        serializeData: function() {
+            var data = Views.CompositeView.__super__.serializeData.apply(this,arguments);
+            return _.extend(this.options,data);
         }
     });
 

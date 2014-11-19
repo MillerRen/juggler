@@ -175,6 +175,8 @@
     		layout.tabsRegion.show(tabs_panels);
     
     		var navbar = new Juggler.Components.Navbar({});
+    
+    		//Juggler.headerRegion.show(navbar);
     		
     	});
     

@@ -14,17 +14,32 @@ Juggler.module('Components', function(Components, Juggler, Backbone, Marionette,
     });
 
     Components.Navbar = Juggler.Views.LayoutView.extend({
-        className:'navbar',
+        className:function(){
+            var data = this.serializeData();
+            return ['navbar','navbar-'+data.type,'navbar-'+data.position].join(' ');
+        },
         template:Juggler.Templates.navbar,
         options:{
             type:'default',
-            position:'static-top'
+            position:'static-top',
+            container:'container',
+            brand:'Home'
         },
         ui:{
             brand:'.navbar-brand',
-            navbarPrimary:'.navbar-primary',
-            navbarSecondary:'.navbar-secondary'
+            primary:'.navbar-nav-primary',
+            secondary:'.navbar-nav-secondary',
+            form:'.navbar-form'
         },
+        onRender:function(){
+            this.collection&&this.primaryRegion.show(new Juggler.Widgets.Nav({
+                collection:this.collection
+            }));
+            this.collection2&&this.secondaryRegion.show(new Juggler.Widgets.Nav({
+                collection:this.collection2
+            }));
+            this.form&&this.formRegion.show(new Juggler.Widgets.Form(this.form));
+        }
     });
 
 });

@@ -78,6 +78,8 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		layout.tabsRegion.show(tabs_panels);
 
 		var navbar = new Juggler.Components.Navbar({});
+
+		//Juggler.headerRegion.show(navbar);
 		
 	});
 

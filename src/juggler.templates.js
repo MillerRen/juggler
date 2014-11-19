@@ -41,7 +41,7 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
     </div>\
     ');
     
-    Templates.navbar = _.template('<div class="container">\
+    Templates.navbar = _.template('<div class="<%- container %>">\
       <div class="navbar-header">\
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">\
           <span class="sr-only">Toggle navigation</span>\
@@ -49,11 +49,14 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
           <span class="icon-bar"></span>\
           <span class="icon-bar"></span>\
         </button>\
-        <a class="navbar-brand" href="#"><%= brand %></a>\
+        <div class="navbar-brand"><%= brand %></div>\
       </div>\
       <div class="collapse navbar-collapse" id="navbar-collapse" data-region="navbar">\
-        <ul class="nav navbar-nav navbar-nav-primary"></ul>\
-        <ul class="nav navbar-nav navbar-nav-secondary"></ul>\
+        <div class="navbar-nav-primary navbar-left">\
+          <ul class="nav navbar-nav"></ul>\
+        </div>\
+        <form class="navbar-form navbar-left"></form>\
+        <div class="navbar-nav-secondary navbar-right"></div>\
       </div>\
     </div>'
     );

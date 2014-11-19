@@ -79,7 +79,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             footer:'.modal-footer'
         },
         get:function(key){
-            return _.extend(this.serializeData(),this.templateHelpers())[key];
+            return this.serializeData()[key];
         },
         set:function(key, value){
             this[key+'Region'].close();

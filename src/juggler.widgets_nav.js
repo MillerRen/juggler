@@ -2,7 +2,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     
     Widgets.ListItem = Juggler.Views.ItemView.extend({
         tagName: 'li',
-        template: _.template('<a><%- label %></a>'),
+        template: _.template('<a href="#"><%- label %></a>'),
         triggers:{
            'click a':'click' 
         },
@@ -112,10 +112,11 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     Widgets.Navbar = Widgets.List.extend({
         tagName:'div',
         template:Juggler.Templates.navbar,
-        childViewContainer:'.navbar-nav-primary',
+        childViewContainer:'.navbar-nav',
         className:'navbar navbar-static-top navbar-default',
         options:{
-            brand:'Home'
+            brand:'Home',
+            container:'container'
         }
     });
 

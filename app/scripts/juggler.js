@@ -84,7 +84,7 @@
         </div>\
         ');
         
-        Templates.navbar = _.template('<div class="container">\
+        Templates.navbar = _.template('<div class="<%- container %>">\
           <div class="navbar-header">\
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">\
               <span class="sr-only">Toggle navigation</span>\
@@ -92,11 +92,14 @@
               <span class="icon-bar"></span>\
               <span class="icon-bar"></span>\
             </button>\
-            <a class="navbar-brand" href="#"><%= brand %></a>\
+            <div class="navbar-brand"><%= brand %></div>\
           </div>\
           <div class="collapse navbar-collapse" id="navbar-collapse" data-region="navbar">\
-            <ul class="nav navbar-nav navbar-nav-primary"></ul>\
-            <ul class="nav navbar-nav navbar-nav-secondary"></ul>\
+            <div class="navbar-nav-primary navbar-left">\
+              <ul class="nav navbar-nav"></ul>\
+            </div>\
+            <form class="navbar-form navbar-left"></form>\
+            <div class="navbar-nav-secondary navbar-right"></div>\
           </div>\
         </div>'
         );
@@ -225,8 +228,9 @@
         
         Views.ItemView = Marionette.ItemView.extend({
             template: _.template(''),
-            templateHelpers: function() {
-                return this.options;
+            serializeData: function() {
+                var data = Views.ItemView.__super__.serializeData.apply(this,arguments);
+                return _.extend(this.options,data);
             }
         });
     
@@ -265,8 +269,9 @@
                 });
                 this.triggerMethod('resoveregion');
             },
-            templateHelpers: function() {
-                return this.options;
+            serializeData: function() {
+                var data = Views.LayoutView.__super__.serializeData.apply(this,arguments);
+                return _.extend(this.options,data);
             }
         });
     
@@ -282,8 +287,9 @@
                 });
                 return options;
             },
-            templateHelpers: function() {
-                return this.options;
+            serializeData: function() {
+                var data = Views.CompositeView.__super__.serializeData.apply(this,arguments);
+                return _.extend(this.options,data);
             }
         });
     
@@ -371,7 +377,7 @@
                 footer:'.modal-footer'
             },
             get:function(key){
-                return _.extend(this.serializeData(),this.templateHelpers())[key];
+                return this.serializeData()[key];
             },
             set:function(key, value){
                 this[key+'Region'].close();
@@ -426,7 +432,7 @@
         
         Widgets.ListItem = Juggler.Views.ItemView.extend({
             tagName: 'li',
-            template: _.template('<a><%- label %></a>'),
+            template: _.template('<a href="#"><%- label %></a>'),
             triggers:{
                'click a':'click' 
             },
@@ -536,10 +542,11 @@
         Widgets.Navbar = Widgets.List.extend({
             tagName:'div',
             template:Juggler.Templates.navbar,
-            childViewContainer:'.navbar-nav-primary',
+            childViewContainer:'.navbar-nav',
             className:'navbar navbar-static-top navbar-default',
             options:{
-                brand:'Home'
+                brand:'Home',
+                container:'container'
             }
         });
     
@@ -876,7 +883,7 @@
                 footer:''
             },
             get:function(key){
-                return _.extend(this.serializeData(),this.templateHelpers())[key];
+                return this.serializeData()[key];
             },
             set:function(key, value){
                 this[key+'Region'].close();
@@ -934,17 +941,32 @@
         });
     
         Components.Navbar = Juggler.Views.LayoutView.extend({
-            className:'navbar',
+            className:function(){
+                var data = this.serializeData();
+                return ['navbar','navbar-'+data.type,'navbar-'+data.position].join(' ');
+            },
             template:Juggler.Templates.navbar,
             options:{
                 type:'default',
-                position:'static-top'
+                position:'static-top',
+                container:'container',
+                brand:'Home'
             },
             ui:{
                 brand:'.navbar-brand',
-                navbarPrimary:'.navbar-primary',
-                navbarSecondary:'.navbar-secondary'
+                primary:'.navbar-nav-primary',
+                secondary:'.navbar-nav-secondary',
+                form:'.navbar-form'
             },
+            onRender:function(){
+                this.collection&&this.primaryRegion.show(new Juggler.Widgets.Nav({
+                    collection:this.collection
+                }));
+                this.collection2&&this.secondaryRegion.show(new Juggler.Widgets.Nav({
+                    collection:this.collection2
+                }));
+                this.form&&this.formRegion.show(new Juggler.Widgets.Form(this.form));
+            }
         });
     
     });
