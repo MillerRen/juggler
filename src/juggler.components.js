@@ -13,4 +13,18 @@ Juggler.module('Components', function(Components, Juggler, Backbone, Marionette,
         }
     });
 
+    Components.Navbar = Juggler.Views.LayoutView.extend({
+        className:'navbar',
+        template:Juggler.Templates.navbar,
+        options:{
+            type:'default',
+            position:'static-top'
+        },
+        ui:{
+            brand:'.navbar-brand',
+            navbarPrimary:'.navbar-primary',
+            navbarSecondary:'.navbar-secondary'
+        },
+    });
+
 });

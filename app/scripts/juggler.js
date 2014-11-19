@@ -271,7 +271,6 @@
         });
     
         Views.CompositeView = Marionette.CompositeView.extend({
-            emptyView: Views.ItemView,
             childViewContainer: "",
             template: _.template(''),
             childViewOptions:function(model,index){
@@ -932,6 +931,20 @@
                 this.tabsRegion.show(new Juggler.Widgets.Tabs(this.options));
                 this.panelsRegion.show(new Juggler.Widgets.TabsContent(this.options));
             }
+        });
+    
+        Components.Navbar = Juggler.Views.LayoutView.extend({
+            className:'navbar',
+            template:Juggler.Templates.navbar,
+            options:{
+                type:'default',
+                position:'static-top'
+            },
+            ui:{
+                brand:'.navbar-brand',
+                navbarPrimary:'.navbar-primary',
+                navbarSecondary:'.navbar-secondary'
+            },
         });
     
     });
