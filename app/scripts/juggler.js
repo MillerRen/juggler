@@ -243,10 +243,7 @@
         Views.LayoutView = Marionette.LayoutView.extend({
             className:'row',
             regionAttr:'data-region',
-            template: function(data){
-                
-                return '';
-            },
+            template: _.template(''),
             render: function() {
                 this.resolveUIRegions();
                 Views.LayoutView.__super__.render.apply(this,arguments);
@@ -457,12 +454,16 @@
             className:'dropdown',
             tagName: 'li',
             childViewContainer:'.dropdown-menu',
-            template: _.template('<a class="dropdown-toggle" data-toggle="dropdown" href="#"><%- label %><span class="caret"></span></a><ul class="dropdown-menu"></ul>'),
+            template: _.template('<a class="dropdown-toggle" data-toggle="dropdown" href="#"><%- label %>\
+            <span class="caret"></span></a><ul class="dropdown-menu"></ul>'),
             triggers:{
-               'click a':'click' 
+               'click a':'click'
+            },
+            ui:{
+                toggle:'.dropdown-toggle'
             },
             onRender:function(){
-                this.$el.find('.dropdown-toggle').dropdown();
+                this.ui.toggle.dropdown();
             }
         });
     
@@ -470,7 +471,11 @@
             className: 'list-group',
             childView: Widgets.ListItem.extend({
                 className: 'list-group-item'
-            })
+            }),
+            childViewOptions:function(){
+                var options = Widgets.GroupList.__super__.childViewOptions.apply(this,arguments);
+                return _.extend(options,{className:'list-group-item'})
+            }
         });
     
         Widgets.Tabs = Widgets.List.extend({

@@ -17,10 +17,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
     Views.LayoutView = Marionette.LayoutView.extend({
         className:'row',
         regionAttr:'data-region',
-        template: function(data){
-            
-            return '';
-        },
+        template: _.template(''),
         render: function() {
             this.resolveUIRegions();
             Views.LayoutView.__super__.render.apply(this,arguments);
