@@ -689,6 +689,9 @@
         Widgets.Field = Juggler.Views.LayoutView.extend({
             className:'form-group has-feedback',
             template:Juggler.Templates.form_row,
+            options:{
+                
+            },
             ui:{
                 label:'.control-label',
                 field:'.control-field',

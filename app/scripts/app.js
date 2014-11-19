@@ -151,9 +151,9 @@
     
     		var dialog = new Juggler.Widgets.Dialog({header:'form title'});
     
-    		//Juggler.dialogRegion.show(dialog);
+    		Juggler.dialogRegion.show(dialog);
     
-    		//dialog.bodyRegion.show(form)
+    		dialog.bodyRegion.show(form)
     
     		var toolbar = new Juggler.Widgets.Toolbar({
     			collection:new Juggler.Enities.Toolbar([
