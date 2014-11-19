@@ -77,9 +77,11 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 
 		layout.tabsRegion.show(tabs_panels);
 
-		var navbar = new Juggler.Components.Navbar({});
+		var navbar = new Juggler.Components.Navbar({
+			collection:new App.Enities.Navs
+		});
 
-		//Juggler.headerRegion.show(navbar);
+		Juggler.headerRegion.show(navbar);
 		
 	});
 
