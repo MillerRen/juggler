@@ -962,10 +962,10 @@
                 this.collection&&this.primaryRegion.show(new Juggler.Widgets.Nav({
                     collection:this.collection
                 }));
-                this.collection2&&this.secondaryRegion.show(new Juggler.Widgets.Nav({
-                    collection:this.collection2
+                this.options.collection2&&this.secondaryRegion.show(new Juggler.Widgets.Nav({
+                    collection:this.options.collection2
                 }));
-                this.form&&this.formRegion.show(new Juggler.Widgets.Form(this.form));
+                this.options.form&&this.formRegion.show(new Juggler.Widgets.Form(this.options.form));
             }
         });
     

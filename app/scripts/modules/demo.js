@@ -10,10 +10,10 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		});
 		Juggler.mainRegion.show(layout);
 
-		var navbar = new Juggler.Widgets.Navbar({
-			collection:new App.Enities.Navs
-		});
-		Juggler.headerRegion.show(navbar);
+// 		var navbar = new Juggler.Widgets.Navbar({
+// 			collection:new App.Enities.Navs
+// 		});
+// 		Juggler.headerRegion.show(navbar);
 
 		var breadcrumb = new Juggler.Widgets.Breadcrumb({
 			collection:new App.Enities.Breadcrumb()
@@ -78,7 +78,8 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 		layout.tabsRegion.show(tabs_panels);
 
 		var navbar = new Juggler.Components.Navbar({
-			collection:new App.Enities.Navs
+			collection:new App.Enities.Navs,
+			collection2:new App.Enities.Navs
 		});
 
 		Juggler.headerRegion.show(navbar);
