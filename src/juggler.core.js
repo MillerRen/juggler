@@ -31,6 +31,14 @@
     };
     
     Backbone.Juggler = Juggler;
+
+    Juggler.AppRouter = Marionette.AppRouter.extend({
+
+    });
+
+    Juggler.Controller = Marionette.Controller.extend({
+        
+    });
     
     // @include ./juggler.config.js
 

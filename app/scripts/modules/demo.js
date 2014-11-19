@@ -1,19 +1,44 @@
 App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
+	
+	Demo.AppRouter = Juggler.AppRouter.extend({
+		appRoutes:{
+			'GridLayout':'layout',
+			'Form':'form',
+			'Table':'table',
+			'Nav':'nav',
+			'Button':'button',
+			'Dialog':'dialog'
+		}
+	});
 
+	Demo.Controller = Juggler.Controller.extend({
+		layout:function(){
+			App.startSubApp('Layout');
+		},
+		form:function(){
+			App.startSubApp('Form');
+		},
+		table:function(){
+			App.startSubApp('Table');
+		},
+		nav:function(){
+			App.startSubApp('Nav');
+		},
+		button:function(){
+			App.startSubApp('Button');
+		},
+		dialog:function(){
+			App.startSubApp('Dialog');
+		}
+	});
+	
 	Demo.on('start',function(){
-		 window.layout = new Juggler.Widgets.GridLayout({
-			collection:new Juggler.Enities.Collection([
-				{sidebar:{md:{3:'',push:9}},content:{md:{9:'',pull:3}}},
-				{panel:{md:3},form:{md:9}},
-				{tabs:{md:3},toolbar:{md:9}},
-			])
-		});
-		Juggler.mainRegion.show(layout);
 
-// 		var navbar = new Juggler.Widgets.Navbar({
-// 			collection:new App.Enities.Navs
-// 		});
-// 		Juggler.headerRegion.show(navbar);
+		new Demo.AppRouter({
+			controller:new Demo.Controller()
+		});
+		return;
+		
 
 		var breadcrumb = new Juggler.Widgets.Breadcrumb({
 			collection:new App.Enities.Breadcrumb()
@@ -82,7 +107,7 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 			collection2:new App.Enities.Navs
 		});
 
-		Juggler.headerRegion.show(navbar);
+		//Juggler.headerRegion.show(navbar);
 		
 	});
 

@@ -19,7 +19,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
           'click':'onClick'  
         },
         onClick:function(view){
-          Backbone.history.navigate(view.model.get('name')); 
+          Backbone.history.navigate(view.model.get('name'),{trigger:true}); 
         }
     });
 

@@ -84,33 +84,238 @@
     
     });
 
-    App.module('Layout',function(Layout, App, Backbone, Marionette, $, _){
+    App.module('Header',function(Header, App, Backbone, Marionette, $, _){
     
-    	Layout.Page = Juggler.Views.LayoutView.extend({
-    		template:_.template('<div class="col-md-3" data-region="sidebar"></div>\
-    				<div class="col-md-9" data-region="content"></div>\
-    		')
+    	Header.Navbar = Juggler.Components.Navbar.extend({
+    
+    	});
+    
+    	Header.NavData = Juggler.Enities.Collection.extend({
+    
+    	});
+    
+    	Header.on('start',function(){
+    		var navbar = new Header.Navbar({
+    			collection:new Header.NavData([
+    				{name:'GridLayout',label:'GridLayout'},
+    				{name:'Form',label:'Form'},
+    				{name:'Table',label:'Table'},
+    				{name:'Nav',label:'Nav'},
+    				{name:'Button',label:'Button'},
+    				{name:'Dialog',label:'Dialog'}
+    			])
+    		});
+    		Juggler.headerRegion.show(navbar);
+    	});
+    
+    });
+    
+
+    App.module('Layout',function(Layout, App, Backbone, Marionette, $, _){
+    	
+    	Layout.startWithParent  = false;
+    	
+    	Layout.Layout = Juggler.Widgets.GridLayout.extend({
+    
+    	});
+    
+    	Layout.on('start',function(){
+    		var layout = new Juggler.Widgets.GridLayout({
+    			className:'grid-layout-demo',
+    			collection:new Juggler.Enities.Collection([
+    				{sidebar:{md:{3:'',push:9}},content:{md:{9:'',pull:3}}},
+    				{panel:{md:4},form:{md:8}},
+    				{tabs:{md:6},toolbar:{md:6}},
+    			])
+    		});
+    		Juggler.mainRegion.show(layout);
+    	});
+    
+    });
+    
+
+    App.module('Form',function(Form, App, Backbone, Marionette, $, _){
+    	
+    	Form.startWithParent  = false;
+    	
+    	Form.Form = Juggler.Widgets.Form.extend({
+    
+    	});
+    
+    	Form.on('start',function(){
+    		var form = new Form.Form({
+    			submit:'提交',
+    			model:new App.Enities.Form(),
+    			collection:new Juggler.Enities.Fields([
+    				{name:'input',label:'Input',editor:'email',validator:{format:'email',required:true}},
+    				{name:'textarea',label:'Textarea',editor:'textarea'},
+    				{name:'select',label:'Select',editor:'select',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}]},
+    				{name:'checkbox',label:'Checkboxes',editor:'checkbox',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}],validator:{blank:false}},
+    				{name:'radio',label:'Radios',editor:'radio',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}]}
+    			])
+    		});console.log(form)
+    		Juggler.mainRegion.show(form);
+    	});
+    
+    });
+    
+
+    App.module('Table',function(Table, App, Backbone, Marionette, $, _){
+    	
+    	Table.startWithParent  = false;
+    	
+    	Table.Table = Juggler.Widgets.Table.extend({
+    
+    	});
+    
+    	Table.on('start',function(){
+    		var table = new Juggler.Widgets.Table({
+    			collection:new App.Enities.Table,
+    			columns:new Juggler.Enities.Columns([{name:'name',value:'Name',readonly:false},{name:'value',value:'Label'}])
+    		});
+    		Juggler.mainRegion.show(table);
+    	});
+    
+    });
+    
+
+    App.module('Nav',function(Nav, App, Backbone, Marionette, $, _){
+    	
+    	Nav.startWithParent  = false;
+    
+    	Nav.Layout = Juggler.Widgets.GridLayout.extend({
+    
+    	});
+    	
+    	Nav.Tabs = Juggler.Widgets.Tabs.extend({
+    
+    	});
+    
+    	Nav.Pills = Juggler.Widgets.Pills.extend({
+    
+    	});
+    
+    	Nav.on('start',function(){
+    		var collection = new Juggler.Enities.Collection([
+    			{name:'tabs1',label:'tabs1',content:'tabs content 1'},
+    			{name:'tabs2',label:'tabs2',content:'tabs content 2'}
+    			]);
+    		var layout = new Nav.Layout({
+    			collection:new Juggler.Enities.Collection([
+    				{tabs:{md:6},pills:{md:6}}
+    			])
+    		});
+    		var tabs = new Nav.Tabs({
+    			collection:collection
+    		});
+    		var pills = new Nav.Pills({
+    			collection:collection
+    		});
+    		Juggler.mainRegion.show(layout);
+    		layout.tabsRegion.show(tabs);
+    		layout.pillsRegion.show(pills);
+    	});
+    
+    });
+    
+
+    App.module('Button',function(Button, App, Backbone, Marionette, $, _){
+    	
+    	Button.startWithParent  = false;
+    	
+    	Button.Button = Juggler.Widgets.Button.extend({
+    
+    	});
+    
+    	Button.on('start',function(){
+    		var toolbar = new Juggler.Widgets.Toolbar({
+    			collection:new Juggler.Enities.Toolbar([
+    			[{name:'Button',icon:'glyphicon glyphicon-star'},{type:'warning',name:'Group'}],
+    			[{type:'primary',name:'Button'},{type:'danger',name:'Group'}],
+    			[{size:'lg',name:'Large'},{size:'',name:'Normal'},{size:'sm',name:'sm'}]
+    			])
+    		});
+    		Juggler.mainRegion.show(toolbar);
+    	});
+    
+    });
+    
+
+    App.module('Dialog',function(Dialog, App, Backbone, Marionette, $, _){
+    	
+    	Dialog.startWithParent  = false;
+    	
+    	Dialog.Form = Juggler.Widgets.Form.extend({
+    
+    	});
+    
+    	Dialog.Dialog = Juggler.Widgets.Dialog.extend({
+    		
+    	});
+    
+    	Dialog.on('start',function(){
+    		var dialog = new Dialog.Dialog({
+    			header:'Dialog Demo'
+    		});
+    		var form = new Dialog.Form({
+    			submit:'提交',
+    			model:new App.Enities.Form(),
+    			collection:new Juggler.Enities.Fields([
+    				{name:'input',label:'Input',editor:'email',validator:{format:'email',required:true}},
+    				{name:'textarea',label:'Textarea',editor:'textarea'},
+    				{name:'select',label:'Select',editor:'select',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}]},
+    				{name:'checkbox',label:'Checkboxes',editor:'checkbox',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}],validator:{blank:false}},
+    				{name:'radio',label:'Radios',editor:'radio',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}]}
+    			])
+    		});
+    		Juggler.mainRegion.show(dialog);
+    		dialog.bodyRegion.show(form);
     	});
     
     });
     
 
     App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
+    	
+    	Demo.AppRouter = Juggler.AppRouter.extend({
+    		appRoutes:{
+    			'GridLayout':'layout',
+    			'Form':'form',
+    			'Table':'table',
+    			'Nav':'nav',
+    			'Button':'button',
+    			'Dialog':'dialog'
+    		}
+    	});
     
+    	Demo.Controller = Juggler.Controller.extend({
+    		layout:function(){
+    			App.startSubApp('Layout');
+    		},
+    		form:function(){
+    			App.startSubApp('Form');
+    		},
+    		table:function(){
+    			App.startSubApp('Table');
+    		},
+    		nav:function(){
+    			App.startSubApp('Nav');
+    		},
+    		button:function(){
+    			App.startSubApp('Button');
+    		},
+    		dialog:function(){
+    			App.startSubApp('Dialog');
+    		}
+    	});
+    	
     	Demo.on('start',function(){
-    		 window.layout = new Juggler.Widgets.GridLayout({
-    			collection:new Juggler.Enities.Collection([
-    				{sidebar:{md:{3:'',push:9}},content:{md:{9:'',pull:3}}},
-    				{panel:{md:3},form:{md:9}},
-    				{tabs:{md:3},toolbar:{md:9}},
-    			])
-    		});
-    		Juggler.mainRegion.show(layout);
     
-    // 		var navbar = new Juggler.Widgets.Navbar({
-    // 			collection:new App.Enities.Navs
-    // 		});
-    // 		Juggler.headerRegion.show(navbar);
+    		new Demo.AppRouter({
+    			controller:new Demo.Controller()
+    		});
+    		return;
+    		
     
     		var breadcrumb = new Juggler.Widgets.Breadcrumb({
     			collection:new App.Enities.Breadcrumb()
@@ -179,7 +384,7 @@
     			collection2:new App.Enities.Navs
     		});
     
-    		Juggler.headerRegion.show(navbar);
+    		//Juggler.headerRegion.show(navbar);
     		
     	});
     

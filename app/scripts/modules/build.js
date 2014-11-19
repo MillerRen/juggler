@@ -45,7 +45,19 @@
 
     // @include ./enities.js
 
+    // @include ./header.js
+
     // @include ./layout.js
+
+    // @include ./form.js
+
+    // @include ./table.js
+
+    // @include ./nav.js
+
+    // @include ./button.js
+
+    // @include ./dialog.js
 
     // @include ./demo.js
     

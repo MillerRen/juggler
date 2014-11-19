@@ -31,6 +31,14 @@
     };
     
     Backbone.Juggler = Juggler;
+
+    Juggler.AppRouter = Marionette.AppRouter.extend({
+
+    });
+
+    Juggler.Controller = Marionette.Controller.extend({
+        
+    });
     
     Juggler.module('Config', function(Config, Juggler, Backbone, Marionette, $, _) {
     
@@ -446,7 +454,7 @@
               'click':'onClick'  
             },
             onClick:function(view){
-              Backbone.history.navigate(view.model.get('name')); 
+              Backbone.history.navigate(view.model.get('name'),{trigger:true}); 
             }
         });
     
