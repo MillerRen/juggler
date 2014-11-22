@@ -21,7 +21,7 @@ Juggler.module('Components', function(Components, Juggler, Backbone, Marionette,
         template:Juggler.Templates.navbar,
         options:{
             type:'default',
-            position:'static-top',
+            position:'static',
             container:'container',
             brand:'Home'
         },
@@ -39,6 +39,26 @@ Juggler.module('Components', function(Components, Juggler, Backbone, Marionette,
                 collection:this.options.collection2
             }));
             this.options.form&&this.formRegion.show(new Juggler.Widgets.Form(this.options.form));
+        }
+    });
+
+
+    Components.Carousel = Juggler.Views.CompositeView.extend({
+        className:'juggler-carousel',
+        template:Juggler.Templates.carousel,
+        childView:Juggler.Views.ItemView.extend({
+            className:'item',
+            template:_.template('<img src="<%- img %>" />\
+            <div class="carousel-caption"><%- caption %></div>')
+        }),
+        childViewContainer:'.carousel-inner',
+        templateHelpers:function(){
+            return {
+                id:this.cid
+            }
+        },
+        onRender:function(){
+            this.$el.carousel();
         }
     });
 

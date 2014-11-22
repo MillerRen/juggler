@@ -51,7 +51,8 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         template: _.template(''),
         childViewOptions:function(model,index){
             var options =  {
-                parentModel:this.model
+                parentModel:this.model,
+                index:index
             };
             model&&model.get('items')&&_.extend(options,{
                 collection:new Juggler.Enities.Collection(model.get('items'))

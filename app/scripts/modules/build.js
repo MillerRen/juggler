@@ -47,6 +47,8 @@
 
     // @include ./header.js
 
+    // @include ./home.js
+
     // @include ./layout.js
 
     // @include ./form.js

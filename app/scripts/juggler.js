@@ -118,6 +118,24 @@
             <div class="panel-footer"><%= footer %></div>'
         );
     
+        Templates.carousel = _.template(
+        '<div id="<%- id %>" class="carousel slide" data-ride="carousel">\
+          <ol class="carousel-indicators">\
+            <% _.each(collection,function(item,i){ %>\
+            <li data-target="<%- id %>" data-slide-to="<%- i %>" class="active"></li>\
+            <% }); %>\
+          </ol>\
+          <div class="carousel-inner" role="listbox"></div>\
+          <a class="left carousel-control" href="#<%- id %>" role="button" data-slide="prev">\
+            <span class="glyphicon glyphicon-chevron-left"></span>\
+            <span class="sr-only">Previous</span>\
+          </a>\
+          <a class="right carousel-control" href="#<%- id %>" role="button" data-slide="next">\
+            <span class="glyphicon glyphicon-chevron-right"></span>\
+            <span class="sr-only">Next</span>\
+          </a>\
+        </div>');
+    
     });
 
     Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
@@ -285,7 +303,8 @@
             template: _.template(''),
             childViewOptions:function(model,index){
                 var options =  {
-                    parentModel:this.model
+                    parentModel:this.model,
+                    index:index
                 };
                 model&&model.get('items')&&_.extend(options,{
                     collection:new Juggler.Enities.Collection(model.get('items'))
@@ -970,7 +989,7 @@
             template:Juggler.Templates.navbar,
             options:{
                 type:'default',
-                position:'static-top',
+                position:'static',
                 container:'container',
                 brand:'Home'
             },
@@ -988,6 +1007,26 @@
                     collection:this.options.collection2
                 }));
                 this.options.form&&this.formRegion.show(new Juggler.Widgets.Form(this.options.form));
+            }
+        });
+    
+    
+        Components.Carousel = Juggler.Views.CompositeView.extend({
+            className:'juggler-carousel',
+            template:Juggler.Templates.carousel,
+            childView:Juggler.Views.ItemView.extend({
+                className:'item',
+                template:_.template('<img src="<%- img %>" />\
+                <div class="carousel-caption"><%- caption %></div>')
+            }),
+            childViewContainer:'.carousel-inner',
+            templateHelpers:function(){
+                return {
+                    id:this.cid
+                }
+            },
+            onRender:function(){
+                this.$el.carousel();
             }
         });
     

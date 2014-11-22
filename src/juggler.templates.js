@@ -67,4 +67,22 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
         <div class="panel-footer"><%= footer %></div>'
     );
 
+    Templates.carousel = _.template(
+    '<div id="<%- id %>" class="carousel slide" data-ride="carousel">\
+      <ol class="carousel-indicators">\
+        <% _.each(collection,function(item,i){ %>\
+        <li data-target="<%- id %>" data-slide-to="<%- i %>" class="active"></li>\
+        <% }); %>\
+      </ol>\
+      <div class="carousel-inner" role="listbox"></div>\
+      <a class="left carousel-control" href="#<%- id %>" role="button" data-slide="prev">\
+        <span class="glyphicon glyphicon-chevron-left"></span>\
+        <span class="sr-only">Previous</span>\
+      </a>\
+      <a class="right carousel-control" href="#<%- id %>" role="button" data-slide="next">\
+        <span class="glyphicon glyphicon-chevron-right"></span>\
+        <span class="sr-only">Next</span>\
+      </a>\
+    </div>');
+
 });
