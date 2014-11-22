@@ -2,6 +2,7 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 	
 	Demo.AppRouter = Juggler.AppRouter.extend({
 		appRoutes:{
+			'':'home',
 			'GridLayout':'layout',
 			'Form':'form',
 			'Table':'table',
@@ -12,6 +13,9 @@ App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
 	});
 
 	Demo.Controller = Juggler.Controller.extend({
+		home:function(){
+			App.startSubApp('Home');
+		},
 		layout:function(){
 			App.startSubApp('Layout');
 		},

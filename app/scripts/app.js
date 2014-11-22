@@ -96,7 +96,9 @@
     
     	Header.on('start',function(){
     		var navbar = new Header.Navbar({
+    			brand:'Juggler',
     			collection:new Header.NavData([
+    				{name:'',label:'Home'},
     				{name:'GridLayout',label:'GridLayout'},
     				{name:'Form',label:'Form'},
     				{name:'Table',label:'Table'},
@@ -113,6 +115,8 @@
 
     App.module('Home',function(Home, App, Backbone, Marionette, $, _){
     
+    	Home.startWithParent = false;
+    	
     	Home.Carousel = Juggler.Components.Carousel.extend({
     
     	});
@@ -302,6 +306,7 @@
     	
     	Demo.AppRouter = Juggler.AppRouter.extend({
     		appRoutes:{
+    			'':'home',
     			'GridLayout':'layout',
     			'Form':'form',
     			'Table':'table',
@@ -312,6 +317,9 @@
     	});
     
     	Demo.Controller = Juggler.Controller.extend({
+    		home:function(){
+    			App.startSubApp('Home');
+    		},
     		layout:function(){
     			App.startSubApp('Layout');
     		},

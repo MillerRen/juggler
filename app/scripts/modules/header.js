@@ -10,7 +10,9 @@ App.module('Header',function(Header, App, Backbone, Marionette, $, _){
 
 	Header.on('start',function(){
 		var navbar = new Header.Navbar({
+			brand:'Juggler',
 			collection:new Header.NavData([
+				{name:'',label:'Home'},
 				{name:'GridLayout',label:'GridLayout'},
 				{name:'Form',label:'Form'},
 				{name:'Table',label:'Table'},
