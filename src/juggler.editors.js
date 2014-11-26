@@ -1,23 +1,32 @@
 Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
 
-    Editors.Base = Juggler.Views.ItemView.extend({
-        className:'form-control',
-        attributes:function(){
-            var data = this.serializeData();
-            return {
-                id:data.cid,
-                value:data.value,
-                placeholder:data.placeholder,
-                name:data.name,
-                type:data.editor
-            }
+    Editors.Base = Juggler.Views.CompositeView.extend({
+        className:'juggler-editor',
+        template:_.template(''),
+        ui:{
+            input:':input'
         },
         events:{
             'change':'onChange',
             'keyup':'onChange'
         },
+        initialize:function(){
+            var data = this.serializeData();
+            this.collection = new Juggler.Enities.Collection(data.items)
+        },
         focus:function(){
-            this.$el.focus();
+            this.ui.input.focus();
+        },
+        onRender:function(){
+            var data = this.serializeData();
+            var attr = {
+                id:data.cid,
+                placeholder:data.placeholder,
+                name:data.name
+            };
+            this.ui.input.
+                attr(attr).
+                val(data.value);
         },
         onChange:function(){
             this.model.set({value:this.$el.val()},{validate:false});
@@ -26,58 +35,73 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
     });
     
     Editors.Input = Editors.Base.extend({
-        tagName:'input'
-    });
-
-    Editors.Number = Editors.Input.extend({});
-
-    Editors.Email = Editors.Input.extend({});
-
-    Editors.Url = Editors.Input.extend({});
-
-    Editors.Date = Editors.Input.extend({});
-
-    Editors.Datetime = Editors.Input.extend({});
-
-    Editors.Textarea = Editors.Base.extend({
-        tagName:'textarea',
-        template:_.template('<%- value %>')
-    });
-
-    Editors.Select = Editors.Base.extend({
-        tagName:'select',
-        template:function(data){
-            return _.map(data.items,function(item,i){
-                var checked = data.value==item.value?'selected':'';
-                return '<option value="'+item.value+'" '+checked+'>'+item.label+'</option>';
-            }).join('');
+        template:_.template('<input type="text" />'),
+        onRender:function(){
+            Editors.Input.__super__.onRender.apply(this,arguments);
+            this.ui.input.addClass('form-control')
         }
     });
 
-    Editors.Checkbox = Juggler.Views.ItemView.extend({
-        className:'',
-        bindings:{'input':'value'},
-        template:function(data){
-            return _.map(data.items,function(item,i){
-                var checked = _.contains(data.value,item.value)||data.value==item.value?'checked':'';
-                return '<label class="'+data.editor+'-inline">'+
-                '<input type="'+data.editor+'" value="'+item.value+'" name="'+data.name+'[]" '+checked+'>'
-                +item.label+'</label>';
-            }).join('');
-        },
-        events:{
-            'change input':'onChange'
-        },
+    Editors.Number = Editors.Input.extend({
+        template:_.template('<input type="number" />')
+    });
+
+    Editors.Email = Editors.Input.extend({
+        template:_.template('<input type="email" />')
+    });
+
+    Editors.Url = Editors.Input.extend({
+        template:_.template('<input type="url" />')
+    });
+
+    Editors.Date = Editors.Input.extend({
+        template:_.template('<input type="date" />')
+    });
+
+    Editors.Datetime = Editors.Input.extend({
+        template:_.template('<input type="datetime" />')
+    });
+
+    Editors.Textarea = Editors.Input.extend({
+        template:_.template('<textarea />')
+    });
+
+    Editors.Select = Editors.Input.extend({
+        template:_.template('<select />'),
+        childViewContainer:'select',
+        childView:Juggler.Views.ItemView.extend({
+            tagName:'option',
+            onRender:function(){
+                var data = this.serializeData();
+                this.$el.prop('value',data.value)
+                    .text(data.label);
+            }
+        })
+    });
+
+    Editors.Checkbox = Editors.Base.extend({
+        template:_.template('<div class="checkbox"></div>'),
+        childViewContainer:'.checkbox',
+        childView:Editors.Base.extend({
+            tagName:'label',
+            template:_.template('<input type="checkbox"><span><%- label %><span>')
+        }),
         onChange:function(){
             var value = _.map(this.$('input').serializeArray(),function(item){
                 return item.value;
-            });
+            });console.log(this.$(':checked').val())
             this.model.set({value:value},{validate:false});
             this.model.validate('value');
         }
     });
 
     Editors.Radio = Editors.Checkbox.extend({
+        template:_.template('<div class="radio"></div>'),
+        childViewContainer:'.radio',
+        childView:Juggler.Views.ItemView.extend({
+            tagName:'label',
+            template:_.template('<input type="radio"><span><%- label %><span>')
+        }),
         onChange:function(){
             var value = this.$('input').val();
             this.model.set({value:value},{validate:false});

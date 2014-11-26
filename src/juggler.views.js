@@ -4,7 +4,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         template: _.template(''),
         serializeData: function() {
             var data = Views.ItemView.__super__.serializeData.apply(this,arguments);
-            return _.extend(this.options,data);
+            return data||this.options;
         }
     });
 
@@ -40,9 +40,8 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
             });
             this.triggerMethod('resoveregion');
         },
-        serializeData: function() {
-            var data = Views.LayoutView.__super__.serializeData.apply(this,arguments);
-            return _.extend(this.options,data);
+        serializeData:function(){
+            return this.model&&this.model.toJSON()||this.options;
         }
     });
 
@@ -50,18 +49,13 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         childViewContainer: "",
         template: _.template(''),
         childViewOptions:function(model,index){
-            var options =  {
-                parentModel:this.model,
-                index:index
-            };
-            model&&model.get('items')&&_.extend(options,{
-                collection:new Juggler.Enities.Collection(model.get('items'))
-            });
+            var options =  {index:index};
+            this.model&&(options.parentModel=this.model);
             return options;
         },
         serializeData: function() {
             var data = Views.CompositeView.__super__.serializeData.apply(this,arguments);
-            return _.extend(this.options,data);
+            return data||this.options;
         }
     });
 
