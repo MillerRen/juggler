@@ -652,7 +652,7 @@
                     val(data.value);
             },
             onChange:function(){
-                this.model.set({value:this.$el.val()},{validate:false});
+                this.model.set({value:this.ui.input.val()},{validate:false});
                 this.model.validate('value');
             }
         });
@@ -707,12 +707,16 @@
             childViewContainer:'.checkbox',
             childView:Editors.Base.extend({
                 tagName:'label',
-                template:_.template('<input type="checkbox"><span><%- label %><span>')
+                template:_.template('<input type="checkbox"><span><%- label %><span>'),
+                onChange:function(){
+                    this.model.set('checked',this.ui.input.prop('checked'),{validate:false});
+                }
             }),
             onChange:function(){
-                var value = _.map(this.$('input').serializeArray(),function(item){
-                    return item.value;
-                });console.log(this.$(':checked').val())
+                var value = this.collection.filter(function(item){
+                    return item.get('checked');
+                });
+                value = _.map(value,function(item){return item.get('value');});
                 this.model.set({value:value},{validate:false});
                 this.model.validate('value');
             }
