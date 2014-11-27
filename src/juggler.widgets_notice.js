@@ -20,6 +20,9 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
                 },this.options.delay);
             }
         },
+        templateHelpers:function(){
+            return this.options;
+        },
         onRender:function(options){
             this.$el.addClass('alert-'+this.options.type)
                 .attr('z-index',this.serializeData().zIndex);
@@ -85,6 +88,9 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             this[key+'Region'].close();
             this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
             value?this.ui[key].show():this.ui[key].hide();
+        },
+        templateHelpers:function(){
+            return this.options;
         },
         onRender:function(){
             this.get('header')?this.ui.header.show().html(this.get('header')):this.ui.header.hide();

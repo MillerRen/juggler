@@ -10,27 +10,40 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
             'change':'onChange',
             'keyup':'onChange'
         },
-        initialize:function(){
-            var data = this.serializeData();
-            this.collection = new Juggler.Enities.Collection(data.items)
+        modelEvents:{
+            'change':'onModelChange'
         },
         focus:function(){
             this.ui.input.focus();
         },
-        onRender:function(){
+        setValue:function(){
+            this.ui.input.val(this.model.get('value'));
+        },
+        getValue:function(){
+            return this.ui.input.val();
+        },
+        setSchema:function(){
             var data = this.serializeData();
             var attr = {
                 id:data.cid,
                 placeholder:data.placeholder,
                 name:data.name
             };
-            this.ui.input.
-                attr(attr).
-                val(data.value);
+            this.ui.input.attr(attr);
+        },
+        commit:function(){
+            this.model.set({value:this.getValue()});
+            this.model.validate('value');
+        },
+        onRender:function(){
+            this.setSchema();
+            this.setValue();
         },
         onChange:function(){
-            this.model.set({value:this.ui.input.val()},{validate:false});
-            this.model.validate('value');
+            this.commit();
+        },
+        onModelChange:function(){
+            this.render();
         }
     });
     
@@ -76,41 +89,67 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
                 this.$el.prop('value',data.value)
                     .text(data.label);
             }
-        })
+        }),
+        initialize:function(){
+            var items = this.serializeData().items;
+            this.collection=this.collection||new Juggler.Enities.Collection(items);
+        }
     });
 
-    Editors.Checkbox = Editors.Base.extend({
+    Editors.Radio = Editors.Base.extend({
+        template:_.template('<div class="radio"></div>'),
+        childViewContainer:'.radio',
+        childView:Editors.Base.extend({
+            tagName:'label',
+            template:_.template('<input type="radio" checked="<%- checked %>"><span><%- label %></span>'),
+        }),
+        initialize:function(){
+            var items = this.serializeData().items;
+            this.collection=this.collection||new Juggler.Enities.Collection(items);
+            this.setSchema();
+            this.setValue();
+        },
+        setSchema:function(){
+            var model = this.model;
+            this.collection.each(function(item,i){
+                item.set('name',model.get('name'));
+            })
+        },
+        setValue:function(){
+            var values = this.serializeData().value;
+            this.collection.each(function(item,i){
+                var value = item.get('value');
+                item.set('checked',_.contains(values,value));
+            });
+        },
+        getValue:function(){
+            var value = this.$('input').val();
+            return value;
+        }
+    });
+
+    Editors.Checkbox = Editors.Radio.extend({
         template:_.template('<div class="checkbox"></div>'),
         childViewContainer:'.checkbox',
         childView:Editors.Base.extend({
             tagName:'label',
-            template:_.template('<input type="checkbox"><span><%- label %><span>'),
+            template:_.template('<input type="checkbox" checked="<%- checked %>" /><span><%- label %></span>'),
             onChange:function(){
                 this.model.set('checked',this.ui.input.prop('checked'),{validate:false});
             }
         }),
-        onChange:function(){
+        getValue:function(){
             var value = this.collection.filter(function(item){
                 return item.get('checked');
             });
-            value = _.map(value,function(item){return item.get('value');});
-            this.model.set({value:value},{validate:false});
-            this.model.validate('value');
+            value = _.map(value,function(item){
+                return item.get('value');
+            });
+
+            return value;
         }
     });
 
-    Editors.Radio = Editors.Checkbox.extend({
-        template:_.template('<div class="radio"></div>'),
-        childViewContainer:'.radio',
-        childView:Juggler.Views.ItemView.extend({
-            tagName:'label',
-            template:_.template('<input type="radio"><span><%- label %><span>')
-        }),
-        onChange:function(){
-            var value = this.$('input').val();
-            this.model.set({value:value},{validate:false});
-            this.model.validate('value');
-        }
-    });
+    
 
 });

@@ -7,7 +7,7 @@ App.module('Form',function(Form, App, Backbone, Marionette, $, _){
 	});
 
 	Form.on('start',function(){
-		var form = new Form.Form({
+		window.form = new Form.Form({
 			submit:'提交',
 			model:new App.Enities.Form(),
 			collection:new Juggler.Enities.Fields([
@@ -17,7 +17,7 @@ App.module('Form',function(Form, App, Backbone, Marionette, $, _){
 				{name:'checkbox',label:'Checkboxes',editor:'checkbox',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}],validator:{blank:false}},
 				{name:'radio',label:'Radios',editor:'radio',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}]}
 			])
-		});console.log(form)
+		});
 		Juggler.mainRegion.show(form);
 	});
 

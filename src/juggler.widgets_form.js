@@ -10,22 +10,23 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             feedback:'.form-control-feedback'
         },
         modelEvents:{
-          'validated':'onValidate'  
+          'validated':'onValidate' 
         },
         initialize:function(){
-            this.model.set('value',this.options.parentModel.get(this.model.get('name')));
+            var value = this.options.parentModel.get(this.model.get('name'));
+            this.model.set('value',value);
             this.model.set('cid',this.model.cid);
+            this._createEditor();
         },
         onRender:function(){
-            this._createEditor();
+            this.fieldRegion.show(new this.Editor({model:this.model}));
         },
         _createEditor:function(){
             var name = this.model.get('editor')
             .replace(/\w/,function(val){
                 return val.toUpperCase();
             });
-            var View = Juggler.Editors[name];
-            View&&this.fieldRegion.show(new View({model:this.model}));
+            this.Editor = Juggler.Editors[name];
         },
         onValidate:function(model,attributes,errors){
             this.$el.attr('class',this.className+' '+(errors?'has-error':'has-success'));
@@ -52,7 +53,8 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         },
         modelEvents:{
             'request':'disableSubmit',
-            'sync':'enableSubmit'
+            'sync':'enableSubmit',
+            'change':'onChange'
         },
         initialize:function(){
             this.setType(this.options.type);
@@ -108,6 +110,15 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             else{
                 this.ui.submit.addClass('hidden');
             }
+        },
+        onChange:function(model){
+            var changed = model.changed;
+            this.collection.each(function(item){
+                var name = item.get('name');
+                if(changed[name]){
+                    item.set('value',changed[name]);
+                }
+            });
         },
         onSubmit:function(e){
             e.preventDefault();

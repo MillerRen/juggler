@@ -20,7 +20,6 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             }).join('');
             return tpl;
         }
-
     });
 
 });

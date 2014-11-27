@@ -293,7 +293,8 @@
                 this.triggerMethod('resoveregion');
             },
             serializeData:function(){
-                return this.model&&this.model.toJSON()||this.options;
+                var data = Views.LayoutView.__super__.serializeData.apply(this,arguments);
+                return data||this.options;
             }
         });
     
@@ -335,6 +336,9 @@
                         that.$el.alert('close');
                     },this.options.delay);
                 }
+            },
+            templateHelpers:function(){
+                return this.options;
             },
             onRender:function(options){
                 this.$el.addClass('alert-'+this.options.type)
@@ -401,6 +405,9 @@
                 this[key+'Region'].close();
                 this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
                 value?this.ui[key].show():this.ui[key].hide();
+            },
+            templateHelpers:function(){
+                return this.options;
             },
             onRender:function(){
                 this.get('header')?this.ui.header.show().html(this.get('header')):this.ui.header.hide();
@@ -633,27 +640,40 @@
                 'change':'onChange',
                 'keyup':'onChange'
             },
-            initialize:function(){
-                var data = this.serializeData();
-                this.collection = new Juggler.Enities.Collection(data.items)
+            modelEvents:{
+                'change':'onModelChange'
             },
             focus:function(){
                 this.ui.input.focus();
             },
-            onRender:function(){
+            setValue:function(){
+                this.ui.input.val(this.model.get('value'));
+            },
+            getValue:function(){
+                return this.ui.input.val();
+            },
+            setSchema:function(){
                 var data = this.serializeData();
                 var attr = {
                     id:data.cid,
                     placeholder:data.placeholder,
                     name:data.name
                 };
-                this.ui.input.
-                    attr(attr).
-                    val(data.value);
+                this.ui.input.attr(attr);
+            },
+            commit:function(){
+                this.model.set({value:this.getValue()});
+                this.model.validate('value');
+            },
+            onRender:function(){
+                this.setSchema();
+                this.setValue();
             },
             onChange:function(){
-                this.model.set({value:this.ui.input.val()},{validate:false});
-                this.model.validate('value');
+                this.commit();
+            },
+            onModelChange:function(){
+                this.render();
             }
         });
         
@@ -699,42 +719,68 @@
                     this.$el.prop('value',data.value)
                         .text(data.label);
                 }
-            })
+            }),
+            initialize:function(){
+                var items = this.serializeData().items;
+                this.collection=this.collection||new Juggler.Enities.Collection(items);
+            }
         });
     
-        Editors.Checkbox = Editors.Base.extend({
+        Editors.Radio = Editors.Base.extend({
+            template:_.template('<div class="radio"></div>'),
+            childViewContainer:'.radio',
+            childView:Editors.Base.extend({
+                tagName:'label',
+                template:_.template('<input type="radio" checked="<%- checked %>"><span><%- label %></span>'),
+            }),
+            initialize:function(){
+                var items = this.serializeData().items;
+                this.collection=this.collection||new Juggler.Enities.Collection(items);
+                this.setSchema();
+                this.setValue();
+            },
+            setSchema:function(){
+                var model = this.model;
+                this.collection.each(function(item,i){
+                    item.set('name',model.get('name'));
+                })
+            },
+            setValue:function(){
+                var values = this.serializeData().value;
+                this.collection.each(function(item,i){
+                    var value = item.get('value');
+                    item.set('checked',_.contains(values,value));
+                });
+            },
+            getValue:function(){
+                var value = this.$('input').val();
+                return value;
+            }
+        });
+    
+        Editors.Checkbox = Editors.Radio.extend({
             template:_.template('<div class="checkbox"></div>'),
             childViewContainer:'.checkbox',
             childView:Editors.Base.extend({
                 tagName:'label',
-                template:_.template('<input type="checkbox"><span><%- label %><span>'),
+                template:_.template('<input type="checkbox" checked="<%- checked %>" /><span><%- label %></span>'),
                 onChange:function(){
                     this.model.set('checked',this.ui.input.prop('checked'),{validate:false});
                 }
             }),
-            onChange:function(){
+            getValue:function(){
                 var value = this.collection.filter(function(item){
                     return item.get('checked');
                 });
-                value = _.map(value,function(item){return item.get('value');});
-                this.model.set({value:value},{validate:false});
-                this.model.validate('value');
+                value = _.map(value,function(item){
+                    return item.get('value');
+                });
+    
+                return value;
             }
         });
     
-        Editors.Radio = Editors.Checkbox.extend({
-            template:_.template('<div class="radio"></div>'),
-            childViewContainer:'.radio',
-            childView:Juggler.Views.ItemView.extend({
-                tagName:'label',
-                template:_.template('<input type="radio"><span><%- label %><span>')
-            }),
-            onChange:function(){
-                var value = this.$('input').val();
-                this.model.set({value:value},{validate:false});
-                this.model.validate('value');
-            }
-        });
+        
     
     });
 
@@ -750,22 +796,23 @@
                 feedback:'.form-control-feedback'
             },
             modelEvents:{
-              'validated':'onValidate'  
+              'validated':'onValidate' 
             },
             initialize:function(){
-                this.model.set('value',this.options.parentModel.get(this.model.get('name')));
+                var value = this.options.parentModel.get(this.model.get('name'));
+                this.model.set('value',value);
                 this.model.set('cid',this.model.cid);
+                this._createEditor();
             },
             onRender:function(){
-                this._createEditor();
+                this.fieldRegion.show(new this.Editor({model:this.model}));
             },
             _createEditor:function(){
                 var name = this.model.get('editor')
                 .replace(/\w/,function(val){
                     return val.toUpperCase();
                 });
-                var View = Juggler.Editors[name];
-                View&&this.fieldRegion.show(new View({model:this.model}));
+                this.Editor = Juggler.Editors[name];
             },
             onValidate:function(model,attributes,errors){
                 this.$el.attr('class',this.className+' '+(errors?'has-error':'has-success'));
@@ -792,7 +839,8 @@
             },
             modelEvents:{
                 'request':'disableSubmit',
-                'sync':'enableSubmit'
+                'sync':'enableSubmit',
+                'change':'onChange'
             },
             initialize:function(){
                 this.setType(this.options.type);
@@ -848,6 +896,15 @@
                 else{
                     this.ui.submit.addClass('hidden');
                 }
+            },
+            onChange:function(model){
+                var changed = model.changed;
+                this.collection.each(function(item){
+                    var name = item.get('name');
+                    if(changed[name]){
+                        item.set('value',changed[name]);
+                    }
+                });
             },
             onSubmit:function(e){
                 e.preventDefault();
@@ -980,7 +1037,6 @@
                 }).join('');
                 return tpl;
             }
-    
         });
     
     });
@@ -1001,16 +1057,13 @@
         });
     
         Components.Navbar = Juggler.Views.LayoutView.extend({
-            className:function(){
-                var data = this.serializeData();
-                return ['navbar','navbar-'+data.type,'navbar-'+data.position].join(' ');
-            },
+            className:'navbar',
             template:Juggler.Templates.navbar,
             options:{
                 type:'default',
                 position:'static',
                 container:'container',
-                brand:'Home'
+                brand:'Juggler'
             },
             ui:{
                 brand:'.navbar-brand',
@@ -1018,14 +1071,14 @@
                 secondary:'.navbar-nav-secondary',
                 form:'.navbar-form'
             },
+            templateHelpers:function(){
+                return this.options;
+            },
             onRender:function(){
-                this.collection&&this.primaryRegion.show(new Juggler.Widgets.Nav({
-                    collection:this.collection
-                }));
-                this.options.collection2&&this.secondaryRegion.show(new Juggler.Widgets.Nav({
-                    collection:this.options.collection2
-                }));
-                this.options.form&&this.formRegion.show(new Juggler.Widgets.Form(this.options.form));
+                var data = this.options;
+                this.$el.
+                    addClass('navbar-'+data.type).
+                    addClass('navbar-'+data.position);
             }
         });
     

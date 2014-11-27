@@ -95,9 +95,8 @@
     	});
     
     	Header.on('start',function(){
-    		var navbar = new Header.Navbar({
-    			brand:'Juggler',
-    			collection:new Header.NavData([
+    		var navbar = new Header.Navbar();
+    		var collection = new Header.NavData([
     				{name:'',label:'Home'},
     				{name:'GridLayout',label:'GridLayout'},
     				{name:'Form',label:'Form'},
@@ -105,9 +104,12 @@
     				{name:'Nav',label:'Nav'},
     				{name:'Button',label:'Button'},
     				{name:'Dialog',label:'Dialog'}
-    			])
+    			]);
+    		var nav = new Juggler.Widgets.Nav({
+    			collection:collection
     		});
     		Juggler.headerRegion.show(navbar);
+    		navbar.primaryRegion.show(nav);
     	});
     
     });
@@ -170,7 +172,7 @@
     	});
     
     	Form.on('start',function(){
-    		var form = new Form.Form({
+    		window.form = new Form.Form({
     			submit:'提交',
     			model:new App.Enities.Form(),
     			collection:new Juggler.Enities.Fields([
@@ -180,7 +182,7 @@
     				{name:'checkbox',label:'Checkboxes',editor:'checkbox',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}],validator:{blank:false}},
     				{name:'radio',label:'Radios',editor:'radio',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}]}
     			])
-    		});console.log(form)
+    		});
     		Juggler.mainRegion.show(form);
     	});
     

@@ -9,9 +9,8 @@ App.module('Header',function(Header, App, Backbone, Marionette, $, _){
 	});
 
 	Header.on('start',function(){
-		var navbar = new Header.Navbar({
-			brand:'Juggler',
-			collection:new Header.NavData([
+		var navbar = new Header.Navbar();
+		var collection = new Header.NavData([
 				{name:'',label:'Home'},
 				{name:'GridLayout',label:'GridLayout'},
 				{name:'Form',label:'Form'},
@@ -19,9 +18,12 @@ App.module('Header',function(Header, App, Backbone, Marionette, $, _){
 				{name:'Nav',label:'Nav'},
 				{name:'Button',label:'Button'},
 				{name:'Dialog',label:'Dialog'}
-			])
+			]);
+		var nav = new Juggler.Widgets.Nav({
+			collection:collection
 		});
 		Juggler.headerRegion.show(navbar);
+		navbar.primaryRegion.show(nav);
 	});
 
 });

@@ -14,16 +14,13 @@ Juggler.module('Components', function(Components, Juggler, Backbone, Marionette,
     });
 
     Components.Navbar = Juggler.Views.LayoutView.extend({
-        className:function(){
-            var data = this.serializeData();
-            return ['navbar','navbar-'+data.type,'navbar-'+data.position].join(' ');
-        },
+        className:'navbar',
         template:Juggler.Templates.navbar,
         options:{
             type:'default',
             position:'static',
             container:'container',
-            brand:'Home'
+            brand:'Juggler'
         },
         ui:{
             brand:'.navbar-brand',
@@ -31,14 +28,14 @@ Juggler.module('Components', function(Components, Juggler, Backbone, Marionette,
             secondary:'.navbar-nav-secondary',
             form:'.navbar-form'
         },
+        templateHelpers:function(){
+            return this.options;
+        },
         onRender:function(){
-            this.collection&&this.primaryRegion.show(new Juggler.Widgets.Nav({
-                collection:this.collection
-            }));
-            this.options.collection2&&this.secondaryRegion.show(new Juggler.Widgets.Nav({
-                collection:this.options.collection2
-            }));
-            this.options.form&&this.formRegion.show(new Juggler.Widgets.Form(this.options.form));
+            var data = this.options;
+            this.$el.
+                addClass('navbar-'+data.type).
+                addClass('navbar-'+data.position);
         }
     });
 

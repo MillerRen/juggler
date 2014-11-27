@@ -41,7 +41,8 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
             this.triggerMethod('resoveregion');
         },
         serializeData:function(){
-            return this.model&&this.model.toJSON()||this.options;
+            var data = Views.LayoutView.__super__.serializeData.apply(this,arguments);
+            return data||this.options;
         }
     });
 
