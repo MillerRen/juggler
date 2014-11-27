@@ -75,6 +75,7 @@
     	Enities.Form = Juggler.Enities.Form.extend({
     		defaults:{
     			input:'MillerRen@github.com',
+    			static:'static text',
     			textarea:'textarea',
     			select:'2',
     			checkbox:['1','2'],
@@ -177,6 +178,7 @@
     			model:new App.Enities.Form(),
     			collection:new Juggler.Enities.Fields([
     				{name:'input',label:'Input',editor:'email',validator:{format:'email',required:true}},
+    				{name:'static',label:'Static',editor:'static'},
     				{name:'textarea',label:'Textarea',editor:'textarea'},
     				{name:'select',label:'Select',editor:'select',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}]},
     				{name:'checkbox',label:'Checkboxes',editor:'checkbox',items:[{value:'1',label:'option1'},{value:'2',label:'option2'}],validator:{blank:false}},

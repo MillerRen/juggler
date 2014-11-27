@@ -26,6 +26,10 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
             this.model.validate('value');
         }
     });
+
+    Editors.Static = Editors.Base.extend({
+        template:_.template('<p class="form-control-static"><%- value %></p>')
+    });
     
     Editors.Input = Editors.Base.extend({
         template:_.template('<input type="text" />'),
