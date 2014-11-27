@@ -675,7 +675,8 @@
                 this.commit();
             },
             onModelChange:function(){
-                this.render();
+                this.setSchema();
+                this.setValue();
             }
         });
     

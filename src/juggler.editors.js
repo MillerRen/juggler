@@ -45,7 +45,8 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
             this.commit();
         },
         onModelChange:function(){
-            this.render();
+            this.setSchema();
+            this.setValue();
         }
     });
 
