@@ -61,7 +61,7 @@
                     </div>\
                     <div class="modal-body"><%= body %></div>\
                     <div class="modal-footer">\
-                    <button class="btn btn-primary"></button>\
+                    <%- footer %>\
                     </div>\
                 </div>\
             </div>');
@@ -387,6 +387,7 @@
                 size:'md',
                 title:'',
                 body:'',
+                footer:'',
                 buttons:{
                     'positive':{},
                     'negative':{}
@@ -398,24 +399,11 @@
                 body:'.modal-body',
                 footer:'.modal-footer'
             },
-            get:function(key){
-                return this.serializeData()[key];
-            },
-            set:function(key, value){
-                this[key+'Region'].close();
-                this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
-                value?this.ui[key].show():this.ui[key].hide();
-            },
             templateHelpers:function(){
                 return this.options;
             },
             onRender:function(){
-                this.get('header')?this.ui.header.show().html(this.get('header')):this.ui.header.hide();
-                this.get('footer')?this.ui.footer.show().html(this.get('footer')):this.ui.footer.hide();
-                if(!this.options.buttons){
-                    this.ui.footer.remove()
-                    return;
-                }
+                
             },
             onShow:function(){
                 this.$el.modal(this.options);

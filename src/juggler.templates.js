@@ -10,7 +10,7 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
                 </div>\
                 <div class="modal-body"><%= body %></div>\
                 <div class="modal-footer">\
-                <button class="btn btn-primary"></button>\
+                <%- footer %>\
                 </div>\
             </div>\
         </div>');

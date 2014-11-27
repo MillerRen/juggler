@@ -286,7 +286,7 @@
     
     	Dialog.on('start',function(){
     		var dialog = new Dialog.Dialog({
-    			header:'Dialog Demo'
+    			title:'Dialog Demo'
     		});
     		var form = new Dialog.Form({
     			submit:'提交',
