@@ -636,16 +636,6 @@
             ui:{
                 input:':input'
             },
-            events:{
-                'change':'onChange',
-                'keyup':'onChange'
-            },
-            modelEvents:{
-                'change':'onModelChange'
-            },
-            focus:function(){
-                this.ui.input.focus();
-            },
             setValue:function(){
                 this.ui.input.val(this.model.get('value'));
             },
@@ -664,8 +654,20 @@
             commit:function(){
                 this.model.set({value:this.getValue()});
                 this.model.validate('value');
+            }
+        });
+        
+        Editors.Input = Editors.Base.extend({
+            template:_.template('<input type="text" />'),
+            events:{
+                'change':'onChange',
+                'keyup':'onChange'
+            },
+            modelEvents:{
+                'change':'onModelChange'
             },
             onRender:function(){
+                this.ui.input.addClass('form-control');
                 this.setSchema();
                 this.setValue();
             },
@@ -674,14 +676,6 @@
             },
             onModelChange:function(){
                 this.render();
-            }
-        });
-        
-        Editors.Input = Editors.Base.extend({
-            template:_.template('<input type="text" />'),
-            onRender:function(){
-                Editors.Input.__super__.onRender.apply(this,arguments);
-                this.ui.input.addClass('form-control')
             }
         });
     
@@ -729,10 +723,19 @@
         Editors.Radio = Editors.Base.extend({
             template:_.template('<div class="radio"></div>'),
             childViewContainer:'.radio',
-            childView:Editors.Base.extend({
+            childView:Editors.Input.extend({
                 tagName:'label',
                 template:_.template('<input type="radio" checked="<%- checked %>"><span><%- label %></span>'),
+                commit:function(){
+                    this.model.set('checked',this.ui.input.prop('checked'));
+                },
+                onRender:function(){
+                    this.setSchema();
+                }
             }),
+            collectionEvents:{
+                'change':'onCollectionChange'
+            },
             initialize:function(){
                 var items = this.serializeData().items;
                 this.collection=this.collection||new Juggler.Enities.Collection(items);
@@ -755,17 +758,24 @@
             getValue:function(){
                 var value = this.$('input').val();
                 return value;
+            },
+            onCollectionChange:function(){
+                this.commit();
             }
         });
     
         Editors.Checkbox = Editors.Radio.extend({
             template:_.template('<div class="checkbox"></div>'),
             childViewContainer:'.checkbox',
-            childView:Editors.Base.extend({
+            childView:Editors.Input.extend({
                 tagName:'label',
-                template:_.template('<input type="checkbox" checked="<%- checked %>" /><span><%- label %></span>'),
-                onChange:function(){
-                    this.model.set('checked',this.ui.input.prop('checked'),{validate:false});
+                template:_.template('<input type="checkbox"  /><span><%- label %></span>'),
+                commit:function(){
+                    var checked = this.ui.input.prop('checked');
+                    this.model.set('checked',checked);
+                },
+                onRender:function(){
+                    this.ui.input.prop('checked',this.model.get('checked'));
                 }
             }),
             getValue:function(){
