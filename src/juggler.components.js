@@ -51,7 +51,8 @@ Juggler.module('Components', function(Components, Juggler, Backbone, Marionette,
         childViewContainer:'.carousel-inner',
         templateHelpers:function(){
             return {
-                id:this.cid
+                id:this.cid,
+                items:this.collection.toJSON()
             }
         },
         onRender:function(){

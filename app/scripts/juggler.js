@@ -121,7 +121,7 @@
         Templates.carousel = _.template(
         '<div id="<%- id %>" class="carousel slide" data-ride="carousel">\
           <ol class="carousel-indicators">\
-            <% _.each(collection,function(item,i){ %>\
+            <% _.each(items,function(item,i){ %>\
             <li data-target="<%- id %>" data-slide-to="<%- i %>" class="active"></li>\
             <% }); %>\
           </ol>\
@@ -1109,7 +1109,8 @@
             childViewContainer:'.carousel-inner',
             templateHelpers:function(){
                 return {
-                    id:this.cid
+                    id:this.cid,
+                    items:this.collection.toJSON()
                 }
             },
             onRender:function(){

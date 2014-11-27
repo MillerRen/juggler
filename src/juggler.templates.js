@@ -70,7 +70,7 @@ Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $
     Templates.carousel = _.template(
     '<div id="<%- id %>" class="carousel slide" data-ride="carousel">\
       <ol class="carousel-indicators">\
-        <% _.each(collection,function(item,i){ %>\
+        <% _.each(items,function(item,i){ %>\
         <li data-target="<%- id %>" data-slide-to="<%- i %>" class="active"></li>\
         <% }); %>\
       </ol>\
