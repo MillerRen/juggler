@@ -1,9 +1,23 @@
 {
+    "globals": {
+    "define"             : true,
+    "require"            : true,
+    "module"             : true,
+    "exports"            : true,
+    "$"                  : true,
+    "jQuery"             : true,
+    "_"                  : true,
+    "Backbone"           : true,
+    "Marionette"         : true,
+    "Juggler"			 : true,
+    "slice"              : true
+    },
+
     "node": true,
     "browser": true,
-    "esnext": true,
+    "esnext": false,
     "bitwise": true,
-    "camelcase": true,
+    "camelcase": false,
     "curly": true,
     "eqeqeq": true,
     "immed": true,

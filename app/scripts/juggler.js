@@ -17,8 +17,6 @@
     
     'use strict';
     
-    
-    
     var previousJuggler = root.Juggler;
     
     var Juggler = Backbone.Juggler = new Marionette.Application();
@@ -50,7 +48,7 @@
     });
 
     Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
-    
+        
         Templates.dialog = _.template('<div class="modal-dialog">\
                 <div class="modal-content">\
                     <div class="modal-header alert alert-<%- type %>">\
@@ -218,6 +216,7 @@
            defaults:{
                label:'label',
                editor:'input',
+               checked:false,
                errors:[]
            },
            validation:function(){
@@ -389,8 +388,7 @@
                 body:'',
                 footer:'',
                 buttons:{
-                    'positive':{},
-                    'negative':{}
+                    
                 },
                 backdrop:'static'
             },
@@ -403,7 +401,14 @@
                 return this.options;
             },
             onRender:function(){
-                
+                var that = this;
+                var buttons = this.options.buttons;
+                _.each(buttons,function(item,key){
+                    var $button = $('<button/>').
+                        addClass('btn btn-default')
+                        .text(key);
+                    that.ui.footer.append($button);
+                });
             },
             onShow:function(){
                 this.$el.modal(this.options);
@@ -709,7 +714,7 @@
             }),
             initialize:function(){
                 var items = this.serializeData().items;
-                this.collection=this.collection||new Juggler.Enities.Collection(items);
+                this.collection=this.collection||new Juggler.Enities.Fields(items);
             }
         });
     
@@ -731,7 +736,7 @@
             },
             initialize:function(){
                 var items = this.serializeData().items;
-                this.collection=this.collection||new Juggler.Enities.Collection(items);
+                this.collection=this.collection||new Juggler.Enities.Fields(items);
                 this.setSchema();
                 this.setValue();
             },

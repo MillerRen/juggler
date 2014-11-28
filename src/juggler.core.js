@@ -17,8 +17,6 @@
     
     'use strict';
     
-    
-    
     var previousJuggler = root.Juggler;
     
     var Juggler = Backbone.Juggler = new Marionette.Application();

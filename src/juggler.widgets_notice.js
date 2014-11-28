@@ -72,8 +72,7 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             body:'',
             footer:'',
             buttons:{
-                'positive':{},
-                'negative':{}
+                
             },
             backdrop:'static'
         },
@@ -86,7 +85,14 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             return this.options;
         },
         onRender:function(){
-            
+            var that = this;
+            var buttons = this.options.buttons;
+            _.each(buttons,function(item,key){
+                var $button = $('<button/>').
+                    addClass('btn btn-default')
+                    .text(key);
+                that.ui.footer.append($button);
+            });
         },
         onShow:function(){
             this.$el.modal(this.options);

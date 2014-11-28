@@ -1,5 +1,5 @@
 Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
-
+    
     Templates.dialog = _.template('<div class="modal-dialog">\
             <div class="modal-content">\
                 <div class="modal-header alert alert-<%- type %>">\

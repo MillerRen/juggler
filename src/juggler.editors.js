@@ -91,7 +91,7 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
         }),
         initialize:function(){
             var items = this.serializeData().items;
-            this.collection=this.collection||new Juggler.Enities.Collection(items);
+            this.collection=this.collection||new Juggler.Enities.Fields(items);
         }
     });
 
@@ -113,7 +113,7 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
         },
         initialize:function(){
             var items = this.serializeData().items;
-            this.collection=this.collection||new Juggler.Enities.Collection(items);
+            this.collection=this.collection||new Juggler.Enities.Fields(items);
             this.setSchema();
             this.setValue();
         },

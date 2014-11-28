@@ -39,15 +39,15 @@ module.exports = function (grunt) {
                 tasks: ['test:watch']
             },
             juggler: {
-              files: ['<%= config.src %>/{,*/}*.js'],
-              tasks: ['preprocess:juggler']
+                files: ['<%= config.src %>/{,*/}*.js'],
+                tasks: ['preprocess:juggler']
             },
             app: {
-              files: ['<%= config.app %>/scripts/modules/{,*/}*.js'],
-              tasks: ['preprocess:app']
+                files: ['<%= config.app %>/scripts/modules/{,*/}*.js'],
+                tasks: ['preprocess:app']
             },
             js: {
-                files: ['<%= config.app %>/scripts/{,*/}*.js'],
+                files: ['<%= config.app %>/scripts/*.js'],
                 tasks: [],
                 options: {
                   livereload: true
@@ -148,8 +148,7 @@ module.exports = function (grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%= config.app %>/scripts/{,*/}*.js',
-                '!<%= config.app %>/scripts/vendor/*',
+                '<%= config.app %>/scripts/*.js',
                 'test/spec/{,*/}*.js'
             ]
         },

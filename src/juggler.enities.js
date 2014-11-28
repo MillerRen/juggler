@@ -78,6 +78,7 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
        defaults:{
            label:'label',
            editor:'input',
+           checked:false,
            errors:[]
        },
        validation:function(){
