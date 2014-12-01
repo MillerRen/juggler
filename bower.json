@@ -1,6 +1,6 @@
 {
   "name": "juggler",
-  "version": "0.0.0",
+  "version": "0.1.1",
   "description": "UI Kits for Backbone.Marionette based on Bootstrap",
   "main": [
     "dist/styles/juggler.css",
