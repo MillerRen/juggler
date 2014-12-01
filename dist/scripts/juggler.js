@@ -17,13 +17,11 @@
     
     'use strict';
     
-    
-    
     var previousJuggler = root.Juggler;
     
     var Juggler = Backbone.Juggler = new Marionette.Application();
     
-    Juggler.VERSION = '0.0.0';
+    Juggler.VERSION = '0.1.0';
     
     Juggler.noConflict = function() {
         root.Juggler = previousJuggler;
@@ -50,7 +48,7 @@
     });
 
     Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
-    
+        
         Templates.dialog = _.template('<div class="modal-dialog">\
                 <div class="modal-content">\
                     <div class="modal-header alert alert-<%- type %>">\
@@ -61,7 +59,7 @@
                     </div>\
                     <div class="modal-body"><%= body %></div>\
                     <div class="modal-footer">\
-                    <button class="btn btn-primary"></button>\
+                    <%- footer %>\
                     </div>\
                 </div>\
             </div>');
@@ -117,6 +115,24 @@
             <div class="panel-body"><%= body %></div>\
             <div class="panel-footer"><%= footer %></div>'
         );
+    
+        Templates.carousel = _.template(
+        '<div id="<%- id %>" class="carousel slide" data-ride="carousel">\
+          <ol class="carousel-indicators">\
+            <% _.each(items,function(item,i){ %>\
+            <li data-target="<%- id %>" data-slide-to="<%- i %>" class="active"></li>\
+            <% }); %>\
+          </ol>\
+          <div class="carousel-inner" role="listbox"></div>\
+          <a class="left carousel-control" href="#<%- id %>" role="button" data-slide="prev">\
+            <span class="glyphicon glyphicon-chevron-left"></span>\
+            <span class="sr-only">Previous</span>\
+          </a>\
+          <a class="right carousel-control" href="#<%- id %>" role="button" data-slide="next">\
+            <span class="glyphicon glyphicon-chevron-right"></span>\
+            <span class="sr-only">Next</span>\
+          </a>\
+        </div>');
     
     });
 
@@ -200,6 +216,7 @@
            defaults:{
                label:'label',
                editor:'input',
+               checked:false,
                errors:[]
            },
            validation:function(){
@@ -238,7 +255,7 @@
             template: _.template(''),
             serializeData: function() {
                 var data = Views.ItemView.__super__.serializeData.apply(this,arguments);
-                return _.extend(this.options,data);
+                return _.isEmpty(data)?this.options:data;
             }
         });
     
@@ -247,7 +264,7 @@
             template: _.template('<%= text %>'),
             options: {text: 'not found！'}
         });
-    
+        
         Views.LayoutView = Marionette.LayoutView.extend({
             className:'row',
             regionAttr:'data-region',
@@ -274,9 +291,9 @@
                 });
                 this.triggerMethod('resoveregion');
             },
-            serializeData: function() {
+            serializeData:function(){
                 var data = Views.LayoutView.__super__.serializeData.apply(this,arguments);
-                return _.extend(this.options,data);
+                return _.isEmpty(data)?this.options:data;
             }
         });
     
@@ -284,17 +301,13 @@
             childViewContainer: "",
             template: _.template(''),
             childViewOptions:function(model,index){
-                var options =  {
-                    parentModel:this.model
-                };
-                model&&model.get('items')&&_.extend(options,{
-                    collection:new Juggler.Enities.Collection(model.get('items'))
-                });
+                var options =  {index:index};
+                this.model&&(options.parentModel=this.model);
                 return options;
             },
             serializeData: function() {
                 var data = Views.CompositeView.__super__.serializeData.apply(this,arguments);
-                return _.extend(this.options,data);
+                return _.isEmpty(data)?this.options:data;
             }
         });
     
@@ -322,6 +335,9 @@
                         that.$el.alert('close');
                     },this.options.delay);
                 }
+            },
+            templateHelpers:function(){
+                return this.options;
             },
             onRender:function(options){
                 this.$el.addClass('alert-'+this.options.type)
@@ -370,32 +386,25 @@
                 size:'md',
                 title:'',
                 body:'',
-                buttons:{
-                    'positive':{},
-                    'negative':{}
-                },
+                footer:'',
+                buttons:[],
                 backdrop:'static'
             },
             ui:{
                 header:'.modal-title',
                 body:'.modal-body',
-                footer:'.modal-footer'
+                footer:'.modal-footer',
+                buttons:'.modal-footer .btn'
             },
-            get:function(key){
-                return this.serializeData()[key];
-            },
-            set:function(key, value){
-                this[key+'Region'].close();
-                this.model?this.model.set(key,value):(this.options[key]=value,this.ui[key].html(value));
-                value?this.ui[key].show():this.ui[key].hide();
+            templateHelpers:function(){
+                return this.options;
             },
             onRender:function(){
-                this.get('header')?this.ui.header.show().html(this.get('header')):this.ui.header.hide();
-                this.get('footer')?this.ui.footer.show().html(this.get('footer')):this.ui.footer.hide();
-                if(!this.options.buttons){
-                    this.ui.footer.remove()
-                    return;
-                }
+                var that = this;
+                var buttons = this.serializeData().buttons;
+                this.footerRegion.show(new Widgets.Buttons({
+                    collection:new Juggler.Enities.ButtonGroup(buttons)
+                }));
             },
             onShow:function(){
                 this.$el.modal(this.options);
@@ -593,6 +602,11 @@
             }
         });
     
+        Widgets.Buttons = Widgets.List.extend({
+            tagName:'div',
+            childView:Widgets.Button
+        });
+    
         Widgets.ButtonGroup = Juggler.Views.CompositeView.extend({
             className:'btn-group',
             childView:Widgets.Button
@@ -610,90 +624,172 @@
 
     Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
     
-        Editors.Base = Juggler.Views.ItemView.extend({
-            className:'form-control',
-            attributes:function(){
-                var data = this.serializeData();
-                return {
-                    id:data.cid,
-                    value:data.value,
-                    placeholder:data.placeholder,
-                    name:data.name,
-                    type:data.editor
-                }
+        Editors.Base = Juggler.Views.CompositeView.extend({
+            className:'juggler-editor',
+            template:_.template(''),
+            ui:{
+                input:':input'
             },
+            setValue:function(){
+                this.ui.input.val(this.model.get('value'));
+            },
+            getValue:function(){
+                return this.ui.input.val();
+            },
+            setSchema:function(){
+                var data = this.serializeData();
+                var attr = {
+                    id:data.cid,
+                    placeholder:data.placeholder,
+                    name:data.name
+                };
+                this.ui.input.attr(attr);
+            },
+            commit:function(){
+                this.model.set({value:this.getValue()});
+                this.model.validate('value');
+            }
+        });
+    
+        Editors.Static = Editors.Base.extend({
+            template:_.template('<p class="form-control-static"><%- value %></p>')
+        });
+        
+        Editors.Input = Editors.Base.extend({
+            template:_.template('<input type="text" />'),
             events:{
                 'change':'onChange',
                 'keyup':'onChange'
             },
-            focus:function(){
-                this.$el.focus();
+            modelEvents:{
+                'change':'onModelChange'
+            },
+            onRender:function(){
+                this.ui.input.addClass('form-control');
+                this.setSchema();
+                this.setValue();
             },
             onChange:function(){
-                this.model.set({value:this.$el.val()},{validate:false});
-                this.model.validate('value');
-            }
-        });
-        
-        Editors.Input = Editors.Base.extend({
-            tagName:'input'
-        });
-    
-        Editors.Number = Editors.Input.extend({});
-    
-        Editors.Email = Editors.Input.extend({});
-    
-        Editors.Url = Editors.Input.extend({});
-    
-        Editors.Date = Editors.Input.extend({});
-    
-        Editors.Datetime = Editors.Input.extend({});
-    
-        Editors.Textarea = Editors.Base.extend({
-            tagName:'textarea',
-            template:_.template('<%- value %>')
-        });
-    
-        Editors.Select = Editors.Base.extend({
-            tagName:'select',
-            template:function(data){
-                return _.map(data.items,function(item,i){
-                    var checked = data.value==item.value?'selected':'';
-                    return '<option value="'+item.value+'" '+checked+'>'+item.label+'</option>';
-                }).join('');
+                this.commit();
+            },
+            onModelChange:function(){
+                this.setSchema();
+                this.setValue();
             }
         });
     
-        Editors.Checkbox = Juggler.Views.ItemView.extend({
-            className:'',
-            bindings:{'input':'value'},
-            template:function(data){
-                return _.map(data.items,function(item,i){
-                    var checked = _.contains(data.value,item.value)||data.value==item.value?'checked':'';
-                    return '<label class="'+data.editor+'-inline">'+
-                    '<input type="'+data.editor+'" value="'+item.value+'" name="'+data.name+'[]" '+checked+'>'
-                    +item.label+'</label>';
-                }).join('');
+        Editors.Number = Editors.Input.extend({
+            template:_.template('<input type="number" />')
+        });
+    
+        Editors.Email = Editors.Input.extend({
+            template:_.template('<input type="email" />')
+        });
+    
+        Editors.Url = Editors.Input.extend({
+            template:_.template('<input type="url" />')
+        });
+    
+        Editors.Date = Editors.Input.extend({
+            template:_.template('<input type="date" />')
+        });
+    
+        Editors.Datetime = Editors.Input.extend({
+            template:_.template('<input type="datetime" />')
+        });
+    
+        Editors.Textarea = Editors.Input.extend({
+            template:_.template('<textarea />')
+        });
+    
+        Editors.Select = Editors.Input.extend({
+            template:_.template('<select />'),
+            childViewContainer:'select',
+            childView:Juggler.Views.ItemView.extend({
+                tagName:'option',
+                onRender:function(){
+                    var data = this.serializeData();
+                    this.$el.prop('value',data.value)
+                        .text(data.label);
+                }
+            }),
+            initialize:function(){
+                var items = this.serializeData().items;
+                this.collection=this.collection||new Juggler.Enities.Fields(items);
+            }
+        });
+    
+        Editors.Radio = Editors.Base.extend({
+            template:_.template('<div class="radio"></div>'),
+            childViewContainer:'.radio',
+            childView:Editors.Input.extend({
+                tagName:'label',
+                template:_.template('<input type="radio" checked="<%- checked %>"><span><%- label %></span>'),
+                commit:function(){
+                    this.model.set('checked',this.ui.input.prop('checked'));
+                },
+                onRender:function(){
+                    this.setSchema();
+                }
+            }),
+            collectionEvents:{
+                'change':'onCollectionChange'
             },
-            events:{
-                'change input':'onChange'
+            initialize:function(){
+                var items = this.serializeData().items;
+                this.collection=this.collection||new Juggler.Enities.Fields(items);
+                this.setSchema();
+                this.setValue();
             },
-            onChange:function(){
-                var value = _.map(this.$('input').serializeArray(),function(item){
-                    return item.value;
+            setSchema:function(){
+                var model = this.model;
+                this.collection.each(function(item,i){
+                    item.set('name',model.get('name'));
+                })
+            },
+            setValue:function(){
+                var values = this.serializeData().value;
+                this.collection.each(function(item,i){
+                    var value = item.get('value');
+                    item.set('checked',_.contains(values,value));
                 });
-                this.model.set({value:value},{validate:false});
-                this.model.validate('value');
+            },
+            getValue:function(){
+                var value = this.$('input').val();
+                return value;
+            },
+            onCollectionChange:function(){
+                this.commit();
             }
         });
     
-        Editors.Radio = Editors.Checkbox.extend({
-            onChange:function(){
-                var value = this.$('input').val();
-                this.model.set({value:value},{validate:false});
-                this.model.validate('value');
+        Editors.Checkbox = Editors.Radio.extend({
+            template:_.template('<div class="checkbox"></div>'),
+            childViewContainer:'.checkbox',
+            childView:Editors.Input.extend({
+                tagName:'label',
+                template:_.template('<input type="checkbox"  /><span><%- label %></span>'),
+                commit:function(){
+                    var checked = this.ui.input.prop('checked');
+                    this.model.set('checked',checked);
+                },
+                onRender:function(){
+                    this.ui.input.prop('checked',this.model.get('checked'));
+                }
+            }),
+            getValue:function(){
+                var value = this.collection.filter(function(item){
+                    return item.get('checked');
+                });
+                value = _.map(value,function(item){
+                    return item.get('value');
+                });
+    
+                return value;
             }
         });
+    
+        
     
     });
 
@@ -702,9 +798,6 @@
         Widgets.Field = Juggler.Views.LayoutView.extend({
             className:'form-group has-feedback',
             template:Juggler.Templates.form_row,
-            options:{
-                
-            },
             ui:{
                 label:'.control-label',
                 field:'.control-field',
@@ -712,22 +805,23 @@
                 feedback:'.form-control-feedback'
             },
             modelEvents:{
-              'validated':'onValidate'  
+              'validated':'onValidate' 
             },
             initialize:function(){
-                this.model.set('value',this.options.parentModel.get(this.model.get('name')));
+                var value = this.options.parentModel.get(this.model.get('name'));
+                this.model.set('value',value);
                 this.model.set('cid',this.model.cid);
+                this._createEditor();
             },
             onRender:function(){
-                this._createEditor();
+                this.fieldRegion.show(new this.Editor({model:this.model}));
             },
             _createEditor:function(){
                 var name = this.model.get('editor')
                 .replace(/\w/,function(val){
                     return val.toUpperCase();
                 });
-                var View = Juggler.Editors[name];
-                View&&this.fieldRegion.show(new View({model:this.model}));
+                this.Editor = Juggler.Editors[name];
             },
             onValidate:function(model,attributes,errors){
                 this.$el.attr('class',this.className+' '+(errors?'has-error':'has-success'));
@@ -754,7 +848,8 @@
             },
             modelEvents:{
                 'request':'disableSubmit',
-                'sync':'enableSubmit'
+                'sync':'enableSubmit',
+                'change':'onChange'
             },
             initialize:function(){
                 this.setType(this.options.type);
@@ -810,6 +905,15 @@
                 else{
                     this.ui.submit.addClass('hidden');
                 }
+            },
+            onChange:function(model){
+                var changed = model.changed;
+                this.collection.each(function(item){
+                    var name = item.get('name');
+                    if(changed[name]){
+                        item.set('value',changed[name]);
+                    }
+                });
             },
             onSubmit:function(e){
                 e.preventDefault();
@@ -942,7 +1046,6 @@
                 }).join('');
                 return tpl;
             }
-    
         });
     
     });
@@ -963,16 +1066,13 @@
         });
     
         Components.Navbar = Juggler.Views.LayoutView.extend({
-            className:function(){
-                var data = this.serializeData();
-                return ['navbar','navbar-'+data.type,'navbar-'+data.position].join(' ');
-            },
+            className:'navbar',
             template:Juggler.Templates.navbar,
             options:{
                 type:'default',
-                position:'static-top',
+                position:'static',
                 container:'container',
-                brand:'Home'
+                brand:'Juggler'
             },
             ui:{
                 brand:'.navbar-brand',
@@ -980,14 +1080,35 @@
                 secondary:'.navbar-nav-secondary',
                 form:'.navbar-form'
             },
+            templateHelpers:function(){
+                return this.options;
+            },
             onRender:function(){
-                this.collection&&this.primaryRegion.show(new Juggler.Widgets.Nav({
-                    collection:this.collection
-                }));
-                this.options.collection2&&this.secondaryRegion.show(new Juggler.Widgets.Nav({
-                    collection:this.options.collection2
-                }));
-                this.options.form&&this.formRegion.show(new Juggler.Widgets.Form(this.options.form));
+                var data = this.options;
+                this.$el.
+                    addClass('navbar-'+data.type).
+                    addClass('navbar-'+data.position);
+            }
+        });
+    
+    
+        Components.Carousel = Juggler.Views.CompositeView.extend({
+            className:'juggler-carousel',
+            template:Juggler.Templates.carousel,
+            childView:Juggler.Views.ItemView.extend({
+                className:'item',
+                template:_.template('<img src="<%- img %>" />\
+                <div class="carousel-caption"><%- caption %></div>')
+            }),
+            childViewContainer:'.carousel-inner',
+            templateHelpers:function(){
+                return {
+                    id:this.cid,
+                    items:this.collection.toJSON()
+                }
+            },
+            onRender:function(){
+                this.$el.carousel();
             }
         });
     
