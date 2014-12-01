@@ -13,7 +13,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         template: _.template('<%= text %>'),
         options: {text: 'not found！'}
     });
-
+    
     Views.LayoutView = Marionette.LayoutView.extend({
         className:'row',
         regionAttr:'data-region',

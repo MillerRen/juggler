@@ -21,7 +21,7 @@
     
     var Juggler = Backbone.Juggler = new Marionette.Application();
     
-    Juggler.VERSION = '0.0.0';
+    Juggler.VERSION = '0.1.0';
     
     Juggler.noConflict = function() {
         root.Juggler = previousJuggler;
