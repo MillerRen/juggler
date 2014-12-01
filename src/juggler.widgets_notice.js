@@ -71,28 +71,24 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
             title:'',
             body:'',
             footer:'',
-            buttons:{
-                
-            },
+            buttons:[],
             backdrop:'static'
         },
         ui:{
             header:'.modal-title',
             body:'.modal-body',
-            footer:'.modal-footer'
+            footer:'.modal-footer',
+            buttons:'.modal-footer .btn'
         },
         templateHelpers:function(){
             return this.options;
         },
         onRender:function(){
             var that = this;
-            var buttons = this.options.buttons;
-            _.each(buttons,function(item,key){
-                var $button = $('<button/>').
-                    addClass('btn btn-default')
-                    .text(key);
-                that.ui.footer.append($button);
-            });
+            var buttons = this.serializeData().buttons;
+            this.footerRegion.show(new Widgets.Buttons({
+                collection:new Juggler.Enities.ButtonGroup(buttons)
+            }));
         },
         onShow:function(){
             this.$el.modal(this.options);

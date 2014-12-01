@@ -12,6 +12,11 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
         }
     });
 
+    Widgets.Buttons = Widgets.List.extend({
+        tagName:'div',
+        childView:Widgets.Button
+    });
+
     Widgets.ButtonGroup = Juggler.Views.CompositeView.extend({
         className:'btn-group',
         childView:Widgets.Button

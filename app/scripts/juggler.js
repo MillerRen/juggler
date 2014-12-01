@@ -255,7 +255,7 @@
             template: _.template(''),
             serializeData: function() {
                 var data = Views.ItemView.__super__.serializeData.apply(this,arguments);
-                return data||this.options;
+                return _.isEmpty(data)?this.options:data;
             }
         });
     
@@ -293,7 +293,7 @@
             },
             serializeData:function(){
                 var data = Views.LayoutView.__super__.serializeData.apply(this,arguments);
-                return data||this.options;
+                return _.isEmpty(data)?this.options:data;
             }
         });
     
@@ -307,7 +307,7 @@
             },
             serializeData: function() {
                 var data = Views.CompositeView.__super__.serializeData.apply(this,arguments);
-                return data||this.options;
+                return _.isEmpty(data)?this.options:data;
             }
         });
     
@@ -387,28 +387,24 @@
                 title:'',
                 body:'',
                 footer:'',
-                buttons:{
-                    
-                },
+                buttons:[],
                 backdrop:'static'
             },
             ui:{
                 header:'.modal-title',
                 body:'.modal-body',
-                footer:'.modal-footer'
+                footer:'.modal-footer',
+                buttons:'.modal-footer .btn'
             },
             templateHelpers:function(){
                 return this.options;
             },
             onRender:function(){
                 var that = this;
-                var buttons = this.options.buttons;
-                _.each(buttons,function(item,key){
-                    var $button = $('<button/>').
-                        addClass('btn btn-default')
-                        .text(key);
-                    that.ui.footer.append($button);
-                });
+                var buttons = this.serializeData().buttons;
+                this.footerRegion.show(new Widgets.Buttons({
+                    collection:new Juggler.Enities.ButtonGroup(buttons)
+                }));
             },
             onShow:function(){
                 this.$el.modal(this.options);
@@ -604,6 +600,11 @@
                 var className = ['btn',type,size].join(' ');
                 this.$el.attr('class',className);
             }
+        });
+    
+        Widgets.Buttons = Widgets.List.extend({
+            tagName:'div',
+            childView:Widgets.Button
         });
     
         Widgets.ButtonGroup = Juggler.Views.CompositeView.extend({

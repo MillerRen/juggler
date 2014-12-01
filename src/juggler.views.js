@@ -4,7 +4,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         template: _.template(''),
         serializeData: function() {
             var data = Views.ItemView.__super__.serializeData.apply(this,arguments);
-            return data||this.options;
+            return _.isEmpty(data)?this.options:data;
         }
     });
 
@@ -42,7 +42,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         },
         serializeData:function(){
             var data = Views.LayoutView.__super__.serializeData.apply(this,arguments);
-            return data||this.options;
+            return _.isEmpty(data)?this.options:data;
         }
     });
 
@@ -56,7 +56,7 @@ Juggler.module('Views', function(Views, Juggler, Backbone, Marionette, $, _) {
         },
         serializeData: function() {
             var data = Views.CompositeView.__super__.serializeData.apply(this,arguments);
-            return data||this.options;
+            return _.isEmpty(data)?this.options:data;
         }
     });
 
