@@ -27,6 +27,15 @@ App.module('Enities',function(Enities, App, Backbone, Marionette, $, _){
 		}
 	});
 
+	Enities.Columns = Juggler.Enities.Columns.extend({
+		initialize:function(){
+			this.reset([
+				{name:'name',label:'Name',editable:true},
+				{name:'value',label:'Label'}
+			]);
+		}
+	});
+
 	Enities.Form = Juggler.Enities.Form.extend({
 		defaults:{
 			input:'MillerRen@github.com',

@@ -140,10 +140,6 @@
         
         Enities.Model = Backbone.Model.extend({
             urlRoot: '/test',
-            message: Juggler.Config.Message,
-            parse: function(resp, options) {
-                return options.collection ? resp : resp.data;
-            },
             index:function(){
                 return this.collection.indexOf(this);
             },
@@ -155,21 +151,6 @@
         Enities.Collection = Backbone.Collection.extend({
             url:'/test',
             model:Enities.Model,
-            parse: function(resp, options) {
-                return options.collection ? resp : resp.data;
-            },
-            up: function(model) {
-              var index = this.indexOf(model);
-              if (index > 0){
-                this.swap(index, index-1);
-              }
-            },
-            down: function(model) {
-              var index = this.indexOf(model);
-              if (index < this.models.length) {
-                this.swap(index, index+1);
-              }
-            },
             swap: function (indexA, indexB) {
               this.models[indexA] = this.models.splice(indexB, 1, this.models[indexA])[0];
             },
@@ -183,38 +164,12 @@
             }
         });
     
-        Enities.Cell = Enities.Model.extend({
-    
-        });
-    
-        Enities.Row = Enities.Collection.extend({
-            model:Enities.Cell
-        });
-    
-        Enities.Column = Enities.Model.extend({
-            defaults: {
-                name: undefined,
-                label: undefined,
-                sortable: false,
-                editable: false,
-                renderable: true,
-                formatter: undefined,
-                sortType: "cycle",
-                sortValue: undefined,
-                direction: null,
-                readonly:true,
-                cell: undefined,
-                headerCell: undefined
-            }
-        });
-    
-        Enities.Columns = Enities.Collection.extend({
-            model:Enities.Column
-        });
-    
         Enities.Field = Enities.Model.extend({
            defaults:{
-               label:'label',
+               name: undefined,
+               label: undefined,
+               sortable: false,
+               editable:false,
                editor:'input',
                checked:false,
                errors:[]
@@ -230,6 +185,14 @@
     
         Enities.Form = Enities.Model.extend({
             
+        });
+    
+        Enities.Column = Enities.Field.extend({
+            
+        });
+    
+        Enities.Columns = Enities.Collection.extend({
+            model:Enities.Column
         });
     
         Enities.Button = Enities.Model.extend({
@@ -623,12 +586,27 @@
     });
 
     Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
-    
+        
+        Editors.getEditor = function(name){
+            if(!name)return false;
+            name=name.replace(/\w/,function(val){
+                return val.toUpperCase();
+            });
+            return Juggler.Editors[name];
+        };
+        
         Editors.Base = Juggler.Views.CompositeView.extend({
             className:'juggler-editor',
             template:_.template(''),
+            triggers:{
+                'focus':'focus',
+                'blur':'blur'
+            },
             ui:{
                 input:':input'
+            },
+            focus:function(){
+    
             },
             setValue:function(){
                 this.ui.input.val(this.model.get('value'));
@@ -663,6 +641,9 @@
             },
             modelEvents:{
                 'change':'onModelChange'
+            },
+            focus:function(){
+                this.ui.input.focus();
             },
             onRender:function(){
                 this.ui.input.addClass('form-control');
@@ -928,10 +909,10 @@
     
         Widgets.Th = Juggler.Views.ItemView.extend({
             tagName:'th',
-            template:_.template('<%- value %>')
+            template:_.template('<%- label %>')
         });
     
-        Widgets.Td = Juggler.Views.ItemView.extend({
+        Widgets.Td = Widgets.Th.extend({
             tagName:'td',
             template:_.template('<%= value %>'),
             events:{
@@ -940,12 +921,40 @@
             serializeData:function(){
                 var origin=Widgets.Td.__super__.serializeData.apply(this,arguments);
                 return _.extend(origin,{value:this.options.parentModel.get(this.model.get('name'))});
+            },
+            enterEditMode:function(){
+                var data,Editor;
+    
+                if(this.editor)return;
+    
+                data = this.serializeData();
+                if(!data.editable)return;
+    
+                Editor = Juggler.Editors.getEditor(data.editor);
+                if(!Editor)return;
+    
+                this.editor = new Editor({model:this.model});
+                this.$el.html(this.editor.render().$el);
+                this.editor.focus();
+            },
+            existEditMode:function(){
+                this.editor&&this.editor.destroy();
+                this.render();
+            },
+            onClick:function(){
+                this.enterEditMode();
+            },
+            onDestroy:function(){
+                this.editor&&this.editor.destroy();
             }
         });
     
         Widgets.Tr = Juggler.Views.CompositeView.extend({
             tagName:'tr',
-            childView:Widgets.Td
+            childView:Widgets.Td,
+            triggers:{
+                'click':'click'
+            }
         });
     
         Widgets.Thead = Juggler.Views.CompositeView.extend({
@@ -956,8 +965,14 @@
         Widgets.Tbody = Juggler.Views.CompositeView.extend({
             tagName:'tbody',
             childView:Widgets.Tr,
+            childEvents:{
+                'click':'onChildClick'
+            },
             childViewOptions:function(){
                 return {collection:this.options.columns}
+            },
+            onChildClick:function(view){
+                
             }
         });
     

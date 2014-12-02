@@ -1,10 +1,25 @@
 Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _) {
-
+    
+    Editors.getEditor = function(name){
+        if(!name)return false;
+        name=name.replace(/\w/,function(val){
+            return val.toUpperCase();
+        });
+        return Juggler.Editors[name];
+    };
+    
     Editors.Base = Juggler.Views.CompositeView.extend({
         className:'juggler-editor',
         template:_.template(''),
+        triggers:{
+            'focus':'focus',
+            'blur':'blur'
+        },
         ui:{
             input:':input'
+        },
+        focus:function(){
+
         },
         setValue:function(){
             this.ui.input.val(this.model.get('value'));
@@ -39,6 +54,9 @@ Juggler.module('Editors', function(Editors, Juggler, Backbone, Marionette, $, _)
         },
         modelEvents:{
             'change':'onModelChange'
+        },
+        focus:function(){
+            this.ui.input.focus();
         },
         onRender:function(){
             this.ui.input.addClass('form-control');

@@ -72,6 +72,15 @@
     		}
     	});
     
+    	Enities.Columns = Juggler.Enities.Columns.extend({
+    		initialize:function(){
+    			this.reset([
+    				{name:'name',label:'Name',editable:true},
+    				{name:'value',label:'Label'}
+    			]);
+    		}
+    	});
+    
     	Enities.Form = Juggler.Enities.Form.extend({
     		defaults:{
     			input:'MillerRen@github.com',
@@ -202,7 +211,7 @@
     	Table.on('start',function(){
     		var table = new Juggler.Widgets.Table({
     			collection:new App.Enities.Table,
-    			columns:new Juggler.Enities.Columns([{name:'name',value:'Name',readonly:false},{name:'value',value:'Label'}])
+    			columns:new App.Enities.Columns()
     		});
     		Juggler.mainRegion.show(table);
     	});
