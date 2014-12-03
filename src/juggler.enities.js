@@ -1,5 +1,5 @@
 Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
-    
+
     Enities.Model = Backbone.Model.extend({
         urlRoot: '/test',
         index:function(){
@@ -50,7 +50,7 @@ Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _)
     });
 
     Enities.Column = Enities.Field.extend({
-        
+
     });
 
     Enities.Columns = Enities.Collection.extend({

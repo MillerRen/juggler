@@ -47,6 +47,14 @@
     
     });
 
+    Juggler.module('Helpers', function(Helpers, Juggler, Backbone, Marionette, $, _) {
+    
+        Helpers.Selection = Marionette.Object.extend({
+            
+        });
+    
+    });
+
     Juggler.module('Templates', function(Templates, Juggler, Backbone, Marionette, $, _) {
         
         Templates.dialog = _.template('<div class="modal-dialog">\
@@ -137,7 +145,7 @@
     });
 
     Juggler.module('Enities', function(Enities, Juggler, Backbone, Marionette, $, _) {
-        
+    
         Enities.Model = Backbone.Model.extend({
             urlRoot: '/test',
             index:function(){
@@ -188,7 +196,7 @@
         });
     
         Enities.Column = Enities.Field.extend({
-            
+    
         });
     
         Enities.Columns = Enities.Collection.extend({

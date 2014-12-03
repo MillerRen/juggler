@@ -40,6 +40,8 @@
     
     // @include ./juggler.config.js
 
+    // @include ./juggler.helpers.js
+
     // @include ./juggler.templates.js
 
     // @include ./juggler.enities.js
