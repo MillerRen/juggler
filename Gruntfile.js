@@ -19,7 +19,8 @@ module.exports = function (grunt) {
     var config = {
         src: 'src',
         app: 'app',
-        dist: 'dist'
+        dist: 'dist',
+        test: 'test'
     };
 
     // Define the configuration for all the tasks
@@ -187,7 +188,7 @@ module.exports = function (grunt) {
                 includeSelf: false,     // default: false
             },
             test: {
-                src: ['<%= config.app %>/test.html'],
+                src: ['<%= config.test %>/test.html'],
                 //exclude: ['bower_components/bootstrap/dist/js/bootstrap.js'],
                 devDependencies: true, // default: false
                 includeSelf: true,     // default: false
