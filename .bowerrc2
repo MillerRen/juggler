@@ -1,5 +1,0 @@
-{
-    "directory": "bower_components",
-    "proxy": "http://proxy.cmcc:8080",
-    "https-proxy": "http://proxy.cmcc:8080"
-}
