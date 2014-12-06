@@ -63,9 +63,9 @@
         <!-- endbower -->
         <!-- endbuild -->
 
-        <!-- build:js({app,.tmp}) scripts/juggler.min.js -->
-        <script src="scripts/juggler.js"></script>
-        <!-- endbuild -->
+        <script type="text/javascript">
+            mocha.setup('tdd');
+        </script>
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
         <script src="spec.js"></script>

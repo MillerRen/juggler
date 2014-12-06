@@ -161,7 +161,7 @@ module.exports = function (grunt) {
                     run: true,
                     urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/test.html'],
                     reporter:'Nyan',
-                    ui:'tdd'
+                    logErrors:true
                 }
             }
         },

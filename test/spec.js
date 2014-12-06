@@ -1,3 +1,6 @@
+var assert = chai.assert,
+    should = chai.should();
+
 suite('Array', function(){
   setup(function(){
     // ...
