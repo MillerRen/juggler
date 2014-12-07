@@ -13,7 +13,6 @@
         <!-- bower:css -->
         <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="../bower_components/mocha/mocha.css" />
-        <link rel="stylesheet" href="../dist/styles/juggler.css" />
         <!-- endbower -->
         <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap-theme.css" />
         <!-- endbuild -->
@@ -59,12 +58,15 @@
         <script src="../bower_components/mocha/mocha.js"></script>
         <script src="../bower_components/chai/chai.js"></script>
         <script src="../bower_components/sinonjs/sinon.js"></script>
-        <script src="../dist/scripts/juggler.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
+        <!-- build:js({app,.tmp}) scripts/juggler.min.js -->
+        <script src="scripts/juggler.js"></script>
+        <!-- endbuild -->
+
         <script type="text/javascript">
-            mocha.setup('tdd');
+            mocha.setup({ui:'tdd'});
         </script>
 
         <!-- build:js({app,.tmp}) scripts/main.js -->

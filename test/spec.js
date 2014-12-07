@@ -1,14 +1,20 @@
-var assert = chai.assert,
-    should = chai.should();
+var assert = chai.assert;
 
-suite('Array', function(){
+suite('Juggler', function(){
   setup(function(){
     // ...
   });
 
-  suite('#indexOf()', function(){
-    test('should return -1 when not present', function(){
-      assert.equal(-1, [1,2,3].indexOf(4));
+  suite('Define', function(){
+    test('should return an Marionette.Application instance', function(){
+      assert.instanceOf(Juggler,Marionette.Application)
     });
   });
+  
+  suite('Commponents', function(){
+    test('should return an Marionette.Application instance', function(){
+      assert.instanceOf(Juggler,Marionette.Application)
+    });
+  });
+
 });

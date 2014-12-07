@@ -193,7 +193,7 @@ module.exports = function (grunt) {
                 src: ['<%= config.test %>/test.html'],
                 //exclude: ['bower_components/bootstrap/dist/js/bootstrap.js'],
                 devDependencies: true, // default: false
-                includeSelf: true,     // default: false
+                includeSelf: false,     // default: false
             }
         },
 
