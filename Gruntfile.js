@@ -37,7 +37,7 @@ module.exports = function (grunt) {
             },
             jstest: {
                 files: ['test/spec/{,*/}*.js'],
-                tasks: ['test:watch']
+                tasks: ['mocha']
             },
             juggler: {
                 files: ['<%= config.src %>/{,*/}*.js'],
@@ -106,7 +106,8 @@ module.exports = function (grunt) {
             },
             test: {
                 options: {
-                    open: false,
+                    open: true,
+                    hostname:'localhost',
                     port: 9001,
                     middleware: function(connect) {
                         return [
@@ -159,7 +160,7 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     run: true,
-                    urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/test.html'],
+                    src: ['test/test.html'],
                     reporter:'Nyan',
                     logErrors:true
                 }
@@ -193,7 +194,7 @@ module.exports = function (grunt) {
                 src: ['<%= config.test %>/test.html'],
                 //exclude: ['bower_components/bootstrap/dist/js/bootstrap.js'],
                 devDependencies: true, // default: false
-                includeSelf: false,     // default: false
+                includeSelf: true,     // default: false
             }
         },
 
@@ -376,7 +377,7 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
-            'connect:test',
+            //'connect:test',
             'mocha'
         ]);
     });

@@ -1,20 +1,9 @@
-var assert = chai.assert;
+var should = chai.should();
 
-suite('Juggler', function(){
-  setup(function(){
-    // ...
-  });
+describe('Juggler', function(){
 
-  suite('Define', function(){
-    test('should return an Marionette.Application instance', function(){
-      assert.instanceOf(Juggler,Marionette.Application)
-    });
-  });
-  
-  suite('Commponents', function(){
-    test('should return an Marionette.Application instance', function(){
-      assert.instanceOf(Juggler,Marionette.Application)
-    });
+  it('should instanceOf Marionette.Application',function(){
+    Juggler.should.instanceOf(Marionette.Application)
   });
 
 });
