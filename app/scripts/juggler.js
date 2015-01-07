@@ -188,12 +188,42 @@
             },
             reset:function(){
                 this.clear().set(this.defaults);
-            }
+            },
+            select: function () {
+                if (this.selected) { return; }
+    
+                this.selected = true;
+                this.trigger("selected", this);
+    
+                this.collection&&this.collection.select(this);
+            },
+            deselect: function () {
+                if (!this.selected) { return; }
+    
+                this.selected = false;
+                this.trigger("deselected", this);
+    
+                this.collection&&this.collection.deselect(this);
+            },
         });
     
         Enities.Collection = Backbone.Collection.extend({
             url:'/test',
             model:Enities.Model,
+            constructor:function(){
+                Enities.Collection.__super__.constructor.apply(this,arguments);
+                this.selected = {};
+            },
+            select:function(model){
+                if(this.selected[model.cid]) return;
+                this.selected[model.cid] = model;
+                model.select();
+            },
+            deselect:function(model){
+                if(!this.selected[model.cid]) return;
+                delete this.selected[model.cid];
+                model.deselect();
+            },
             swap: function (indexA, indexB) {
               this.models[indexA] = this.models.splice(indexB, 1, this.models[indexA])[0];
             },
@@ -585,7 +615,28 @@
         });
     
         Widgets.Pagination = Widgets.List.extend({
-            className:'pagination'
+            className:'pagination',
+            options:{
+    
+            },
+            initialize:function(){
+                this._actived = 1;
+            },
+            next:function(){
+    
+            },
+            prev:function(){
+    
+            },
+            first:function(){
+    
+            },
+            last:function(){
+                
+            },
+            go:function(num){
+    
+            }
         });
     
         Widgets.MediaList = Widgets.List.extend({

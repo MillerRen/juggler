@@ -135,7 +135,28 @@ Juggler.module('Widgets', function(Widgets, Juggler, Backbone, Marionette, $, _)
     });
 
     Widgets.Pagination = Widgets.List.extend({
-        className:'pagination'
+        className:'pagination',
+        options:{
+
+        },
+        initialize:function(){
+            this._actived = 1;
+        },
+        next:function(){
+
+        },
+        prev:function(){
+
+        },
+        first:function(){
+
+        },
+        last:function(){
+            
+        },
+        go:function(num){
+
+        }
     });
 
     Widgets.MediaList = Widgets.List.extend({
