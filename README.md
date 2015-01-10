@@ -1,4 +1,5 @@
-<h1>Juggler<small>The Marionette UI framework</small></h1>
+#Juggler
+----------------------------
 
 
 ##What's included
