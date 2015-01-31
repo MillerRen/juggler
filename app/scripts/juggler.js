@@ -30,14 +30,6 @@
     
     Backbone.Juggler = Juggler;
 
-    Juggler.AppRouter = Marionette.AppRouter.extend({
-
-    });
-
-    Juggler.Controller = Marionette.Controller.extend({
-        
-    });
-    
     Juggler.module('Config', function(Config, Juggler, Backbone, Marionette, $, _) {
     
         Config.Message = {
@@ -87,6 +79,22 @@
         Helpers.Validator = Marionette.Object.extend({
             
         });
+    
+    });
+
+    Juggler.module('Routers', function(Routers, Juggler, Backbone, Marionette, $, _) {
+    
+        Routers.AppRouter = Marionette.AppRouter.extend({
+            
+        })
+    
+    });
+
+    Juggler.module('Controllers', function(Controllers, Juggler, Backbone, Marionette, $, _) {
+    
+        Controllers.Controller = Marionette.Controller.extend({
+            
+        })
     
     });
 

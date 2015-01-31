@@ -317,7 +317,7 @@
 
     App.module('Demo',function(Demo, App, Backbone, Marionette, $, _){
     	
-    	Demo.AppRouter = Juggler.AppRouter.extend({
+    	Demo.AppRouter = Juggler.Routers.AppRouter.extend({
     		appRoutes:{
     			'':'home',
     			'GridLayout':'layout',
@@ -329,7 +329,7 @@
     		}
     	});
     
-    	Demo.Controller = Juggler.Controller.extend({
+    	Demo.Controller = Juggler.Controllers.Controller.extend({
     		home:function(){
     			App.startSubApp('Home');
     		},
