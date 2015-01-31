@@ -41,6 +41,17 @@
 
     Juggler.module('Helpers', function(Helpers, Juggler, Backbone, Marionette, $, _) {
     
+        Helpers.startModule = function(appName, args) {
+            var currentApp = App.module(appName);
+    		
+            if (App.currentApp) {
+                App.currentApp.stop();
+            }
+            
+            App.currentApp = currentApp;
+            currentApp.start(args);
+        };
+    
         Helpers.Selection = Marionette.Object.extend({
             constructor:function(options){
                 Marionette.Object.apply(this,arguments);
