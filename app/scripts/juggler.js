@@ -42,13 +42,13 @@
     Juggler.module('Helpers', function(Helpers, Juggler, Backbone, Marionette, $, _) {
     
         Helpers.startModule = function(appName, args) {
-            var currentApp = App.module(appName);
+            var currentApp = Juggler.module(appName);
     		
-            if (App.currentApp) {
-                App.currentApp.stop();
+            if (Juggler.currentApp) {
+                Juggler.currentApp.stop();
             }
             
-            App.currentApp = currentApp;
+            Juggler.currentApp = currentApp;
             currentApp.start(args);
         };
     
