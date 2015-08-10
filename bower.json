@@ -22,7 +22,8 @@
     "jquery": ">1.10.0",
     "bootstrap": ">3.0.0",
     "marionette": ">=2.0.0",
-    "backbone-validator": "~0.3.0"
+    "backbone-validator": "~0.3.0",
+    "backbone.routemanager": "~0.1.0"
   },
   "devDependencies": {
     "mocha": "~1.21.4",
